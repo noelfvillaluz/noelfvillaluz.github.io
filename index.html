@@ -30,7 +30,46 @@ nav{display:flex;align-items:center;justify-content:space-between;gap:20px}
 .logo{color:#fff;font-weight:800;letter-spacing:.6px}
 nav ul{display:flex;gap:24px;list-style:none;flex-wrap:wrap}
 nav a{color:#fff;text-decoration:none;font-weight:700;font-size:14px}
-nav a:hover{color:var(--gold)}
+nav a:hover{color:var(--gold)} 
+      /* Resume Dropdown Menu */
+.dropdown{
+    position:relative;
+}
+
+.dropdown-content{
+    display:none;
+    position:absolute;
+    top:100%;
+    left:0;
+    background:#fff;
+    min-width:240px;
+    border-radius:8px;
+    box-shadow:0 8px 25px rgba(0,0,0,.15);
+    padding:8px 0;
+    z-index:1000;
+}
+
+.dropdown-content a{
+    display:block;
+    color:var(--navy);
+    padding:12px 18px;
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.dropdown-content a:hover{
+    background:var(--light);
+    color:var(--blue);
+}
+
+.dropdown:hover .dropdown-content{
+    display:block;
+}
+
+.dropbtn{
+    cursor:pointer;
+}
 .hero{min-height:88vh;background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;display:flex;align-items:center;padding:70px 9%}
 .hero-grid{display:grid;grid-template-columns:1.4fr .6fr;gap:55px;align-items:center;width:100%;max-width:1200px;margin:auto}
 .eyebrow{color:var(--gold);font-weight:800;letter-spacing:2px;text-transform:uppercase}
@@ -85,7 +124,16 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
 <li><a href="#services">Services</a></li>
 <li><a href="#projects">Projects</a></li>
 <li><a href="#resume">Templates</a></li>
-<li><a href="#resume">Resume</a></li>
+<li><div class="dropdown">
+    <a href="#resume" class="dropbtn">Resume ▾</a>
+
+    <div class="dropdown-content">
+        <a href="#education">Education</a>
+        <a href="#training">Training & Certifications</a>
+        <a href="#projects">Projects</a>
+        <a href="#affiliations">Professional Affiliations</a>
+    </div>
+</div></li>
 <li><a href="#about">About</a></li>
 <li><a href="#contact">Contact</a></li>
 </ul>
