@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFI Generator | Noel Villaluz, PEE</title>
+<meta name="description" content="Dynamic Request for Inspection generator with ITP, ITR, IMM, barcode and inspection workflow integration.">
+
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+
+<style>
+:root{
+  --navy:#071b2f;--blue:#0d416d;--gold:#f3b632;--light:#f4f7fa;
+  --text:#263746;--line:#d7e0e8;--ok:#1f7a4f;--warn:#9c6a00;--bad:#a62d2d;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:#eef3f7;line-height:1.5}
+header{position:sticky;top:0;z-index:20;background:rgba(7,27,47,.98);padding:14px 5%}
+nav{display:flex;align-items:center;justify-content:space-between;gap:20px;max-width:1500px;margin:auto}
+.logo{color:#fff;font-weight:800;letter-spacing:.5px}
+nav ul{display:flex;gap:18px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+nav a{color:#fff;text-decoration:none;font-weight:700;font-size:14px}
+nav a:hover{color:var(--gold)}
+.hero{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:42px 5%}
+.hero .wrap{max-width:1500px;margin:auto}
+.hero h1{margin:5px 0 8px;font-size:clamp(30px,5vw,50px)}
+.hero p{margin:0;color:#dce9f3;max-width:900px}
+.breadcrumb{font-size:13px;color:#b8ccdd;margin-bottom:10px}
+.breadcrumb a{color:var(--gold);text-decoration:none}
+main{max-width:1500px;margin:28px auto;padding:0 20px 70px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 5px 18px rgba(7,27,47,.06)}
+.span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-6{grid-column:span 6}.span-4{grid-column:span 4}.span-3{grid-column:span 3}
+.panel h2,.panel h3{color:var(--navy);margin:0 0 14px}
+.section-kicker{font-size:12px;font-weight:800;letter-spacing:1.5px;color:var(--blue);text-transform:uppercase;margin-bottom:4px}
+.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field.span-2{grid-column:span 2}.field.span-3{grid-column:span 3}.field.span-4{grid-column:span 4}
+label{font-size:12px;font-weight:800;color:#334b60}
+input,select,textarea{width:100%;padding:10px 11px;border:1px solid #bccbd7;border-radius:7px;font:inherit;background:#fff;color:#233644}
+textarea{min-height:86px;resize:vertical}
+input[readonly],textarea[readonly]{background:#f2f6f9;color:#536676}
+button,.btn{border:0;border-radius:7px;padding:10px 15px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-light{background:#e7eef4;color:var(--navy)}
+.btn-danger{background:#f9e5e5;color:var(--bad)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.mode-row{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+.mode-row label{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px}
+.mode-row input{width:auto}
+.small{font-size:12px;color:#687b8c}
+.status{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800}
+.status.ok{background:#e5f4ec;color:var(--ok)}
+.status.warn{background:#fff3d8;color:var(--warn)}
+.status.bad{background:#fde7e7;color:var(--bad)}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px}
+table{width:100%;border-collapse:collapse;min-width:900px;background:#fff}
+th,td{padding:9px 10px;border-bottom:1px solid #e3e9ee;text-align:left;font-size:12px;vertical-align:top}
+th{background:#f2f6f9;color:var(--navy);position:sticky;top:0;z-index:1}
+tr:last-child td{border-bottom:0}
+.tag-list{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;max-height:220px;overflow:auto;border:1px solid var(--line);padding:10px;border-radius:7px;background:#fafcfd}
+.tag-list label{font-size:12px;font-weight:600;display:flex;align-items:center;gap:7px}
+.tag-list input{width:auto}
+.validation-box{border-left:4px solid var(--blue);background:#f5f9fc;padding:12px 14px;border-radius:6px;margin-top:12px}
+.validation-box.bad{border-left-color:var(--bad);background:#fff1f1}
+.validation-box.ok{border-left-color:var(--ok);background:#eef9f3}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{padding:14px;border:1px solid var(--line);border-radius:9px;background:#fafcfd}
+.stat strong{display:block;font-size:22px;color:var(--blue)}
+.preview{background:#fff}
+.sheet{background:#fff;border:1px solid #9aa9b5;margin:16px auto;padding:14mm;max-width:210mm;min-height:297mm;color:#111}
+.sheet-header{display:grid;grid-template-columns:1.1fr 2fr 1fr;border:1px solid #111}
+.sheet-header>div{padding:9px;border-right:1px solid #111}
+.sheet-header>div:last-child{border-right:0}
+.sheet-title{text-align:center;font-weight:800;font-size:18px}
+.meta-table{width:100%;border-collapse:collapse;margin-top:10px;min-width:0}
+.meta-table td,.meta-table th{border:1px solid #111;padding:5px;font-size:10px;position:static;background:#fff;color:#111}
+.meta-table th{font-weight:800;background:#f0f0f0}
+.sign-table td,.sign-table th{text-align:center}
+.barcode-cell svg{width:180px;height:40px}
+.print-only{display:none}
+.hidden{display:none!important}
+.footer-note{font-size:11px;color:#697b8b;margin-top:10px}
+@media(max-width:1000px){
+  .span-8,.span-6,.span-4,.span-3{grid-column:span 12}
+  .form-grid{grid-template-columns:repeat(2,1fr)}
+  .stat-row{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+  nav{flex-direction:column;align-items:flex-start}
+  .form-grid{grid-template-columns:1fr}
+  .field.span-2,.field.span-3,.field.span-4{grid-column:span 1}
+  .tag-list{grid-template-columns:1fr}
+}
+@media print{
+  body{background:#fff}
+  header,.hero,main>.grid,.no-print{display:none!important}
+  #printArea{display:block!important}
+  .print-only{display:block}
+  .sheet{border:0;margin:0;max-width:none;page-break-after:always;padding:8mm}
+  .sheet:last-child{page-break-after:auto}
+  @page{size:A4 portrait;margin:7mm}
+}
+</style>
+</head>
+<body>
+
+<header>
+<nav>
+  <div class="logo">NOEL VILLALUZ · PEE</div>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../index.html#services">Services</a></li>
+    <li><a href="../index.html#technical-resources">Technical Resources</a></li>
+    <li><a href="../index.html#resume">Resume</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+</header>
+
+<section class="hero">
+<div class="wrap">
+  <div class="breadcrumb"><a href="../index.html">Home</a> › Technical Resources › RFI Generator</div>
+  <div class="section-kicker" style="color:#f3b632">Inspection Management</div>
+  <h1>RFI Generator</h1>
+  <p>Dynamic Request for Inspection preparation with ITP-driven fields, Tag + Activity validation, prerequisite control, barcode traceability, document references, inspection disposition and simulated IMM updating.</p>
+</div>
+</section>
+
+<main>
+<div class="grid">
+
+<section class="panel span-12">
+  <div class="section-kicker">Sheet 1 Data</div>
+  <h2>Project & RFI Information</h2>
+  <div class="form-grid">
+    <div class="field"><label>Project No.</label><input id="projectNo" value="ZULF-PKG3"></div>
+    <div class="field span-2"><label>Project Description</label><input id="projectDesc" value="Zuluf AM Crude Platform Project - Package 3"></div>
+    <div class="field"><label>BI No.</label><input id="biNo" value="BI-10-01365"></div>
+
+    <div class="field"><label>Location</label><input id="location" value="PDM / Offshore Platform"></div>
+    <div class="field"><label>RFI No.</label><input id="rfiNo" value="RFI-E-0001"></div>
+    <div class="field"><label>Revision No.</label><input id="revision" value="0"></div>
+    <div class="field"><label>Date of Inspection</label><input type="date" id="inspectionDate"></div>
+
+    <div class="field"><label>Inspection Time</label><input type="time" id="inspectionTime" value="09:00"></div>
+    <div class="field"><label>System No.</label><input id="systemNo" value="SYS-240"></div>
+    <div class="field"><label>Subsystem No.</label><input id="subsystemNo" value="SUB-240-E01"></div>
+    <div class="field"><label>Area / Location</label><input id="area" value="Mezzanine Deck"></div>
+
+    <div class="field span-4"><label>RFI Description</label>
+      <textarea id="rfiDescription">Inspection and verification of electrical cable installation in accordance with approved ITP, IFC drawings, project specifications and applicable standards.</textarea>
+    </div>
+  </div>
+</section>
+
+<section class="panel span-8">
+  <div class="section-kicker">ITP Library</div>
+  <h2>Inspection Activity Selection</h2>
+  <div class="form-grid">
+    <div class="field"><label>Discipline</label><select id="discipline"></select></div>
+    <div class="field"><label>Main Equipment / Work Category</label><select id="equipment"></select></div>
+    <div class="field"><label>ITP No.</label><select id="itp"></select></div>
+    <div class="field"><label>Activity No.</label><select id="activity"></select></div>
+
+    <div class="field span-2"><label>Activity Description</label><input id="activityDescription" readonly></div>
+    <div class="field"><label>ITP Revision</label><input id="itpRevision" readonly></div>
+    <div class="field"><label>Risk Category</label><input id="riskCategory" readonly></div>
+
+    <div class="field"><label>Inspection Level</label><input id="inspectionLevel" readonly></div>
+    <div class="field"><label>ITR No.</label><input id="itrNo" readonly></div>
+    <div class="field"><label>ITR Sheet No.</label><input id="itrSheet" readonly></div>
+    <div class="field"><label>Prerequisite Activity</label><input id="prerequisite" readonly></div>
+
+    <div class="field span-2"><label>Reference Standard / Specification</label><textarea id="referenceStandard" readonly></textarea></div>
+    <div class="field span-2"><label>Procedure / Method Statement</label><textarea id="procedure" readonly></textarea></div>
+  </div>
+  <p class="footer-note">Risk category, inspection level, ITR, references and prerequisites are controlled by the selected ITP activity and are read-only.</p>
+</section>
+
+<section class="panel span-4">
+  <div class="section-kicker">Readiness</div>
+  <h2>Inspection Gate</h2>
+  <div class="stat-row">
+    <div class="stat"><strong id="statSelected">0</strong><span>Selected Tags</span></div>
+    <div class="stat"><strong id="statEligible">0</strong><span>Eligible</span></div>
+    <div class="stat"><strong id="statBlocked">0</strong><span>Blocked</span></div>
+    <div class="stat"><strong id="statAccepted">0</strong><span>Accepted</span></div>
+  </div>
+  <div id="gateMessage" class="validation-box">Select an activity and equipment tag(s), then run validation.</div>
+</section>
+
+<section class="panel span-6">
+  <div class="section-kicker">Equipment Tags</div>
+  <h2>Tag Selection & Entry</h2>
+  <div class="mode-row">
+    <label><input type="radio" name="tagMode" value="list" checked> Select from List</label>
+    <label><input type="radio" name="tagMode" value="paste"> Copy & Paste</label>
+    <label><input type="radio" name="tagMode" value="manual"> Manual Entry</label>
+  </div>
+
+  <div id="modeList">
+    <div class="tag-list" id="tagList"></div>
+  </div>
+
+  <div id="modePaste" class="hidden">
+    <label>Paste tags from Excel, email or text (line/comma/tab/semicolon separated)</label>
+    <textarea id="pasteTags" placeholder="408-3J-PC-00801&#10;408-3J-PC-00802&#10;408-3J-PC-00803"></textarea>
+    <div class="actions"><button class="btn-light" onclick="parsePastedTags()">Load Tags</button></div>
+  </div>
+
+  <div id="modeManual" class="hidden">
+    <label>Enter Equipment Tag</label>
+    <input id="manualTag" list="tagSuggestions" placeholder="Start typing equipment tag...">
+    <datalist id="tagSuggestions"></datalist>
+    <div class="actions"><button class="btn-light" onclick="addManualTag()">Add Tag</button></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-primary" onclick="validateSelection()">Validate Tag + Activity</button>
+    <button class="btn-light" onclick="clearTagSelection()">Clear Tags</button>
+  </div>
+</section>
+
+<section class="panel span-6">
+  <div class="section-kicker">Validation Results</div>
+  <h2>Tag + Activity Status</h2>
+  <div class="table-wrap" style="max-height:390px">
+    <table>
+      <thead><tr><th>Equipment Tag</th><th>Activity</th><th>IMM / RFI Status</th><th>Eligibility</th><th>Reason</th></tr></thead>
+      <tbody id="validationBody"><tr><td colspan="5">No validation performed.</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel span-12">
+  <div class="section-kicker">Document Management Integration</div>
+  <h2>Reference Documents & Drawings</h2>
+  <div class="form-grid">
+    <div class="field span-2"><label>Search / Select Reference</label>
+      <select id="docSelect"></select>
+    </div>
+    <div class="field"><label>Document No.</label><input id="docNo" readonly></div>
+    <div class="field"><label>Revision / Status</label><input id="docRevStatus" readonly></div>
+  </div>
+  <div class="actions">
+    <button class="btn-light" onclick="addDocument()">Add Reference</button>
+  </div>
+  <div class="table-wrap" style="margin-top:12px">
+    <table>
+      <thead><tr><th>No.</th><th>Type</th><th>Document No.</th><th>Title</th><th>Rev.</th><th>Status</th><th></th></tr></thead>
+      <tbody id="documentBody"><tr><td colspan="7">No reference document added.</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel span-12">
+  <div class="section-kicker">Inspection Result</div>
+  <h2>Disposition & Signatories</h2>
+  <div class="form-grid">
+    <div class="field"><label>Overall Disposition</label>
+      <select id="overallDisposition">
+        <option>Accepted</option>
+        <option>Accepted with Comments</option>
+        <option>Rejected</option>
+        <option>Rescheduled</option>
+        <option>Cancelled</option>
+      </select>
+    </div>
+    <div class="field span-3"><label>Comments / Remarks</label><input id="remarks" placeholder="Inspection comments or remarks"></div>
+  </div>
+
+  <div class="table-wrap" style="margin-top:14px">
+    <table>
+      <thead><tr><th>Role</th><th>Name</th><th>Signature / Initial</th><th>Date</th></tr></thead>
+      <tbody>
+        <tr><td>Contractor Construction</td><td><input id="sigConstruction"></td><td><input id="initConstruction"></td><td><input type="date" id="dateConstruction"></td></tr>
+        <tr><td>Contractor QC Inspector</td><td><input id="sigQC"></td><td><input id="initQC"></td><td><input type="date" id="dateQC"></td></tr>
+        <tr><td>Contractor QC Supervisor / Lead</td><td><input id="sigQCSup"></td><td><input id="initQCSup"></td><td><input type="date" id="dateQCSup"></td></tr>
+        <tr><td>PMT / PMC Inspector</td><td><input id="sigPMT"></td><td><input id="initPMT"></td><td><input type="date" id="datePMT"></td></tr>
+        <tr><td>PID / Client / Company Inspector</td><td><input id="sigPID"></td><td><input id="initPID"></td><td><input type="date" id="datePID"></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel span-12">
+  <div class="section-kicker">Sheet 2</div>
+  <h2>Equipment Tag & Barcode Register</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>No.</th><th>Equipment Tag</th><th>Activity No.</th><th>Barcode</th><th>System</th><th>Subsystem</th><th>Location</th><th>IMM Status</th><th>Tag Disposition</th></tr></thead>
+      <tbody id="barcodeBody"><tr><td colspan="9">Validate eligible tags to populate Sheet 2.</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="actions">
+    <button class="btn-gold" onclick="generateRFI()">Generate / Refresh RFI</button>
+    <button class="btn-primary" onclick="simulatePIDAcceptance()">Simulate PID Acceptance & IMM Update</button>
+    <button class="btn-light" onclick="window.print()">Print RFI Package</button>
+  </div>
+  <p class="footer-note">Prototype behavior: PID acceptance updates the in-memory IMM for each accepted Tag + Activity. A production version requires authentication, backend database, audit trail and controlled authorization.</p>
+</section>
+
+</div>
+</main>
+
+<div id="printArea" class="print-only">
+  <section class="sheet" id="sheet1"></section>
+  <section class="sheet" id="sheet2"></section>
+</div>
+
+<script>
+const today = new Date().toISOString().slice(0,10);
+["inspectionDate","dateConstruction","dateQC","dateQCSup","datePMT","datePID"].forEach(id=>{
+  document.getElementById(id).value = today;
+});
+
+const itpLibrary = [
+  {
+    discipline:"Electrical", equipment:"Cable", itpNo:"ITP-E-CBL-001", revision:"03",
+    activities:[
+      {no:"4.1", desc:"Cable Installation Inspection", risk:"B", level:"Witness", itr:"ITR-E-CBL-001", sheet:"1", refs:"Approved IFC cable routing drawings; project specification; SAIC/SAES requirements as applicable", proc:"Approved Electrical Cable Installation Method Statement", prereq:[]},
+      {no:"4.2", desc:"Insulation Resistance & Continuity Test", risk:"B", level:"Witness", itr:"ITR-E-CBL-002", sheet:"2", refs:"Approved testing procedure; cable datasheet; applicable IEC/project requirements", proc:"Approved Cable IR & Continuity Test Procedure", prereq:["4.1"]},
+      {no:"4.3", desc:"Cable Termination Inspection", risk:"B", level:"Witness", itr:"ITR-E-CBL-003", sheet:"3", refs:"Approved termination drawings; cable schedule; project specification", proc:"Approved Cable Termination Method Statement", prereq:["4.1"]},
+      {no:"4.4", desc:"Final Cable Test / Completion Verification", risk:"A", level:"Hold", itr:"ITR-E-CBL-004", sheet:"4", refs:"Approved ITP; final test procedure; project specification", proc:"Approved Final Cable Test Procedure", prereq:["4.2","4.3"]}
+    ]
+  },
+  {
+    discipline:"Instrumentation", equipment:"Cable", itpNo:"ITP-I-CBL-001", revision:"02",
+    activities:[
+      {no:"5.1", desc:"Instrument Cable Installation Inspection", risk:"B", level:"Witness", itr:"ITR-I-CBL-001", sheet:"1", refs:"Approved instrument cable routing/layout drawings; project specification", proc:"Approved Instrument Cable Installation Method Statement", prereq:[]},
+      {no:"5.2", desc:"Continuity / Insulation Test", risk:"B", level:"Witness", itr:"ITR-I-CBL-002", sheet:"2", refs:"Approved test procedure and instrument cable requirements", proc:"Approved Instrument Cable Testing Procedure", prereq:["5.1"]},
+      {no:"5.3", desc:"Instrument Cable Termination Inspection", risk:"B", level:"Witness", itr:"ITR-I-CBL-003", sheet:"3", refs:"Approved termination/interconnection drawings", proc:"Approved Instrument Cable Termination Method Statement", prereq:["5.1"]}
+    ]
+  },
+  {
+    discipline:"Electrical", equipment:"Cable Tray", itpNo:"ITP-E-CTR-001", revision:"01",
+    activities:[
+      {no:"3.1", desc:"Cable Tray Support Installation Inspection", risk:"B", level:"Surveillance", itr:"ITR-E-CTR-001", sheet:"1", refs:"Approved IFC support/layout drawings; NEMA VE-2; project specification", proc:"Approved Cable Tray Installation Method Statement", prereq:[]},
+      {no:"3.2", desc:"Cable Tray / Ladder Installation Inspection", risk:"B", level:"Witness", itr:"ITR-E-CTR-002", sheet:"2", refs:"Approved IFC cable tray routing drawings; NEMA VE-2; project specification", proc:"Approved Cable Tray Installation Method Statement", prereq:["3.1"]}
+    ]
+  }
+];
+
+const tags = [
+  "408-3J-PC-00801","408-3J-PC-00802","408-3J-PC-00803","408-3J-PC-00804","408-3J-PC-00805",
+  "408-3J-PC-00806","408-3J-PC-00807","408-3J-PC-00808","408-3J-PC-00809","408-3J-PC-00810",
+  "408-3M-PC-00781","408-3M-PC-00782","408-3M-PC-00783","408-3M-PC-00784","408-3M-PC-00785",
+  "408-3M-PC-00786","408-3M-PC-00787","408-3M-PC-00788","408-3M-PC-00789","408-3M-PC-00790"
+];
+
+const tagMeta = {};
+tags.forEach((t,i)=>{
+  tagMeta[t] = {
+    discipline: t.includes("3J") ? "Electrical" : "Electrical",
+    equipment:"Cable",
+    system: i < 10 ? "SYS-240" : "SYS-245",
+    subsystem: i < 10 ? "SUB-240-E01" : "SUB-245-E01",
+    location: i < 10 ? "Mezzanine Deck" : "Main Deck"
+  };
+});
+
+const imm = {
+  "408-3J-PC-00801|4.1":"Accepted",
+  "408-3J-PC-00801|4.2":"Draft / Not Raised",
+  "408-3J-PC-00802|4.1":"Accepted",
+  "408-3J-PC-00803|4.1":"Rejected / Reinspection Required",
+  "408-3J-PC-00804|4.1":"RFI Submitted",
+  "408-3M-PC-00790|4.1":"Accepted",
+  "408-3M-PC-00790|4.2":"Accepted"
+};
+
+const activeRFI = {
+  "408-3J-PC-00804|4.1":"RFI-E-0098"
+};
+
+const documents = [
+  {type:"IFC Drawing", no:"408-E-EL-240-001", title:"Electrical Cable Routing Layout - Mezzanine Deck", rev:"C", status:"Approved / Current"},
+  {type:"IFC Drawing", no:"408-E-EL-245-002", title:"Electrical Cable Routing Layout - Main Deck", rev:"B", status:"Approved / Current"},
+  {type:"ITP", no:"ITP-E-CBL-001", title:"Inspection & Test Plan - Electrical Cables", rev:"03", status:"Approved / Current"},
+  {type:"ITR", no:"ITR-E-CBL-002", title:"Cable IR & Continuity Inspection and Test Report", rev:"02", status:"Approved / Current"},
+  {type:"Procedure", no:"MS-E-CBL-001", title:"Electrical Cable Installation Method Statement", rev:"04", status:"Approved / Current"},
+  {type:"Specification", no:"PROJECT-SPEC-E-001", title:"Project Electrical Installation Specification", rev:"1", status:"Approved / Current"}
+];
+
+let selectedTags = [];
+let validationResults = [];
+let selectedDocuments = [];
+
+function uniq(arr){ return [...new Set(arr.filter(Boolean))]; }
+
+function initSelectors(){
+  const disciplines = uniq(itpLibrary.map(x=>x.discipline));
+  fillSelect("discipline", disciplines);
+  updateEquipment();
+}
+function fillSelect(id, values){
+  const el = document.getElementById(id);
+  el.innerHTML = values.map(v=>`<option value="${v}">${v}</option>`).join("");
+}
+function updateEquipment(){
+  const d = discipline.value;
+  fillSelect("equipment", uniq(itpLibrary.filter(x=>x.discipline===d).map(x=>x.equipment)));
+  updateITP();
+}
+function updateITP(){
+  const d=discipline.value,e=equipment.value;
+  fillSelect("itp", itpLibrary.filter(x=>x.discipline===d&&x.equipment===e).map(x=>x.itpNo));
+  updateActivity();
+}
+function currentITP(){ return itpLibrary.find(x=>x.itpNo===itp.value); }
+function currentActivity(){
+  const i=currentITP(); return i ? i.activities.find(a=>a.no===activity.value) : null;
+}
+function updateActivity(){
+  const i=currentITP();
+  fillSelect("activity", i ? i.activities.map(a=>a.no) : []);
+  populateActivity();
+}
+function populateActivity(){
+  const i=currentITP(),a=currentActivity();
+  if(!i||!a)return;
+  activityDescription.value=a.desc;
+  itpRevision.value=i.revision;
+  riskCategory.value=a.risk;
+  inspectionLevel.value=a.level;
+  itrNo.value=a.itr;
+  itrSheet.value=a.sheet;
+  prerequisite.value=a.prereq.length?a.prereq.join(", "):"None";
+  referenceStandard.value=a.refs;
+  procedure.value=a.proc;
+  validateSelection(false);
+}
+discipline.addEventListener("change",updateEquipment);
+equipment.addEventListener("change",updateITP);
+itp.addEventListener("change",updateActivity);
+activity.addEventListener("change",populateActivity);
+
+function renderTagList(){
+  tagList.innerHTML = tags.map(t=>`<label><input type="checkbox" class="tagCheck" value="${t}"> ${t}</label>`).join("");
+  tagSuggestions.innerHTML = tags.map(t=>`<option value="${t}"></option>`).join("");
+}
+document.querySelectorAll('input[name="tagMode"]').forEach(r=>r.addEventListener("change",e=>{
+  modeList.classList.toggle("hidden",e.target.value!=="list");
+  modePaste.classList.toggle("hidden",e.target.value!=="paste");
+  modeManual.classList.toggle("hidden",e.target.value!=="manual");
+}));
+
+function collectListTags(){
+  return [...document.querySelectorAll(".tagCheck:checked")].map(x=>x.value);
+}
+function splitTags(text){
+  return uniq(text.split(/[\n,\t;]+/).map(x=>x.trim()).filter(Boolean));
+}
+function parsePastedTags(){
+  selectedTags = splitTags(pasteTags.value);
+  validateSelection();
+}
+function addManualTag(){
+  const t=manualTag.value.trim();
+  if(t){ selectedTags=uniq([...selectedTags,t]); manualTag.value=""; validateSelection(); }
+}
+function clearTagSelection(){
+  selectedTags=[];
+  document.querySelectorAll(".tagCheck").forEach(x=>x.checked=false);
+  pasteTags.value=""; manualTag.value="";
+  validationResults=[];
+  renderValidation();
+  renderBarcodes();
+  updateStats();
+}
+
+function getSelectedTags(){
+  const mode=document.querySelector('input[name="tagMode"]:checked').value;
+  if(mode==="list") selectedTags=collectListTags();
+  else if(mode==="paste") selectedTags=splitTags(pasteTags.value);
+  return uniq(selectedTags);
+}
+
+function validateTag(t,a,itpObj){
+  const meta=tagMeta[t];
+  if(!meta) return {tag:t,ok:false,status:"Not Found",reason:"Equipment tag does not exist in the sample Tag Library."};
+  if(meta.discipline!==discipline.value) return {tag:t,ok:false,status:"Wrong Discipline",reason:`Tag is registered under ${meta.discipline}.`};
+  if(meta.equipment!==equipment.value) return {tag:t,ok:false,status:"Not Applicable",reason:`Tag category is ${meta.equipment}.`};
+
+  const key=`${t}|${a.no}`;
+  const current=imm[key]||"Draft / Not Raised";
+  if(activeRFI[key]) return {tag:t,ok:false,status:"Existing RFI",reason:`Active RFI ${activeRFI[key]} already exists for this Tag + Activity.`};
+  if(current==="Accepted") return {tag:t,ok:false,status:"Already Inspected",reason:"This Tag + Activity is already accepted in IMM."};
+
+  for(const p of a.prereq){
+    const ps=imm[`${t}|${p}`]||"Draft / Not Raised";
+    if(ps!=="Accepted"){
+      return {tag:t,ok:false,status:"Prerequisite Incomplete",reason:`Required prerequisite Activity ${p} status is "${ps}".`};
+    }
+  }
+  return {tag:t,ok:true,status:current,reason:"Eligible for RFI."};
+}
+
+function validateSelection(show=true){
+  const a=currentActivity(), i=currentITP();
+  const list=getSelectedTags();
+  if(!a||!i){ validationResults=[]; renderValidation(); updateStats(); return false; }
+  validationResults=list.map(t=>({...validateTag(t,a,i), activity:a.no}));
+  renderValidation();
+  renderBarcodes();
+  updateStats();
+
+  const blocked=validationResults.filter(x=>!x.ok);
+  if(show || list.length){
+    if(!list.length){
+      gateMessage.className="validation-box";
+      gateMessage.innerHTML="No equipment tags selected.";
+    }else if(blocked.length){
+      gateMessage.className="validation-box bad";
+      gateMessage.innerHTML=`<strong>RFI CANNOT FULLY PROCEED.</strong> ${blocked.length} tag(s) are blocked. Only eligible Tag + Activity records can be included.`;
+    }else{
+      gateMessage.className="validation-box ok";
+      gateMessage.innerHTML=`<strong>RFI READY.</strong> All ${list.length} selected Tag + Activity records passed the prototype validation gates.`;
+    }
+  }
+  return blocked.length===0 && list.length>0;
+}
+
+function renderValidation(){
+  if(!validationResults.length){validationBody.innerHTML='<tr><td colspan="5">No validation performed.</td></tr>';return;}
+  validationBody.innerHTML=validationResults.map(r=>`
+    <tr>
+      <td>${r.tag}</td><td>${r.activity}</td><td>${r.status}</td>
+      <td><span class="status ${r.ok?'ok':'bad'}">${r.ok?'ELIGIBLE':'BLOCKED'}</span></td>
+      <td>${r.reason}</td>
+    </tr>`).join("");
+}
+function updateStats(){
+  statSelected.textContent=validationResults.length;
+  statEligible.textContent=validationResults.filter(x=>x.ok).length;
+  statBlocked.textContent=validationResults.filter(x=>!x.ok).length;
+  statAccepted.textContent=validationResults.filter(x=>imm[`${x.tag}|${x.activity}`]==="Accepted").length;
+}
+function eligibleResults(){return validationResults.filter(x=>x.ok);}
+
+function renderBarcodes(){
+  const eligible=eligibleResults();
+  if(!eligible.length){barcodeBody.innerHTML='<tr><td colspan="9">Validate eligible tags to populate Sheet 2.</td></tr>';return;}
+  barcodeBody.innerHTML=eligible.map((r,idx)=>{
+    const m=tagMeta[r.tag], id=`bc_${idx}`;
+    return `<tr>
+      <td>${idx+1}</td><td>${r.tag}</td><td>${r.activity}</td>
+      <td class="barcode-cell"><svg id="${id}"></svg><div class="small">${r.tag}|${r.activity}</div></td>
+      <td>${m.system}</td><td>${m.subsystem}</td><td>${m.location}</td>
+      <td>${imm[`${r.tag}|${r.activity}`]||"Draft / Not Raised"}</td>
+      <td>
+        <select class="tagDisposition" data-tag="${r.tag}">
+          <option>Accepted</option><option>Accepted with Comments</option>
+          <option>Rejected</option><option>Rescheduled</option><option>Cancelled</option>
+        </select>
+      </td></tr>`;
+  }).join("");
+  eligible.forEach((r,idx)=>{
+    try{JsBarcode(`#bc_${idx}`,`${r.tag}|${r.activity}`,{format:"CODE128",height:34,width:1.25,displayValue:false,margin:2});}catch(e){}
+  });
+}
+
+function initDocuments(){
+  docSelect.innerHTML=documents.map((d,i)=>`<option value="${i}">${d.type} | ${d.no} | ${d.title}</option>`).join("");
+  syncDocumentFields();
+}
+function syncDocumentFields(){
+  const d=documents[+docSelect.value];
+  if(!d)return;
+  docNo.value=d.no; docRevStatus.value=`Rev ${d.rev} | ${d.status}`;
+}
+docSelect.addEventListener("change",syncDocumentFields);
+function addDocument(){
+  const d=documents[+docSelect.value];
+  if(!d)return;
+  if(!selectedDocuments.some(x=>x.no===d.no))selectedDocuments.push(d);
+  renderDocuments();
+}
+function removeDocument(no){
+  selectedDocuments=selectedDocuments.filter(x=>x.no!==no);renderDocuments();
+}
+function renderDocuments(){
+  if(!selectedDocuments.length){documentBody.innerHTML='<tr><td colspan="7">No reference document added.</td></tr>';return;}
+  documentBody.innerHTML=selectedDocuments.map((d,i)=>`<tr>
+    <td>${i+1}</td><td>${d.type}</td><td>${d.no}</td><td>${d.title}</td><td>${d.rev}</td><td>${d.status}</td>
+    <td><button class="btn-danger" onclick="removeDocument('${d.no}')">Remove</button></td>
+  </tr>`).join("");
+}
+
+function value(id){return document.getElementById(id).value||"";}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+
+function generateRFI(){
+  validateSelection();
+  const eligible=eligibleResults();
+  if(!eligible.length){alert("No eligible Tag + Activity records are available for RFI generation.");return;}
+
+  const a=currentActivity(),i=currentITP();
+  const tagText=eligible.length===1?eligible[0].tag:`${eligible.length} equipment tags - refer Sheet 2`;
+
+  sheet1.innerHTML=`
+    <div class="sheet-header">
+      <div><strong>CONTRACTOR</strong><br><span style="font-size:10px">Inspection Request</span></div>
+      <div class="sheet-title">REQUEST FOR INSPECTION (RFI)</div>
+      <div><strong>${esc(value("rfiNo"))}</strong><br>Rev. ${esc(value("revision"))}</div>
+    </div>
+
+    <table class="meta-table">
+      <tr><th>Project No.</th><td>${esc(value("projectNo"))}</td><th>BI No.</th><td>${esc(value("biNo"))}</td></tr>
+      <tr><th>Project Description</th><td colspan="3">${esc(value("projectDesc"))}</td></tr>
+      <tr><th>Location</th><td>${esc(value("location"))}</td><th>Date / Time</th><td>${esc(value("inspectionDate"))} ${esc(value("inspectionTime"))}</td></tr>
+      <tr><th>Discipline</th><td>${esc(value("discipline"))}</td><th>Main Equipment</th><td>${esc(value("equipment"))}</td></tr>
+      <tr><th>System</th><td>${esc(value("systemNo"))}</td><th>Subsystem</th><td>${esc(value("subsystemNo"))}</td></tr>
+      <tr><th>Area</th><td>${esc(value("area"))}</td><th>Equipment Tag(s)</th><td>${esc(tagText)}</td></tr>
+      <tr><th>RFI Description</th><td colspan="3">${esc(value("rfiDescription"))}</td></tr>
+      <tr><th>ITP No. / Rev.</th><td>${esc(i.itpNo)} / ${esc(i.revision)}</td><th>Activity No.</th><td>${esc(a.no)}</td></tr>
+      <tr><th>Activity Description</th><td colspan="3">${esc(a.desc)}</td></tr>
+      <tr><th>Risk Category</th><td>${esc(a.risk)}</td><th>Inspection Level</th><td>${esc(a.level)}</td></tr>
+      <tr><th>ITR No.</th><td>${esc(a.itr)}</td><th>ITR Sheet</th><td>${esc(a.sheet)}</td></tr>
+      <tr><th>Reference Standard / Specification</th><td colspan="3">${esc(a.refs)}</td></tr>
+      <tr><th>Procedure / Method Statement</th><td colspan="3">${esc(a.proc)}</td></tr>
+      <tr><th>Prerequisite Activity</th><td colspan="3">${esc(a.prereq.length?a.prereq.join(", "):"None")}</td></tr>
+    </table>
+
+    <h4 style="margin:12px 0 4px">Reference Documents / Drawings</h4>
+    <table class="meta-table">
+      <tr><th>No.</th><th>Type</th><th>Document No.</th><th>Title</th><th>Rev.</th><th>Status</th></tr>
+      ${(selectedDocuments.length?selectedDocuments:[{type:"-",no:"-",title:"No document selected",rev:"-",status:"-"}]).map((d,n)=>`
+        <tr><td>${n+1}</td><td>${esc(d.type)}</td><td>${esc(d.no)}</td><td>${esc(d.title)}</td><td>${esc(d.rev)}</td><td>${esc(d.status)}</td></tr>`).join("")}
+    </table>
+
+    <table class="meta-table">
+      <tr><th>Inspection Disposition</th><td>${esc(value("overallDisposition"))}</td></tr>
+      <tr><th>Comments / Remarks</th><td>${esc(value("remarks"))}</td></tr>
+    </table>
+
+    <h4 style="margin:12px 0 4px">Signatories</h4>
+    <table class="meta-table sign-table">
+      <tr><th>Role</th><th>Name</th><th>Signature / Initial</th><th>Date</th></tr>
+      ${[
+        ["Contractor Construction","sigConstruction","initConstruction","dateConstruction"],
+        ["Contractor QC Inspector","sigQC","initQC","dateQC"],
+        ["Contractor QC Supervisor / Lead","sigQCSup","initQCSup","dateQCSup"],
+        ["PMT / PMC Inspector","sigPMT","initPMT","datePMT"],
+        ["PID / Client / Company Inspector","sigPID","initPID","datePID"]
+      ].map(x=>`<tr><td>${x[0]}</td><td>${esc(value(x[1]))}</td><td>${esc(value(x[2]))}</td><td>${esc(value(x[3]))}</td></tr>`).join("")}
+    </table>
+    <p style="font-size:9px;margin-top:8px">Sheet 1 of 2 · Generated by Technical Resources – RFI Generator prototype.</p>
+  `;
+
+  sheet2.innerHTML=`
+    <div class="sheet-header">
+      <div><strong>CONTRACTOR</strong></div>
+      <div class="sheet-title">EQUIPMENT TAG & BARCODE REGISTER</div>
+      <div><strong>${esc(value("rfiNo"))}</strong><br>Sheet 2 of 2</div>
+    </div>
+    <table class="meta-table" style="margin-top:10px">
+      <tr><th>No.</th><th>Equipment Tag</th><th>Activity</th><th>Barcode Payload</th><th>System</th><th>Subsystem</th><th>Location</th><th>IMM Status</th><th>Disposition</th></tr>
+      ${eligible.map((r,idx)=>{
+        const m=tagMeta[r.tag];
+        const disp=document.querySelector(`.tagDisposition[data-tag="${r.tag}"]`)?.value||"Accepted";
+        return `<tr><td>${idx+1}</td><td>${esc(r.tag)}</td><td>${esc(r.activity)}</td><td>${esc(r.tag+"|"+r.activity)}</td><td>${esc(m.system)}</td><td>${esc(m.subsystem)}</td><td>${esc(m.location)}</td><td>${esc(imm[`${r.tag}|${r.activity}`]||"Draft / Not Raised")}</td><td>${esc(disp)}</td></tr>`;
+      }).join("")}
+    </table>
+    <p style="font-size:9px;margin-top:8px">Barcode identity is based on Equipment Tag + Activity No. Production implementation may additionally include ITP identity in the internal record key.</p>
+  `;
+}
+
+function simulatePIDAcceptance(){
+  validateSelection();
+  const eligible=eligibleResults();
+  if(!eligible.length){alert("No eligible tags to update.");return;}
+  eligible.forEach(r=>{
+    const disp=document.querySelector(`.tagDisposition[data-tag="${r.tag}"]`)?.value||overallDisposition.value;
+    if(disp==="Accepted"||disp==="Accepted with Comments"){
+      imm[`${r.tag}|${r.activity}`]="Accepted";
+    }else if(disp==="Rejected"){
+      imm[`${r.tag}|${r.activity}`]="Rejected / Reinspection Required";
+    }else if(disp==="Rescheduled"){
+      imm[`${r.tag}|${r.activity}`]="Rescheduled / Pending";
+    }else if(disp==="Cancelled"){
+      imm[`${r.tag}|${r.activity}`]="Cancelled";
+    }
+  });
+  validationResults=[];
+  validateSelection();
+  alert("Prototype IMM updated according to each Tag + Activity disposition.");
+}
+
+renderTagList();
+initSelectors();
+initDocuments();
+</script>
+
+</body>
+</html>
