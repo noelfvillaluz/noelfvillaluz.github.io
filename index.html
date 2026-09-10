@@ -108,6 +108,71 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
  .cards{grid-template-columns:1fr} .cert-list{columns:1}
  .profile-photo,.profile-placeholder{width:180px;height:180px}
 }
+
+      /* ================================
+   TECHNICAL RESOURCES DROPDOWN
+================================ */
+
+.dropdown-content .submenu {
+    position: relative;
+}
+
+.dropdown-content .submenu > a {
+    padding-right: 34px;
+}
+
+.dropdown-content .submenu > a::after {
+    content: "›";
+    position: absolute;
+    right: 14px;
+    font-size: 18px;
+}
+
+.submenu-content {
+    display: none;
+    position: absolute;
+    top: -8px;
+    left: 100%;
+    background: #fff;
+    min-width: 310px;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+    padding: 8px 0;
+    z-index: 1100;
+}
+
+.submenu-content a {
+    display: block;
+    color: var(--navy);
+    padding: 11px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.submenu-content a:hover {
+    background: var(--light);
+    color: var(--blue);
+}
+
+.submenu:hover > .submenu-content {
+    display: block;
+}
+
+@media(max-width:800px) {
+    .dropdown-content,
+    .submenu-content {
+        position: static;
+        min-width: 100%;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .submenu-content {
+        padding-left: 16px;
+    }
+}
+      
 </style>
 </head>
 <body>
@@ -118,6 +183,227 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
 <li><a href="#home">Home</a></li>
 <li><a href="#services">Services</a></li>
 <li><a href="#service-projects">Projects</a></li>
+
+      <li class="dropdown">
+    <a href="#technical-resources" class="dropbtn">
+        Technical Resources ▾
+    </a>
+
+    <div class="dropdown-content">
+
+        <!-- RFI GENERATOR -->
+        <a href="#rfi-generator">
+            RFI Generator
+        </a>
+
+        <!-- INSPECTION MONITORING MATRIX -->
+        <a href="#inspection-monitoring-matrix">
+            Inspection Monitoring Matrix (IMM)
+        </a>
+
+        <!-- INSPECTION & TEST MANAGEMENT -->
+        <div class="submenu">
+            <a href="#inspection-test-management">
+                Inspection & Test Management
+            </a>
+
+            <div class="submenu-content">
+                <a href="#itp">
+                    ITP – Inspection & Test Plan
+                </a>
+
+                <a href="#itr">
+                    ITR – Inspection & Test Report
+                </a>
+            </div>
+        </div>
+
+        <!-- DOCUMENT MANAGEMENT -->
+        <div class="submenu">
+            <a href="#document-management">
+                Document Management & Control
+            </a>
+
+            <div class="submenu-content">
+                <a href="#document-library">
+                    Document Library & Search
+                </a>
+
+                <a href="#document-submittal">
+                    Document Submittal / Transmittal
+                </a>
+
+                <a href="#document-review">
+                    Document Review & Approval
+                </a>
+
+                <a href="#comment-resolution">
+                    Comment Resolution
+                </a>
+
+                <a href="#revision-control">
+                    Revision & Status Control
+                </a>
+
+                <a href="#document-register">
+                    Document Register
+                </a>
+
+                <a href="#distribution">
+                    Distribution / Acknowledgement
+                </a>
+
+                <a href="#document-audit-trail">
+                    Document History & Audit Trail
+                </a>
+            </div>
+        </div>
+
+        <!-- QUALITY IMPROVEMENT & ASSURANCE -->
+        <div class="submenu">
+            <a href="#quality-improvement">
+                Quality Improvement & Assurance
+            </a>
+
+            <div class="submenu-content">
+
+                <a href="#ncr">
+                    Non-Conformance Management (NCR)
+                </a>
+
+                <a href="#proactive-quality">
+                    Proactive Quality Notification
+                </a>
+
+                <a href="#focused-assessment">
+                    Focused Assessment
+                </a>
+
+                <a href="#quality-audit">
+                    Quality Audit Management
+                </a>
+
+                <a href="#test-instrument-control">
+                    Test Instrument Monitoring & Control
+                </a>
+
+                <a href="#best-practices">
+                    Best Practices
+                </a>
+
+                <a href="#lessons-learned">
+                    Lessons Learned
+                </a>
+
+            </div>
+        </div>
+
+        <!-- COMPLETION MANAGEMENT -->
+        <div class="submenu">
+            <a href="#completion-management">
+                Completion Management System (CMS)
+            </a>
+
+            <div class="submenu-content">
+
+                <a href="#system-subsystem-register">
+                    System & Subsystem Register
+                </a>
+
+                <a href="#tag-completion">
+                    Tag Completion
+                </a>
+
+                <a href="#punch-eil">
+                    Punch List / EIL
+                </a>
+
+                <a href="#mechanical-completion">
+                    Mechanical Completion
+                </a>
+
+                <a href="#precommissioning-completion">
+                    Pre-Commissioning Completion
+                </a>
+
+                <a href="#test-packages">
+                    Test Packages
+                </a>
+
+                <a href="#completion-certificates">
+                    Completion Certificates
+                </a>
+
+                <a href="#handover-dossiers">
+                    Handover / Dossiers
+                </a>
+
+                <a href="#completion-status">
+                    Completion Status
+                </a>
+
+            </div>
+        </div>
+
+        <!-- CONSTRUCTION & PRE-COMMISSIONING -->
+        <a href="#construction-precommissioning">
+            Construction & Pre-Commissioning
+        </a>
+
+        <!-- INTEGRATED PROJECT DASHBOARD -->
+        <div class="submenu">
+            <a href="#integrated-project-dashboard">
+                Integrated Project Dashboard
+            </a>
+
+            <div class="submenu-content">
+
+                <a href="#executive-overview">
+                    Executive Overview
+                </a>
+
+                <a href="#dashboard-document-control">
+                    Document Control
+                </a>
+
+                <a href="#dashboard-procurement">
+                    Procurement
+                </a>
+
+                <a href="#dashboard-construction">
+                    Construction
+                </a>
+
+                <a href="#dashboard-quality">
+                    Quality & Inspection
+                </a>
+
+                <a href="#inspector-performance">
+                    Inspector Performance
+                </a>
+
+                <a href="#dashboard-precommissioning">
+                    Pre-Commissioning
+                </a>
+
+                <a href="#dashboard-commissioning">
+                    Commissioning
+                </a>
+
+                <a href="#dashboard-completion">
+                    Completion & Handover
+                </a>
+
+                <a href="#dashboard-risks">
+                    Risks, Constraints & Proactive Alerts
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+</li>
+      
 <li class="dropdown">
     <a href="#resume" class="dropbtn">Resume ▾</a>
     <div class="dropdown-content">
@@ -224,6 +510,182 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
     </div>
 </section>
 
+      <!-- ==================================
+     TECHNICAL RESOURCES
+=================================== -->
+
+<section id="technical-resources" class="services">
+
+<div class="wrap">
+
+    <div class="title">
+
+        <h2>Technical Resources</h2>
+
+        <p>
+            Integrated project quality, inspection, document control,
+            construction, pre-commissioning, commissioning, completion
+            and management resources.
+        </p>
+
+    </div>
+
+    <div class="cards">
+
+        <!-- RFI GENERATOR -->
+
+        <div class="card" id="rfi-generator">
+
+            <h3>RFI Generator</h3>
+
+            <p>
+                Dynamic Request for Inspection generation including
+                equipment tag and activity validation, ITP integration,
+                prerequisite verification, document linking, barcode
+                traceability and inspection workflow.
+            </p>
+
+        </div>
+
+
+        <!-- INSPECTION MONITORING MATRIX -->
+
+        <div class="card" id="inspection-monitoring-matrix">
+
+            <h3>Inspection Monitoring Matrix (IMM)</h3>
+
+            <p>
+                Equipment Tag and Activity-level inspection monitoring
+                integrated with ITP activities, RFIs, ITRs, inspection
+                results, prerequisites and completion status.
+            </p>
+
+        </div>
+
+
+        <!-- INSPECTION & TEST MANAGEMENT -->
+
+        <div class="card" id="inspection-test-management">
+
+            <h3>Inspection & Test Management</h3>
+
+            <p id="itp">
+                <strong>ITP – Inspection & Test Plan</strong><br>
+                Management of inspection activities, risk categories,
+                inspection levels, acceptance criteria, standards,
+                procedures and prerequisite activities.
+            </p>
+
+            <br>
+
+            <p id="itr">
+                <strong>ITR – Inspection & Test Report</strong><br>
+                Inspection records, checklists, test results,
+                measurements, acceptance criteria and signatories.
+            </p>
+
+        </div>
+
+
+        <!-- DOCUMENT MANAGEMENT -->
+
+        <div class="card" id="document-management">
+
+            <h3>Document Management & Control</h3>
+
+            <p>
+                Central project document library supporting document
+                search, submittals, transmittals, review, approval,
+                comment resolution, revision control, distribution
+                and document history.
+            </p>
+
+        </div>
+
+
+        <!-- QUALITY -->
+
+        <div class="card" id="quality-improvement">
+
+            <h3>Quality Improvement & Assurance</h3>
+
+            <p>
+                Integrated management of NCRs, proactive quality
+                notifications, focused assessments, quality audits,
+                test instrument monitoring, best practices and
+                lessons learned.
+            </p>
+
+        </div>
+
+
+        <!-- COMPLETION -->
+
+        <div class="card" id="completion-management">
+
+            <h3>Completion Management System (CMS)</h3>
+
+            <p>
+                System and subsystem completion management including
+                tag completion, Punch List/EIL, mechanical completion,
+                pre-commissioning completion, test packages,
+                certificates and handover dossiers.
+            </p>
+
+        </div>
+
+
+        <!-- CONSTRUCTION -->
+
+        <div class="card" id="construction-precommissioning">
+
+            <h3>Construction & Pre-Commissioning</h3>
+
+            <p>
+                Construction readiness, installation progress,
+                work fronts, constraints, inspection readiness,
+                testing, pre-commissioning activities and
+                construction-to-commissioning interfaces.
+            </p>
+
+        </div>
+
+
+        <!-- DASHBOARD -->
+
+        <div class="card" id="integrated-project-dashboard">
+
+            <h3>Integrated Project Dashboard</h3>
+
+            <p>
+                Integrated management dashboard covering document
+                control, procurement, construction, quality,
+                inspection, pre-commissioning, commissioning,
+                completion, handover, risks and proactive alerts.
+            </p>
+
+            <br>
+
+            <p id="inspector-performance">
+
+                <strong>Inspector Performance</strong><br>
+
+                Inspector workload, assigned inspections,
+                completed and pending inspections, first-pass
+                acceptance, rejection and reinspection,
+                timeliness, documentation quality and
+                proactive quality contribution.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+      
 <!-- EDUCATION -->
 <section id="education">
     <div class="wrap">
