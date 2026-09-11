@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspection & Test Management | Noel Villaluz, PEE</title>
+<meta name="description" content="Integrated ITP, ITR, revision control, risk analysis and risk-based inspection management prototype.">
+<style>
+:root{
+  --navy:#071b2f;--blue:#0d416d;--gold:#f3b632;--light:#f4f7fa;
+  --text:#263746;--line:#d7e0e8;--ok:#1f7a4f;--warn:#9c6a00;--bad:#a62d2d;--crit:#6d1420;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f7;color:var(--text);line-height:1.45}
+header{position:sticky;top:0;z-index:20;background:var(--navy);padding:14px 5%}
+nav{max-width:1500px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.logo{color:#fff;font-weight:800}
+nav ul{display:flex;gap:18px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+nav a{color:#fff;text-decoration:none;font-weight:700;font-size:14px}
+nav a:hover{color:var(--gold)}
+.hero{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:38px 5%}
+.hero .wrap{max-width:1500px;margin:auto}
+.hero h1{margin:4px 0 8px;font-size:clamp(30px,5vw,48px)}
+.hero p{margin:0;max-width:1000px;color:#dce9f3}
+.breadcrumb{font-size:13px;color:#bfd0de;margin-bottom:8px}
+.breadcrumb a{color:var(--gold);text-decoration:none}
+main{max-width:1500px;margin:26px auto;padding:0 20px 60px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 5px 18px rgba(7,27,47,.06);margin-bottom:18px}
+.panel h2,.panel h3{color:var(--navy);margin:0 0 14px}
+.section-kicker{font-size:12px;font-weight:800;letter-spacing:1.4px;color:var(--blue);text-transform:uppercase;margin-bottom:5px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tab-btn{border:0;border-radius:8px;padding:11px 15px;font-weight:800;cursor:pointer;background:#dfe8ef;color:var(--navy)}
+.tab-btn.active{background:var(--blue);color:#fff}
+.tab{display:none}.tab.active{display:block}
+.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.span-2{grid-column:span 2}.span-3{grid-column:span 3}.span-4{grid-column:span 4}
+label{font-size:12px;font-weight:800;color:#334b60}
+input,select,textarea{width:100%;padding:10px 11px;border:1px solid #bccbd7;border-radius:7px;font:inherit;background:#fff;color:#233644}
+textarea{min-height:84px;resize:vertical}
+input[readonly],textarea[readonly]{background:#f2f6f9;color:#536676}
+button{border:0;border-radius:7px;padding:10px 14px;font-weight:800;cursor:pointer}
+.btn-primary{background:var(--blue);color:#fff}.btn-gold{background:var(--gold);color:var(--navy)}.btn-light{background:#e7eef4;color:var(--navy)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px}
+table{width:100%;border-collapse:collapse;min-width:900px;background:#fff}
+th,td{padding:9px 10px;border-bottom:1px solid #e3e9ee;text-align:left;font-size:12px;vertical-align:top}
+th{background:#f2f6f9;color:var(--navy)}
+.status{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800}
+.low{background:#e5f4ec;color:var(--ok)}.medium{background:#fff3d8;color:var(--warn)}.high{background:#fde7e7;color:var(--bad)}.critical{background:#f6dbe0;color:var(--crit)}
+.notice{border-left:4px solid var(--blue);background:#f4f8fb;padding:12px 14px;border-radius:6px;margin-top:14px}
+.notice.warn{border-left-color:var(--warn);background:#fff8e7}
+.notice.bad{border-left-color:var(--bad);background:#fff1f1}
+.risk-result{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.risk-box{padding:16px;border:1px solid var(--line);border-radius:10px;background:#fafcfd}
+.risk-box strong{display:block;font-size:26px}
+.matrix{border-collapse:collapse;min-width:0;width:100%;max-width:700px}
+.matrix th,.matrix td{text-align:center;border:1px solid #cbd5dd;padding:8px}
+.timeline{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.stage{padding:10px 13px;background:#edf3f7;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:800}
+.stage.current{background:var(--gold);color:var(--navy)}
+.small{font-size:12px;color:#6b7d8d}
+@media(max-width:900px){.form-grid{grid-template-columns:repeat(2,1fr)}.span-2,.span-3,.span-4{grid-column:span 2}.risk-result{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){nav{flex-direction:column;align-items:flex-start}.form-grid{grid-template-columns:1fr}.span-2,.span-3,.span-4{grid-column:span 1}.risk-result{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+<nav>
+  <div class="logo">NOEL VILLALUZ · PEE</div>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../rfi-generator.html">RFI Generator</a></li>
+    <li><a href="../index.html#technical-resources">Technical Resources</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+</header>
+
+<section class="hero">
+<div class="wrap">
+  <div class="breadcrumb"><a href="../index.html">Home</a> › Technical Resources › Inspection & Test Management</div>
+  <div class="section-kicker" style="color:#f3b632">Risk-Based Quality Management</div>
+  <h1>Inspection & Test Management</h1>
+  <p>Integrated ITP, ITR, revision control, revision cycle, risk analysis and risk-based inspection management.</p>
+</div>
+</section>
+
+<main>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="itpTab">ITP Library</button>
+  <button class="tab-btn" data-tab="itrTab">ITR Library</button>
+  <button class="tab-btn" data-tab="revisionTab">Revision Control</button>
+  <button class="tab-btn" data-tab="riskTab">Risk Analysis</button>
+  <button class="tab-btn" data-tab="rbiTab">Risk-Based Inspection</button>
+</div>
+
+<section id="itpTab" class="tab active">
+<div class="panel">
+<div class="section-kicker">Controlled Inspection Planning</div>
+<h2>ITP — Inspection & Test Plan Library</h2>
+<div class="form-grid">
+  <div class="field"><label>Discipline</label><select id="itpDiscipline"></select></div>
+  <div class="field"><label>Main Equipment</label><select id="itpEquipment"></select></div>
+  <div class="field"><label>ITP No.</label><select id="itpNo"></select></div>
+  <div class="field"><label>Current Revision</label><input id="itpRev" readonly></div>
+
+  <div class="field"><label>Activity No.</label><select id="itpActivity"></select></div>
+  <div class="field span-3"><label>Activity Description</label><input id="itpActivityDesc" readonly></div>
+
+  <div class="field"><label>Approved Risk Category</label><input id="itpRiskCat" readonly></div>
+  <div class="field"><label>Inspection Level</label><input id="itpInspectionLevel" readonly></div>
+  <div class="field"><label>ITR No.</label><input id="itpItrNo" readonly></div>
+  <div class="field"><label>ITR Sheet No.</label><input id="itpItrSheet" readonly></div>
+
+  <div class="field span-2"><label>Reference Standard / Specification</label><textarea id="itpRefs" readonly></textarea></div>
+  <div class="field span-2"><label>Procedure / Method Statement</label><textarea id="itpProcedure" readonly></textarea></div>
+
+  <div class="field span-2"><label>Acceptance Criteria</label><textarea id="itpAcceptance" readonly></textarea></div>
+  <div class="field span-2"><label>Prerequisite Activity / Activities</label><textarea id="itpPrereq" readonly></textarea></div>
+</div>
+<div class="notice">The current approved revision is used for new RFIs. Historical RFIs retain the revision that was effective at the time they were raised.</div>
+</div>
+
+<div class="panel">
+<h3>ITP Activity Register</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Discipline</th><th>Equipment</th><th>ITP No.</th><th>Rev.</th><th>Activity</th><th>Description</th><th>Risk</th><th>Inspection Level</th><th>ITR</th><th>Prerequisite</th></tr></thead>
+<tbody id="itpRegisterBody"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="itrTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Inspection Records</div>
+<h2>ITR — Inspection & Test Report Library</h2>
+<div class="form-grid">
+  <div class="field"><label>ITR No.</label><select id="itrSelect"></select></div>
+  <div class="field span-2"><label>ITR Title</label><input id="itrTitle" readonly></div>
+  <div class="field"><label>Current Revision</label><input id="itrRevision" readonly></div>
+
+  <div class="field"><label>ITR Sheet No.</label><input id="itrSheetNo" readonly></div>
+  <div class="field"><label>Discipline</label><input id="itrDiscipline" readonly></div>
+  <div class="field"><label>Main Equipment</label><input id="itrEquipment" readonly></div>
+  <div class="field"><label>Applicable ITP / Activity</label><input id="itrLink" readonly></div>
+
+  <div class="field span-2"><label>Inspection / Test Requirements</label><textarea id="itrChecks" readonly></textarea></div>
+  <div class="field span-2"><label>Acceptance Criteria</label><textarea id="itrAcceptance" readonly></textarea></div>
+</div>
+</div>
+
+<div class="panel">
+<h3>ITR Register</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>ITR No.</th><th>Title</th><th>Rev.</th><th>Discipline</th><th>Equipment</th><th>ITP</th><th>Activity</th><th>Sheet</th></tr></thead>
+<tbody id="itrRegisterBody"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="revisionTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Document Governance</div>
+<h2>Revision Control & Revision Cycle</h2>
+
+<div class="timeline">
+  <span class="stage">Draft</span>
+  <span class="stage">Internal Review</span>
+  <span class="stage">Interdisciplinary Review</span>
+  <span class="stage">Client / Company Review</span>
+  <span class="stage current">Approved / Issued</span>
+  <span class="stage">Superseded</span>
+</div>
+
+<div class="form-grid">
+  <div class="field"><label>Document Type</label>
+    <select id="revDocType"><option>ITP</option><option>ITR</option></select>
+  </div>
+  <div class="field"><label>Document No.</label><select id="revDocNo"></select></div>
+  <div class="field"><label>Current Revision</label><input id="revCurrent" readonly></div>
+  <div class="field"><label>Current Status</label><input id="revStatus" readonly></div>
+
+  <div class="field"><label>Issue Date</label><input id="revIssueDate" readonly></div>
+  <div class="field"><label>Approved By</label><input id="revApprovedBy" readonly></div>
+  <div class="field span-2"><label>Reason for Latest Revision</label><input id="revReason" readonly></div>
+</div>
+
+<div class="notice">
+Revision-cycle rule: only the <strong>current approved/applicable revision</strong> is suggested for new inspections and RFIs. Superseded revisions remain available for traceability, audit and historical records.
+</div>
+</div>
+
+<div class="panel">
+<h3>Revision History</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Document</th><th>Revision</th><th>Status</th><th>Issue Date</th><th>Prepared By</th><th>Reviewed By</th><th>Approved By</th><th>Reason for Change</th></tr>
+</thead>
+<tbody id="revisionHistoryBody"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="riskTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Initial & Residual Risk</div>
+<h2>Risk Analysis</h2>
+
+<div class="form-grid">
+  <div class="field"><label>Discipline</label><select id="riskDiscipline"></select></div>
+  <div class="field"><label>Main Equipment</label><select id="riskEquipment"></select></div>
+  <div class="field"><label>ITP No.</label><select id="riskItp"></select></div>
+  <div class="field"><label>Activity No.</label><select id="riskActivity"></select></div>
+
+  <div class="field span-2"><label>Hazard / Quality Risk</label><textarea id="hazard">Incorrect installation or incomplete verification may result in nonconforming work, rework, delayed testing or commissioning impact.</textarea></div>
+  <div class="field span-2"><label>Potential Failure / Nonconformity</label><textarea id="failure">Installation not meeting approved drawings, specification, ITP, procedure or acceptance criteria.</textarea></div>
+
+  <div class="field span-2"><label>Potential Cause</label><textarea id="cause">Incomplete readiness, wrong material, incorrect installation, missed prerequisite, workmanship issue, outdated document or insufficient verification.</textarea></div>
+  <div class="field span-2"><label>Potential Consequence</label><textarea id="consequenceText">Rework, inspection rejection, safety concern, delayed testing, commissioning constraint or system completion delay.</textarea></div>
+
+  <div class="field"><label>Initial Likelihood (1-5)</label><select id="likelihood"></select></div>
+  <div class="field"><label>Initial Consequence (1-5)</label><select id="consequence"></select></div>
+  <div class="field"><label>Residual Likelihood (1-5)</label><select id="resLikelihood"></select></div>
+  <div class="field"><label>Residual Consequence (1-5)</label><select id="resConsequence"></select></div>
+
+  <div class="field span-4"><label>Existing / Proposed Controls</label><textarea id="controls">Approved ITP and procedure, latest approved drawing, qualified personnel, QC inspection, prerequisite verification, calibrated test instruments and client inspection as required.</textarea></div>
+</div>
+
+<div class="risk-result">
+  <div class="risk-box"><span>Initial Score</span><strong id="initialScore">9</strong><span id="initialLevel" class="status medium">MEDIUM</span></div>
+  <div class="risk-box"><span>Residual Score</span><strong id="residualScore">4</strong><span id="residualLevel" class="status low">LOW</span></div>
+  <div class="risk-box"><span>ITP Inspection Level</span><strong id="riskInspectionLevel">-</strong></div>
+  <div class="risk-box"><span>Recommended Priority</span><strong id="priority">NORMAL</strong></div>
+</div>
+
+<div class="actions"><button class="btn-primary" onclick="calculateRisk()">Calculate Risk</button></div>
+
+<div class="notice warn">
+Risk Score = Likelihood × Consequence. Default bands in this prototype are configurable: Low 1–4, Medium 5–9, High 10–16, Critical 17–25.
+</div>
+</div>
+
+<div class="panel">
+<h3>5 × 5 Risk Matrix</h3>
+<table class="matrix">
+<tr><th>C \ L</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+<tr><th>5</th><td>5</td><td>10</td><td>15</td><td>20</td><td>25</td></tr>
+<tr><th>4</th><td>4</td><td>8</td><td>12</td><td>16</td><td>20</td></tr>
+<tr><th>3</th><td>3</td><td>6</td><td>9</td><td>12</td><td>15</td></tr>
+<tr><th>2</th><td>2</td><td>4</td><td>6</td><td>8</td><td>10</td></tr>
+<tr><th>1</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+</table>
+</div>
+</section>
+
+<section id="rbiTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Risk-Based Inspection Strategy</div>
+<h2>Risk-Based Inspection</h2>
+<div class="form-grid">
+  <div class="field"><label>Selected ITP / Activity</label><input id="rbiActivity" readonly></div>
+  <div class="field"><label>Initial Risk</label><input id="rbiInitial" readonly></div>
+  <div class="field"><label>Residual Risk</label><input id="rbiResidual" readonly></div>
+  <div class="field"><label>Approved ITP Level</label><input id="rbiApprovedLevel" readonly></div>
+
+  <div class="field"><label>Recommended Inspection Priority</label><input id="rbiPriority" readonly></div>
+  <div class="field"><label>Suggested Sampling / Coverage</label><input id="rbiSampling" readonly></div>
+  <div class="field"><label>Management Review</label><input id="rbiReview" readonly></div>
+  <div class="field"><label>Focused Assessment</label><input id="rbiFocus" readonly></div>
+
+  <div class="field span-4"><label>Risk-Based Recommendation</label><textarea id="rbiRecommendation" readonly></textarea></div>
+</div>
+
+<div class="notice">
+The risk-based recommendation is advisory. It can increase attention or trigger review, but any change to the approved ITP inspection level, inspection point or contractual sampling requirement should follow the formal revision and approval cycle.
+</div>
+</div>
+</section>
+
+</main>
+
+<script>
+const itps=[
+ {discipline:"Electrical",equipment:"Cable",itpNo:"ITP-E-CBL-001",revision:"03",status:"Approved / Current",issueDate:"2026-07-15",approvedBy:"QA/QC Manager",
+  activities:[
+   {no:"4.1",desc:"Cable Installation Inspection",risk:"B",level:"Witness",itr:"ITR-E-CBL-001",sheet:"1",refs:"Approved IFC drawings; project specification; applicable SAES/SAIC/IEC requirements",procedure:"Approved Cable Installation Method Statement",acceptance:"Installation complete, correct routing/support/separation, no damage, identification verified.",prereq:[]},
+   {no:"4.2",desc:"Insulation Resistance & Continuity Test",risk:"B",level:"Witness",itr:"ITR-E-CBL-002",sheet:"2",refs:"Approved cable test procedure; applicable project/IEC requirements",procedure:"Approved IR & Continuity Test Procedure",acceptance:"Test values acceptable per approved procedure/project criteria using calibrated instrument.",prereq:["4.1"]},
+   {no:"4.3",desc:"Cable Termination Inspection",risk:"B",level:"Witness",itr:"ITR-E-CBL-003",sheet:"3",refs:"Approved termination drawings; cable schedule; project specification",procedure:"Approved Cable Termination Method Statement",acceptance:"Correct cable/core identification, lug/gland, torque, segregation and workmanship.",prereq:["4.1"]},
+   {no:"4.4",desc:"Final Cable Test / Completion Verification",risk:"A",level:"Hold",itr:"ITR-E-CBL-004",sheet:"4",refs:"Approved ITP and final testing requirements",procedure:"Approved Final Cable Test Procedure",acceptance:"All required preceding inspections/tests accepted and final verification satisfactory.",prereq:["4.2","4.3"]}
+  ]},
+ {discipline:"Instrumentation",equipment:"Cable",itpNo:"ITP-I-CBL-001",revision:"02",status:"Approved / Current",issueDate:"2026-06-20",approvedBy:"Instrumentation QA/QC Lead",
+  activities:[
+   {no:"5.1",desc:"Instrument Cable Installation Inspection",risk:"B",level:"Witness",itr:"ITR-I-CBL-001",sheet:"1",refs:"Approved routing drawings and project specification",procedure:"Approved Instrument Cable Installation Method Statement",acceptance:"Routing, segregation, identification and installation condition acceptable.",prereq:[]},
+   {no:"5.2",desc:"Continuity / Insulation Test",risk:"B",level:"Witness",itr:"ITR-I-CBL-002",sheet:"2",refs:"Approved test procedure",procedure:"Approved Instrument Cable Testing Procedure",acceptance:"Continuity/IR values acceptable and recorded with calibrated instrument.",prereq:["5.1"]}
+  ]},
+ {discipline:"Electrical",equipment:"Cable Tray",itpNo:"ITP-E-CTR-001",revision:"01",status:"Approved / Current",issueDate:"2026-05-12",approvedBy:"Electrical QA/QC Lead",
+  activities:[
+   {no:"3.1",desc:"Cable Tray Support Installation Inspection",risk:"B",level:"Surveillance",itr:"ITR-E-CTR-001",sheet:"1",refs:"Approved IFC support/layout drawings; NEMA VE-2; project specification",procedure:"Approved Cable Tray Installation Method Statement",acceptance:"Support type, span, location, alignment and coating acceptable.",prereq:[]},
+   {no:"3.2",desc:"Cable Tray / Ladder Installation Inspection",risk:"B",level:"Witness",itr:"ITR-E-CTR-002",sheet:"2",refs:"Approved IFC routing drawings; NEMA VE-2",procedure:"Approved Cable Tray Installation Method Statement",acceptance:"Tray alignment, support, fittings, bonding, clearances and installation complete.",prereq:["3.1"]}
+  ]}
+];
+
+const itrs=[
+ {no:"ITR-E-CBL-001",title:"Cable Installation Inspection & Test Report",rev:"02",sheet:"1",discipline:"Electrical",equipment:"Cable",itp:"ITP-E-CBL-001",activity:"4.1",checks:"Cable route; support; bending radius; segregation; identification; physical condition.",acceptance:"Complies with approved drawings, specifications and ITP."},
+ {no:"ITR-E-CBL-002",title:"Cable IR & Continuity Inspection & Test Report",rev:"02",sheet:"2",discipline:"Electrical",equipment:"Cable",itp:"ITP-E-CBL-001",activity:"4.2",checks:"Instrument ID; calibration status; IR values; continuity; test date; test voltage.",acceptance:"Results satisfy approved test procedure/project acceptance criteria."},
+ {no:"ITR-E-CBL-003",title:"Cable Termination Inspection & Test Report",rev:"01",sheet:"3",discipline:"Electrical",equipment:"Cable",itp:"ITP-E-CBL-001",activity:"4.3",checks:"Cable/core ID; gland; lug; torque; phase/core identification; segregation.",acceptance:"Termination complete and acceptable per approved drawings/specification."},
+ {no:"ITR-I-CBL-001",title:"Instrument Cable Installation Inspection & Test Report",rev:"01",sheet:"1",discipline:"Instrumentation",equipment:"Cable",itp:"ITP-I-CBL-001",activity:"5.1",checks:"Routing; segregation; tagging; shield/armor requirements; physical condition.",acceptance:"Complies with approved drawings/specification."},
+ {no:"ITR-E-CTR-002",title:"Cable Tray Installation Inspection & Test Report",rev:"01",sheet:"2",discipline:"Electrical",equipment:"Cable Tray",itp:"ITP-E-CTR-001",activity:"3.2",checks:"Support; alignment; fitting support; bonding; coating; routing; clearances.",acceptance:"Installation acceptable per approved IFC and applicable requirements."}
+];
+
+const revisionHistory=[
+ {doc:"ITP-E-CBL-001",rev:"01",status:"Superseded",date:"2026-02-10",prep:"E&I QC",review:"QA/QC Lead",approve:"QA/QC Manager",reason:"Initial issue"},
+ {doc:"ITP-E-CBL-001",rev:"02",status:"Superseded",date:"2026-05-08",prep:"E&I QC",review:"Engineering / QAQC",approve:"QA/QC Manager",reason:"Updated activity sequence and ITR references"},
+ {doc:"ITP-E-CBL-001",rev:"03",status:"Approved / Current",date:"2026-07-15",prep:"E&I QC",review:"Engineering / QAQC",approve:"QA/QC Manager",reason:"Updated prerequisites, acceptance criteria and inspection controls"},
+ {doc:"ITR-E-CBL-002",rev:"01",status:"Superseded",date:"2026-03-01",prep:"Electrical QC",review:"QC Lead",approve:"QA/QC Manager",reason:"Initial issue"},
+ {doc:"ITR-E-CBL-002",rev:"02",status:"Approved / Current",date:"2026-06-18",prep:"Electrical QC",review:"QC Lead",approve:"QA/QC Manager",reason:"Added calibration reference and revised test data fields"},
+ {doc:"ITP-I-CBL-001",rev:"01",status:"Superseded",date:"2026-04-11",prep:"Instrument QC",review:"QC Lead",approve:"QA/QC Manager",reason:"Initial issue"},
+ {doc:"ITP-I-CBL-001",rev:"02",status:"Approved / Current",date:"2026-06-20",prep:"Instrument QC",review:"Engineering / QAQC",approve:"Instrumentation QA/QC Lead",reason:"Revised cable testing activity and document references"}
+];
+
+function uniq(a){return [...new Set(a)]}
+function fill(id,vals){document.getElementById(id).innerHTML=vals.map(v=>`<option>${v}</option>`).join("")}
+function curITP(){return itps.find(x=>x.itpNo===itpNo.value)}
+function curAct(){let i=curITP();return i?i.activities.find(a=>a.no===itpActivity.value):null}
+
+function initITP(){
+ fill("itpDiscipline",uniq(itps.map(x=>x.discipline)));
+ updateEquip();
+}
+function updateEquip(){
+ fill("itpEquipment",uniq(itps.filter(x=>x.discipline===itpDiscipline.value).map(x=>x.equipment)));updateItp();
+}
+function updateItp(){
+ fill("itpNo",itps.filter(x=>x.discipline===itpDiscipline.value&&x.equipment===itpEquipment.value).map(x=>x.itpNo));updateActivity();
+}
+function updateActivity(){
+ const i=curITP(); fill("itpActivity",i.activities.map(a=>a.no)); populateITP();
+}
+function populateITP(){
+ const i=curITP(),a=curAct();
+ itpRev.value=i.revision;itpActivityDesc.value=a.desc;itpRiskCat.value=a.risk;itpInspectionLevel.value=a.level;itpItrNo.value=a.itr;itpItrSheet.value=a.sheet;itpRefs.value=a.refs;itpProcedure.value=a.procedure;itpAcceptance.value=a.acceptance;itpPrereq.value=a.prereq.length?a.prereq.join(", "):"None";
+ syncRiskSelectors();
+}
+itpDiscipline.onchange=updateEquip;itpEquipment.onchange=updateItp;itpNo.onchange=updateActivity;itpActivity.onchange=populateITP;
+
+function renderITPRegister(){
+ itpRegisterBody.innerHTML=itps.flatMap(i=>i.activities.map(a=>`<tr><td>${i.discipline}</td><td>${i.equipment}</td><td>${i.itpNo}</td><td>${i.revision}</td><td>${a.no}</td><td>${a.desc}</td><td>${a.risk}</td><td>${a.level}</td><td>${a.itr}</td><td>${a.prereq.join(", ")||"None"}</td></tr>`)).join("");
+}
+function initITR(){
+ fill("itrSelect",itrs.map(x=>x.no));populateITR();renderITRRegister();
+}
+function populateITR(){
+ const x=itrs.find(y=>y.no===itrSelect.value);if(!x)return;
+ itrTitle.value=x.title;itrRevision.value=x.rev;itrSheetNo.value=x.sheet;itrDiscipline.value=x.discipline;itrEquipment.value=x.equipment;itrLink.value=`${x.itp} / ${x.activity}`;itrChecks.value=x.checks;itrAcceptance.value=x.acceptance;
+}
+itrSelect.onchange=populateITR;
+function renderITRRegister(){
+ itrRegisterBody.innerHTML=itrs.map(x=>`<tr><td>${x.no}</td><td>${x.title}</td><td>${x.rev}</td><td>${x.discipline}</td><td>${x.equipment}</td><td>${x.itp}</td><td>${x.activity}</td><td>${x.sheet}</td></tr>`).join("");
+}
+
+function revDocs(){
+ return revDocType.value==="ITP"?itps.map(x=>x.itpNo):itrs.map(x=>x.no);
+}
+function initRevision(){
+ fill("revDocNo",revDocs());populateRevision();renderRevisionHistory();
+}
+function populateRevision(){
+ const doc=revDocNo.value;
+ const hist=revisionHistory.filter(x=>x.doc===doc);
+ const current=hist.find(x=>x.status.includes("Current")) || hist[hist.length-1];
+ let master;
+ if(revDocType.value==="ITP") master=itps.find(x=>x.itpNo===doc);
+ else master=itrs.find(x=>x.no===doc);
+ revCurrent.value=current?.rev || master?.revision || master?.rev || "-";
+ revStatus.value=current?.status || "Approved / Current";
+ revIssueDate.value=current?.date || master?.issueDate || "-";
+ revApprovedBy.value=current?.approve || master?.approvedBy || "-";
+ revReason.value=current?.reason || "Current approved issue";
+}
+revDocType.onchange=()=>{fill("revDocNo",revDocs());populateRevision()};
+revDocNo.onchange=populateRevision;
+function renderRevisionHistory(){
+ revisionHistoryBody.innerHTML=revisionHistory.map(x=>`<tr><td>${x.doc}</td><td>${x.rev}</td><td>${x.status}</td><td>${x.date}</td><td>${x.prep}</td><td>${x.review}</td><td>${x.approve}</td><td>${x.reason}</td></tr>`).join("");
+}
+
+function fillRiskNumbers(){["likelihood","consequence","resLikelihood","resConsequence"].forEach(id=>fill(id,[1,2,3,4,5]));likelihood.value=3;consequence.value=3;resLikelihood.value=1;resConsequence.value=4}
+function syncRiskSelectors(){
+ fill("riskDiscipline",uniq(itps.map(x=>x.discipline)));riskDiscipline.value=itpDiscipline.value;
+ fill("riskEquipment",uniq(itps.filter(x=>x.discipline===riskDiscipline.value).map(x=>x.equipment)));riskEquipment.value=itpEquipment.value;
+ fill("riskItp",itps.filter(x=>x.discipline===riskDiscipline.value&&x.equipment===riskEquipment.value).map(x=>x.itpNo));riskItp.value=itpNo.value;
+ const i=itps.find(x=>x.itpNo===riskItp.value);fill("riskActivity",i.activities.map(a=>a.no));riskActivity.value=itpActivity.value;
+ calculateRisk();
+}
+function riskClass(s){return s<=4?["LOW","low"]:s<=9?["MEDIUM","medium"]:s<=16?["HIGH","high"]:["CRITICAL","critical"]}
+function selectedRiskActivity(){const i=itps.find(x=>x.itpNo===riskItp.value);return i?.activities.find(a=>a.no===riskActivity.value)}
+function calculateRisk(){
+ const s=+likelihood.value*+consequence.value, rs=+resLikelihood.value*+resConsequence.value;
+ const [lvl,cls]=riskClass(s),[rlvl,rcls]=riskClass(rs);const a=selectedRiskActivity();
+ initialScore.textContent=s;initialLevel.textContent=lvl;initialLevel.className=`status ${cls}`;
+ residualScore.textContent=rs;residualLevel.textContent=rlvl;residualLevel.className=`status ${rcls}`;
+ riskInspectionLevel.textContent=a?.level||"-";
+ priority.textContent=lvl==="CRITICAL"?"URGENT":lvl==="HIGH"?"HIGH":lvl==="MEDIUM"?"NORMAL":"ROUTINE";
+ updateRBI(s,lvl,rs,rlvl,a);
+}
+function updateRBI(s,lvl,rs,rlvl,a){
+ rbiActivity.value=a?`${riskItp.value} / Activity ${a.no} - ${a.desc}`:"-";
+ rbiInitial.value=`${s} / ${lvl}`;rbiResidual.value=`${rs} / ${rlvl}`;rbiApprovedLevel.value=a?.level||"-";
+ const p=lvl==="CRITICAL"?"Urgent":lvl==="HIGH"?"High":lvl==="MEDIUM"?"Normal":"Routine";
+ rbiPriority.value=p;
+ rbiSampling.value=lvl==="CRITICAL"?"Consider 100% / enhanced verification":lvl==="HIGH"?"Increase coverage / targeted inspection":lvl==="MEDIUM"?"As approved ITP / risk-focused checks":"As approved ITP";
+ rbiReview.value=(lvl==="CRITICAL"||lvl==="HIGH")?"Recommended":"Normal workflow";
+ rbiFocus.value=(lvl==="CRITICAL"||lvl==="HIGH")?"Consider focused assessment":"Not normally required";
+ rbiRecommendation.value=
+   `Risk-based recommendation: ${p} inspection priority. Maintain the approved ITP inspection level (${a?.level||"-"}). `+
+   (lvl==="CRITICAL"||lvl==="HIGH"
+    ?"Consider increased inspection coverage, additional document verification, focused assessment and management review. Any formal change to Hold/Witness/Review/Surveillance level or sampling shall follow the approved revision-control cycle."
+    :"Proceed using the approved ITP controls, prerequisites and acceptance criteria, with normal risk-based monitoring.");
+}
+riskDiscipline.onchange=()=>{fill("riskEquipment",uniq(itps.filter(x=>x.discipline===riskDiscipline.value).map(x=>x.equipment)));riskEquipment.dispatchEvent(new Event("change"))}
+riskEquipment.onchange=()=>{fill("riskItp",itps.filter(x=>x.discipline===riskDiscipline.value&&x.equipment===riskEquipment.value).map(x=>x.itpNo));riskItp.dispatchEvent(new Event("change"))}
+riskItp.onchange=()=>{const i=itps.find(x=>x.itpNo===riskItp.value);fill("riskActivity",i.activities.map(a=>a.no));calculateRisk()}
+riskActivity.onchange=calculateRisk;
+["likelihood","consequence","resLikelihood","resConsequence"].forEach(id=>document.getElementById(id).onchange=calculateRisk);
+
+document.querySelectorAll(".tab-btn").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active");
+});
+
+initITP();renderITPRegister();initITR();initRevision();fillRiskNumbers();syncRiskSelectors();
+</script>
+</body>
+</html>
