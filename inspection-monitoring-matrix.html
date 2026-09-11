@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspection Monitoring Matrix | Noel Villaluz, PEE</title>
+<style>
+:root{--navy:#071b2f;--blue:#0d416d;--gold:#f3b632;--light:#f4f7fa;--text:#263746;--line:#d7e0e8;--ok:#1f7a4f;--warn:#9c6a00;--bad:#a62d2d}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f7;color:var(--text)}
+header{background:var(--navy);padding:14px 5%;position:sticky;top:0;z-index:20}
+nav{max-width:1500px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:18px}.logo{color:#fff;font-weight:800}
+nav ul{display:flex;gap:18px;list-style:none;margin:0;padding:0;flex-wrap:wrap}nav a{color:#fff;text-decoration:none;font-weight:700;font-size:14px}nav a:hover{color:var(--gold)}
+.hero{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:38px 5%}.hero .wrap{max-width:1500px;margin:auto}.hero h1{margin:5px 0 8px;font-size:44px}.hero p{margin:0;color:#dce9f3;max-width:1000px}
+main{max-width:1550px;margin:26px auto;padding:0 20px 60px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 5px 18px rgba(7,27,47,.06);margin-bottom:18px}
+h2,h3{color:var(--navy);margin-top:0}.kpis{display:grid;grid-template-columns:repeat(8,1fr);gap:10px}.kpi{background:#fafcfd;border:1px solid var(--line);border-radius:9px;padding:14px}.kpi strong{display:block;font-size:24px;color:var(--blue)}.kpi span{font-size:12px}
+.filters{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.field{display:flex;flex-direction:column;gap:5px}label{font-size:12px;font-weight:800}select,input{padding:9px;border:1px solid #bccbd7;border-radius:7px}
+button{border:0;border-radius:7px;padding:10px 14px;font-weight:800;cursor:pointer}.primary{background:var(--blue);color:#fff}.light{background:#e7eef4;color:var(--navy)}.gold{background:var(--gold);color:var(--navy)}.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px;max-height:620px}table{width:100%;border-collapse:collapse;min-width:1700px;background:#fff}th,td{padding:8px;border-bottom:1px solid #e3e9ee;text-align:left;font-size:11px;vertical-align:top}th{background:#f2f6f9;color:var(--navy);position:sticky;top:0}
+.status{display:inline-block;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}.ok{background:#e5f4ec;color:var(--ok)}.warn{background:#fff3d8;color:var(--warn)}.bad{background:#fde7e7;color:var(--bad)}.neutral{background:#e9eef2;color:#526575}
+.grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}.notice{border-left:4px solid var(--blue);background:#f4f8fb;padding:12px 14px;border-radius:6px;margin-top:12px;font-size:13px}.progress{height:10px;background:#e3e9ee;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;background:var(--blue)}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(4,1fr)}.filters{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:1fr}}@media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><nav><div class="logo">NOEL VILLALUZ · PEE</div><ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="rfi-generator.html">RFI Generator</a></li>
+<li><a href="inspection-test-management.html">Inspection & Test Management</a></li>
+<li><a href="../index.html#technical-resources">Technical Resources</a></li>
+</ul></nav></header>
+
+<section class="hero"><div class="wrap">
+<div style="font-size:13px;color:#bfd0de">Home › Technical Resources › Inspection Monitoring Matrix</div>
+<h1>Inspection Monitoring Matrix (IMM)</h1>
+<p>Central monitoring of Equipment Tag + ITP Activity status, prerequisites, risk, revision used, RFI history, reinspection, NCR linkage and completion progress.</p>
+</div></section>
+
+<main>
+<section class="panel">
+<h2>IMM Summary</h2>
+<div class="kpis">
+<div class="kpi"><strong id="kTotal">0</strong><span>Total Activities</span></div>
+<div class="kpi"><strong id="kAccepted">0</strong><span>Accepted</span></div>
+<div class="kpi"><strong id="kPending">0</strong><span>Pending</span></div>
+<div class="kpi"><strong id="kSubmitted">0</strong><span>RFI Submitted</span></div>
+<div class="kpi"><strong id="kRejected">0</strong><span>Rejected</span></div>
+<div class="kpi"><strong id="kBlocked">0</strong><span>Blocked</span></div>
+<div class="kpi"><strong id="kOverdue">0</strong><span>Overdue</span></div>
+<div class="kpi"><strong id="kComplete">0%</strong><span>Completion</span></div>
+</div>
+</section>
+
+<section class="panel">
+<h2>Inspection Monitoring Filters</h2>
+<div class="filters">
+<div class="field"><label>Discipline</label><select id="fDiscipline"></select></div>
+<div class="field"><label>Main Equipment</label><select id="fEquipment"></select></div>
+<div class="field"><label>System</label><select id="fSystem"></select></div>
+<div class="field"><label>Subsystem</label><select id="fSubsystem"></select></div>
+<div class="field"><label>ITP No.</label><select id="fItp"></select></div>
+<div class="field"><label>Activity No.</label><select id="fActivity"></select></div>
+<div class="field"><label>Risk Level</label><select id="fRisk"></select></div>
+<div class="field"><label>Inspector</label><select id="fInspector"></select></div>
+<div class="field"><label>Status</label><select id="fStatus"></select></div>
+<div class="field"><label>Revision Used</label><select id="fRevision"></select></div>
+<div class="field"><label>NCR</label><select id="fNcr"></select></div>
+<div class="field"><label>Search Tag / RFI</label><input id="fSearch" placeholder="Tag or RFI No."></div>
+</div>
+<div class="actions"><button class="primary" onclick="applyFilters()">Apply Filters</button><button class="light" onclick="resetFilters()">Reset</button></div>
+</section>
+
+<section class="panel">
+<h2>Inspection Monitoring Matrix</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Equipment Tag</th><th>Discipline</th><th>Main Equipment</th><th>System</th><th>Subsystem</th><th>ITP No.</th><th>ITP Rev Used</th><th>Activity</th><th>Activity Description</th><th>Risk</th><th>Inspection Level</th><th>ITR</th><th>Prerequisite</th><th>RFI No.</th><th>RFI Rev</th><th>Requested Date</th><th>Inspection Date</th><th>Contractor QCI</th><th>PMT/PMC</th><th>PID/Client</th><th>Result</th><th>NCR No.</th><th>Reinspection RFI</th><th>Status</th>
+</tr></thead><tbody id="immBody"></tbody></table></div>
+</section>
+
+<div class="grid2">
+<section class="panel">
+<h2>Revision Impact Assessment</h2>
+<div class="filters" style="grid-template-columns:repeat(4,1fr)">
+<div class="field"><label>ITP No.</label><select id="revItp"></select></div>
+<div class="field"><label>Old Revision</label><input id="oldRev" value="02"></div>
+<div class="field"><label>New Revision</label><input id="newRev" value="03"></div>
+<div class="field"><label>Change Type</label><select id="changeType"><option>Acceptance Criteria</option><option>Prerequisite</option><option>ITR Reference</option><option>Inspection Level</option><option>Procedure / Standard</option></select></div>
+</div>
+<div class="actions"><button class="gold" onclick="assessRevisionImpact()">Assess Revision Impact</button></div>
+<div id="revisionImpact" class="notice">Select an ITP and run revision impact assessment.</div>
+</section>
+
+<section class="panel">
+<h2>Inspection Progress</h2>
+<div style="margin-bottom:10px"><strong id="progressText">0%</strong></div>
+<div class="progress"><span id="progressBar" style="width:0%"></span></div>
+<div class="notice" id="progressDetail">No records loaded.</div>
+</section>
+</div>
+</main>
+
+<script>
+const records=[
+["408-3J-PC-00801","Electrical","Cable","SYS-240","SUB-240-E01","ITP-E-CBL-001","02","4.1","Cable Installation Inspection","Medium","Witness","ITR-E-CBL-001","None","RFI-E-0101","0","2026-08-10","2026-08-11","Mohammad Abdullah","PMT-E01","PID-E01","Accepted","","","Accepted"],
+["408-3J-PC-00801","Electrical","Cable","SYS-240","SUB-240-E01","ITP-E-CBL-001","02","4.2","Insulation Resistance & Continuity Test","High","Witness","ITR-E-CBL-002","4.1","RFI-E-0145","0","2026-08-18","2026-08-19","Mohammad Abdullah","PMT-E01","PID-E01","Accepted","","","Accepted"],
+["408-3J-PC-00802","Electrical","Cable","SYS-240","SUB-240-E01","ITP-E-CBL-001","03","4.1","Cable Installation Inspection","Medium","Witness","ITR-E-CBL-001","None","RFI-E-0210","0","2026-09-01","2026-09-02","Julius Dela Cruz","PMT-E01","PID-E02","Accepted","","","Accepted"],
+["408-3J-PC-00802","Electrical","Cable","SYS-240","SUB-240-E01","ITP-E-CBL-001","03","4.2","Insulation Resistance & Continuity Test","High","Witness","ITR-E-CBL-002","4.1","RFI-E-0225","0","2026-09-05","","Julius Dela Cruz","PMT-E01","PID-E02","Pending","","","RFI Submitted"],
+["408-3J-PC-00803","Electrical","Cable","SYS-240","SUB-240-E01","ITP-E-CBL-001","03","4.1","Cable Installation Inspection","Medium","Witness","ITR-E-CBL-001","None","RFI-E-0208","0","2026-08-31","2026-09-01","Julius Dela Cruz","PMT-E01","PID-E02","Rejected","NCR-E-0041","RFI-E-0238","Rejected / Reinspection Required"],
+["408-3J-PC-00803","Electrical","Cable","SYS-240","SUB-240-E01","ITP-E-CBL-001","03","4.2","Insulation Resistance & Continuity Test","High","Witness","ITR-E-CBL-002","4.1","","","","","Julius Dela Cruz","PMT-E01","PID-E02","Blocked","NCR-E-0041","","Blocked"],
+["408-3M-PC-00790","Electrical","Cable","SYS-245","SUB-245-E01","ITP-E-CBL-001","02","4.1","Cable Installation Inspection","Medium","Witness","ITR-E-CBL-001","None","RFI-E-0090","0","2026-08-05","2026-08-06","Mohammad Abdullah","PMT-E02","PID-E01","Accepted","","","Accepted"],
+["408-3M-PC-00790","Electrical","Cable","SYS-245","SUB-245-E01","ITP-E-CBL-001","02","4.2","Insulation Resistance & Continuity Test","High","Witness","ITR-E-CBL-002","4.1","RFI-E-0112","0","2026-08-12","2026-08-13","Mohammad Abdullah","PMT-E02","PID-E01","Accepted","","","Accepted"],
+["408-3M-PC-00790","Electrical","Cable","SYS-245","SUB-245-E01","ITP-E-CBL-001","03","4.3","Cable Termination Inspection","High","Witness","ITR-E-CBL-003","4.1","RFI-E-0245","0","2026-09-09","","Mohammad Abdullah","PMT-E02","PID-E01","Pending","","","Scheduled"],
+["408-3M-CTR-0011","Electrical","Cable Tray","SYS-245","SUB-245-E02","ITP-E-CTR-001","01","3.1","Cable Tray Support Installation Inspection","Medium","Surveillance","ITR-E-CTR-001","None","RFI-E-0190","0","2026-08-25","2026-08-26","Julius Dela Cruz","PMT-E02","PID-E02","Accepted","","","Accepted"],
+["408-3M-CTR-0011","Electrical","Cable Tray","SYS-245","SUB-245-E02","ITP-E-CTR-001","01","3.2","Cable Tray / Ladder Installation Inspection","High","Witness","ITR-E-CTR-002","3.1","","","2026-09-03","","Julius Dela Cruz","PMT-E02","PID-E02","Pending","","","Pending / Not Raised"],
+["408-3I-SC-00101","Instrumentation","Cable","SYS-216","SUB-216-I01","ITP-I-CBL-001","02","5.1","Instrument Cable Installation Inspection","Medium","Witness","ITR-I-CBL-001","None","RFI-I-0301","0","2026-09-02","2026-09-03","Afzal","PMT-I01","PID-I01","Accepted","","","Accepted"],
+["408-3I-SC-00101","Instrumentation","Cable","SYS-216","SUB-216-I01","ITP-I-CBL-001","02","5.2","Continuity / Insulation Test","High","Witness","ITR-I-CBL-002","5.1","RFI-I-0315","0","2026-09-08","","Afzal","PMT-I01","PID-I01","Pending","","","RFI Submitted"]
+].map(r=>({tag:r[0],discipline:r[1],equipment:r[2],system:r[3],subsystem:r[4],itp:r[5],rev:r[6],activity:r[7],desc:r[8],risk:r[9],level:r[10],itr:r[11],prereq:r[12],rfi:r[13],rfiRev:r[14],req:r[15],insp:r[16],qci:r[17],pmt:r[18],pid:r[19],result:r[20],ncr:r[21],reRfi:r[22],status:r[23]}));
+
+let filtered=[...records];
+const uniq=a=>[...new Set(a.filter(Boolean))].sort();
+function fill(id,vals){document.getElementById(id).innerHTML='<option value="">All</option>'+vals.map(v=>`<option>${v}</option>`).join('')}
+function init(){fill("fDiscipline",uniq(records.map(r=>r.discipline)));fill("fEquipment",uniq(records.map(r=>r.equipment)));fill("fSystem",uniq(records.map(r=>r.system)));fill("fSubsystem",uniq(records.map(r=>r.subsystem)));fill("fItp",uniq(records.map(r=>r.itp)));fill("fActivity",uniq(records.map(r=>r.activity)));fill("fRisk",uniq(records.map(r=>r.risk)));fill("fInspector",uniq(records.map(r=>r.qci)));fill("fStatus",uniq(records.map(r=>r.status)));fill("fRevision",uniq(records.map(r=>r.rev)));fill("fNcr",["With NCR","Without NCR"]);fill("revItp",uniq(records.map(r=>r.itp)))}
+function cls(s){if(s==="Accepted")return"ok";if(s.includes("Rejected")||s==="Blocked")return"bad";if(s.includes("Submitted")||s==="Scheduled"||s.includes("Pending"))return"warn";return"neutral"}
+function render(){immBody.innerHTML=filtered.map(r=>`<tr><td><strong>${r.tag}</strong></td><td>${r.discipline}</td><td>${r.equipment}</td><td>${r.system}</td><td>${r.subsystem}</td><td>${r.itp}</td><td>${r.rev}</td><td>${r.activity}</td><td>${r.desc}</td><td>${r.risk}</td><td>${r.level}</td><td>${r.itr}</td><td>${r.prereq}</td><td>${r.rfi||"-"}</td><td>${r.rfiRev||"-"}</td><td>${r.req||"-"}</td><td>${r.insp||"-"}</td><td>${r.qci}</td><td>${r.pmt}</td><td>${r.pid}</td><td>${r.result}</td><td>${r.ncr||"-"}</td><td>${r.reRfi||"-"}</td><td><span class="status ${cls(r.status)}">${r.status}</span></td></tr>`).join("");stats()}
+function stats(){let t=filtered.length,a=filtered.filter(r=>r.status==="Accepted").length,re=filtered.filter(r=>r.status.includes("Rejected")).length,b=filtered.filter(r=>r.status==="Blocked").length,s=filtered.filter(r=>r.status==="RFI Submitted").length,p=filtered.filter(r=>r.status.includes("Pending")||r.status==="Scheduled"||r.status==="RFI Submitted").length,o=filtered.filter(r=>r.req&&!r.insp&&new Date(r.req)<new Date("2026-09-10")).length,pc=t?Math.round(a/t*100):0;kTotal.textContent=t;kAccepted.textContent=a;kPending.textContent=p;kSubmitted.textContent=s;kRejected.textContent=re;kBlocked.textContent=b;kOverdue.textContent=o;kComplete.textContent=pc+"%";progressText.textContent=pc+"%";progressBar.style.width=pc+"%";progressDetail.innerHTML=`Accepted <strong>${a}</strong> of <strong>${t}</strong> filtered inspection activities. Pending: <strong>${p}</strong>; Rejected: <strong>${re}</strong>; Blocked: <strong>${b}</strong>.`}
+function applyFilters(){const m={discipline:fDiscipline.value,equipment:fEquipment.value,system:fSystem.value,subsystem:fSubsystem.value,itp:fItp.value,activity:fActivity.value,risk:fRisk.value,qci:fInspector.value,status:fStatus.value,rev:fRevision.value};const q=fSearch.value.trim().toLowerCase();filtered=records.filter(r=>{for(const[k,v]of Object.entries(m))if(v&&r[k]!==v)return false;if(fNcr.value==="With NCR"&&!r.ncr)return false;if(fNcr.value==="Without NCR"&&r.ncr)return false;if(q&&!(r.tag.toLowerCase().includes(q)||r.rfi.toLowerCase().includes(q)))return false;return true});render()}
+function resetFilters(){document.querySelectorAll("select[id^='f']").forEach(x=>x.value="");fSearch.value="";filtered=[...records];render()}
+function assessRevisionImpact(){const itp=revItp.value,oldR=oldRev.value,newR=newRev.value;const a=records.filter(r=>r.itp===itp),old=a.filter(r=>r.rev===oldR),acc=old.filter(r=>r.status==="Accepted").length,p=a.filter(r=>r.status!=="Accepted"&&!r.status.includes("Rejected")).length,n=a.filter(r=>!r.rfi).length,rej=a.filter(r=>r.status.includes("Rejected")).length;revisionImpact.innerHTML=`<strong>NEW ITP REVISION IMPACT ASSESSMENT</strong><br>${itp} · Rev. ${oldR} → Rev. ${newR}<br><br>Affected IMM records: <strong>${a.length}</strong><br>Historical inspections using Rev. ${oldR}: <strong>${old.length}</strong><br>Already accepted under Rev. ${oldR}: <strong>${acc}</strong><br>Pending / active activities: <strong>${p}</strong><br>Not yet raised: <strong>${n}</strong><br>Rejected / reinspection: <strong>${rej}</strong><br><br>Change category: <strong>${changeType.value}</strong>.<br><small>Historical accepted records retain their original revision. Pending/not-started activities should be reviewed for applicability of the new revision before the next RFI is raised.</small>`}
+init();render();
+</script>
+</body>
+</html>
