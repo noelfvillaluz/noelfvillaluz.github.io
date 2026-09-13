@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Management & Control | Noel Villaluz, PEE</title>
+<meta name="description" content="Integrated document management and control prototype for technical resources, RFI readiness, revision control, review approval, and audit trail.">
+<style>
+:root{
+  --navy:#071b2f;--blue:#0d416d;--gold:#f3b632;--light:#f4f7fa;
+  --text:#263746;--line:#d7e0e8;--ok:#1f7a4f;--warn:#9c6a00;--bad:#a62d2d;--muted:#667a8c;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f7;color:var(--text);line-height:1.45}
+header{background:var(--navy);padding:14px 5%;position:sticky;top:0;z-index:20}
+nav{max-width:1500px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.logo{color:#fff;font-weight:800}
+nav ul{display:flex;gap:18px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+nav a{color:#fff;text-decoration:none;font-weight:700;font-size:14px}
+nav a:hover{color:var(--gold)}
+.hero{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:38px 5%}
+.hero .wrap{max-width:1500px;margin:auto}
+.hero h1{margin:4px 0 8px;font-size:clamp(30px,5vw,48px)}
+.hero p{margin:0;color:#dce9f3;max-width:1100px}
+.breadcrumb{font-size:13px;color:#bfd0de;margin-bottom:8px}
+.breadcrumb a{color:var(--gold);text-decoration:none}
+main{max-width:1550px;margin:26px auto;padding:0 20px 60px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 5px 18px rgba(7,27,47,.06);margin-bottom:18px}
+.panel h2,.panel h3{color:var(--navy);margin:0 0 14px}
+.section-kicker{font-size:12px;font-weight:800;letter-spacing:1.4px;color:var(--blue);text-transform:uppercase;margin-bottom:5px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tab-btn{border:0;border-radius:8px;padding:10px 14px;font-weight:800;cursor:pointer;background:#dfe8ef;color:var(--navy)}
+.tab-btn.active{background:var(--blue);color:#fff}
+.tab{display:none}.tab.active{display:block}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(120px,1fr));gap:10px}
+.kpi{background:#fafcfd;border:1px solid var(--line);border-radius:9px;padding:14px}
+.kpi strong{display:block;font-size:24px;color:var(--blue)}
+.kpi span{font-size:12px;color:#5f7384}
+.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.span-2{grid-column:span 2}.span-4{grid-column:span 4}
+label{font-size:12px;font-weight:800;color:#334b60}
+input,select,textarea{width:100%;padding:10px 11px;border:1px solid #bccbd7;border-radius:7px;font:inherit;background:#fff;color:#233644}
+textarea{min-height:84px;resize:vertical}
+input[readonly],textarea[readonly]{background:#f2f6f9;color:#536676}
+button{border:0;border-radius:7px;padding:10px 14px;font-weight:800;cursor:pointer}
+.btn-primary{background:var(--blue);color:#fff}.btn-gold{background:var(--gold);color:var(--navy)}.btn-light{background:#e7eef4;color:var(--navy)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px;max-height:560px}
+table{width:100%;border-collapse:collapse;min-width:1100px;background:#fff}
+th,td{padding:9px 10px;border-bottom:1px solid #e3e9ee;text-align:left;font-size:11px;vertical-align:top}
+th{background:#f2f6f9;color:var(--navy);position:sticky;top:0;z-index:1}
+.status{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}
+.ok{background:#e5f4ec;color:var(--ok)}.warn{background:#fff3d8;color:var(--warn)}.bad{background:#fde7e7;color:var(--bad)}.neutral{background:#e9eef2;color:#526575}
+.notice{border-left:4px solid var(--blue);background:#f4f8fb;padding:12px 14px;border-radius:6px;margin-top:12px}
+.notice.warn{border-left-color:var(--warn);background:#fff8e7}.notice.bad{border-left-color:var(--bad);background:#fff1f1}
+.small{font-size:12px;color:var(--muted)}
+.checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.check{border:1px solid var(--line);padding:10px;border-radius:8px;background:#fafcfd}
+.timeline{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.stage{padding:10px 13px;background:#edf3f7;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:800}
+.stage.current{background:var(--gold);color:var(--navy)}
+@media(max-width:1000px){.form-grid{grid-template-columns:repeat(2,1fr)}.span-2,.span-4{grid-column:span 2}.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:650px){nav{flex-direction:column;align-items:flex-start}.form-grid{grid-template-columns:1fr}.span-2,.span-4{grid-column:span 1}.kpis{grid-template-columns:repeat(2,1fr)}.checklist{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+<nav>
+  <div class="logo">NOEL VILLALUZ · PEE</div>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="rfi-generator.html">RFI Generator</a></li>
+    <li><a href="inspection-test-management.html">Inspection & Test Management</a></li>
+    <li><a href="inspection-monitoring-matrix.html">IMM</a></li>
+    <li><a href="../index.html#technical-resources">Technical Resources</a></li>
+  </ul>
+</nav>
+</header>
+
+<section class="hero">
+<div class="wrap">
+  <div class="breadcrumb"><a href="../index.html">Home</a> › Technical Resources › Document Management & Control</div>
+  <div class="section-kicker" style="color:#f3b632">Controlled Technical Information</div>
+  <h1>Document Management & Control</h1>
+  <p>Central management of approved technical documents, revisions, transmittals, review comments, distribution, acknowledgements and audit history with direct support to RFI readiness and inspection traceability.</p>
+</div>
+</section>
+
+<main>
+
+<section class="panel">
+<div class="section-kicker">Document Status</div>
+<h2>Document Control Summary</h2>
+<div class="kpis">
+  <div class="kpi"><strong id="kTotal">0</strong><span>Total Documents</span></div>
+  <div class="kpi"><strong id="kApproved">0</strong><span>Approved / Current</span></div>
+  <div class="kpi"><strong id="kReview">0</strong><span>Under Review</span></div>
+  <div class="kpi"><strong id="kSuperseded">0</strong><span>Superseded</span></div>
+  <div class="kpi"><strong id="kComments">0</strong><span>Open Comments</span></div>
+  <div class="kpi"><strong id="kRfiBlocked">0</strong><span>RFI Blocked</span></div>
+</div>
+</section>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="libraryTab">Library & Search</button>
+  <button class="tab-btn" data-tab="transmittalTab">Submittal / Transmittal</button>
+  <button class="tab-btn" data-tab="reviewTab">Review & Approval</button>
+  <button class="tab-btn" data-tab="commentTab">Comment Resolution</button>
+  <button class="tab-btn" data-tab="revisionTab">Revision & Status</button>
+  <button class="tab-btn" data-tab="registerTab">Document Register</button>
+  <button class="tab-btn" data-tab="distributionTab">Distribution</button>
+  <button class="tab-btn" data-tab="auditTab">Audit Trail</button>
+</div>
+
+<section id="libraryTab" class="tab active">
+<div class="panel">
+<div class="section-kicker">Controlled Search</div>
+<h2>Document Library & Search</h2>
+<div class="form-grid">
+  <div class="field"><label>Discipline</label><select id="fDiscipline"></select></div>
+  <div class="field"><label>Document Type</label><select id="fType"></select></div>
+  <div class="field"><label>System</label><select id="fSystem"></select></div>
+  <div class="field"><label>Subsystem</label><select id="fSubsystem"></select></div>
+  <div class="field"><label>Main Equipment</label><select id="fEquipment"></select></div>
+  <div class="field"><label>Status</label><select id="fStatus"></select></div>
+  <div class="field"><label>Revision</label><select id="fRevision"></select></div>
+  <div class="field"><label>Search</label><input id="fSearch" placeholder="Document No., title, tag, keyword"></div>
+</div>
+<div class="actions">
+  <button class="btn-primary" onclick="applyFilters()">Apply Filters</button>
+  <button class="btn-light" onclick="resetFilters()">Reset</button>
+</div>
+</div>
+
+<div class="panel">
+<h3>Controlled Document Results</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Document No.</th><th>Title</th><th>Type</th><th>Discipline</th><th>Equipment</th><th>System</th><th>Subsystem</th><th>Rev.</th><th>Status</th><th>Issue Date</th><th>Mandatory for RFI</th></tr></thead>
+<tbody id="libraryBody"></tbody>
+</table>
+</div>
+<div class="notice">For new RFIs, the system should normally suggest only the current approved/applicable revision. Superseded documents remain visible for traceability and historical records.</div>
+</div>
+
+<div class="panel">
+<div class="section-kicker">RFI Readiness</div>
+<h3>Mandatory Document Gate</h3>
+<div class="form-grid">
+  <div class="field"><label>Discipline</label><select id="gateDiscipline"></select></div>
+  <div class="field"><label>Main Equipment</label><select id="gateEquipment"></select></div>
+  <div class="field"><label>ITP No.</label><select id="gateItp"></select></div>
+  <div class="field"><label>Activity No.</label><select id="gateActivity"></select></div>
+</div>
+<div class="actions"><button class="btn-gold" onclick="checkRfiReadiness()">Check RFI Readiness</button></div>
+<div id="rfiGateResult" class="notice">Select inspection context and check document readiness.</div>
+</div>
+</section>
+
+<section id="transmittalTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Controlled Issuance</div>
+<h2>Document Submittal / Transmittal</h2>
+<div class="form-grid">
+  <div class="field"><label>Transmittal No.</label><input value="TR-E-2026-0145"></div>
+  <div class="field"><label>Date</label><input type="date" value="2026-09-10"></div>
+  <div class="field"><label>From</label><input value="Contractor Document Control"></div>
+  <div class="field"><label>To</label><input value="Company / PMT Document Control"></div>
+  <div class="field"><label>Purpose</label><select><option>For Review</option><option>For Approval</option><option>For Information</option><option>For Construction</option><option>As-Built</option></select></div>
+  <div class="field"><label>Priority</label><select><option>Normal</option><option>Urgent</option></select></div>
+  <div class="field span-2"><label>Remarks</label><input value="Controlled technical document submission."></div>
+</div>
+<div class="table-wrap" style="margin-top:14px">
+<table>
+<thead><tr><th>No.</th><th>Document No.</th><th>Title</th><th>Rev.</th><th>Status</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>ITP-E-CBL-001</td><td>Electrical Cable Inspection & Test Plan</td><td>03</td><td>For Approval</td><td>Submit</td></tr>
+<tr><td>2</td><td>ITR-E-CBL-002</td><td>Cable IR & Continuity Test Report</td><td>02</td><td>For Review</td><td>Submit</td></tr>
+</tbody>
+</table>
+</div>
+<div class="notice">Each transmittal should create a permanent traceable record of what was sent, when, by whom, to whom, for what purpose, and under which revision.</div>
+</div>
+</section>
+
+<section id="reviewTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Workflow</div>
+<h2>Document Review & Approval</h2>
+<div class="timeline">
+  <span class="stage">Submitted</span>
+  <span class="stage">Document Control Check</span>
+  <span class="stage current">Technical Review</span>
+  <span class="stage">Client / Company Review</span>
+  <span class="stage">Approved / Returned</span>
+</div>
+<div class="form-grid">
+  <div class="field"><label>Document No.</label><select id="reviewDoc"></select></div>
+  <div class="field"><label>Revision</label><input id="reviewRev" readonly></div>
+  <div class="field"><label>Current Status</label><input id="reviewStatus" readonly></div>
+  <div class="field"><label>Review Due Date</label><input value="2026-09-15" type="date"></div>
+  <div class="field"><label>Reviewer</label><input value="Discipline Engineer / QAQC"></div>
+  <div class="field"><label>Approval Code</label><select><option>A - Approved</option><option>B - Approved with Comments</option><option>C - Revise and Resubmit</option><option>D - Rejected</option></select></div>
+  <div class="field span-2"><label>Review Remarks</label><input value="Review against project specification, approved design and applicable standards."></div>
+</div>
+<div class="actions"><button class="btn-primary">Record Review</button></div>
+</div>
+</section>
+
+<section id="commentTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Technical Comments</div>
+<h2>Comment Resolution</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Comment ID</th><th>Document</th><th>Rev.</th><th>Reviewer</th><th>Comment</th><th>Contractor Response</th><th>Status</th><th>Closed By</th></tr></thead>
+<tbody id="commentBody"></tbody>
+</table>
+</div>
+<div class="notice warn">Open comments should remain traceable through subsequent revisions. Closing a comment does not delete it; the resolution history should remain available for audit.</div>
+</div>
+</section>
+
+<section id="revisionTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Revision Governance</div>
+<h2>Revision & Status Control</h2>
+<div class="timeline">
+  <span class="stage">Draft</span><span class="stage">For Review</span><span class="stage">For Approval</span><span class="stage current">Approved / Current</span><span class="stage">Superseded</span><span class="stage">Archived</span>
+</div>
+<div class="form-grid">
+  <div class="field"><label>Document No.</label><select id="revDoc"></select></div>
+  <div class="field"><label>Current Revision</label><input id="revCurrent" readonly></div>
+  <div class="field"><label>Current Status</label><input id="revCurrentStatus" readonly></div>
+  <div class="field"><label>Next Revision</label><input id="revNext" value="04"></div>
+  <div class="field"><label>Change Category</label><select><option>Technical Change</option><option>Comment Incorporation</option><option>Reference Update</option><option>Editorial</option></select></div>
+  <div class="field"><label>Impact Review Required</label><select><option>Yes</option><option>No</option></select></div>
+  <div class="field span-2"><label>Reason for Revision</label><input value="Update inspection prerequisites and acceptance criteria."></div>
+</div>
+<div class="notice">When a new revision becomes approved/current, the previous approved revision is automatically marked superseded. Historical RFI/ITR/inspection records keep the revision originally used.</div>
+</div>
+</section>
+
+<section id="registerTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Master Register</div>
+<h2>Document Register</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Document No.</th><th>Title</th><th>Type</th><th>Discipline</th><th>Rev.</th><th>Status</th><th>Issue Date</th><th>Originator</th><th>Reviewer</th><th>Approver</th><th>Transmittal</th></tr></thead>
+<tbody id="registerBody"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="distributionTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Controlled Distribution</div>
+<h2>Distribution / Acknowledgement</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Document</th><th>Rev.</th><th>Recipient</th><th>Organization</th><th>Purpose</th><th>Sent Date</th><th>Acknowledged</th><th>Acknowledgement Date</th></tr></thead>
+<tbody>
+<tr><td>ITP-E-CBL-001</td><td>03</td><td>Electrical QC Team</td><td>Contractor</td><td>Implementation</td><td>2026-07-15</td><td><span class="status ok">Yes</span></td><td>2026-07-15</td></tr>
+<tr><td>ITP-E-CBL-001</td><td>03</td><td>PMT Electrical</td><td>Company PMT</td><td>Information / Inspection</td><td>2026-07-15</td><td><span class="status ok">Yes</span></td><td>2026-07-16</td></tr>
+<tr><td>ITR-E-CBL-002</td><td>02</td><td>Electrical Construction</td><td>Contractor</td><td>Implementation</td><td>2026-06-18</td><td><span class="status warn">Pending</span></td><td>-</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="auditTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Traceability</div>
+<h2>Document History & Audit Trail</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Date / Time</th><th>User / Role</th><th>Action</th><th>Document</th><th>Revision</th><th>Previous Status</th><th>New Status</th><th>Reference</th></tr></thead>
+<tbody>
+<tr><td>2026-07-15 09:10</td><td>Document Controller</td><td>Revision issued</td><td>ITP-E-CBL-001</td><td>03</td><td>For Approval</td><td>Approved / Current</td><td>TR-E-2026-0112</td></tr>
+<tr><td>2026-07-15 09:11</td><td>System</td><td>Previous revision superseded</td><td>ITP-E-CBL-001</td><td>02</td><td>Approved / Current</td><td>Superseded</td><td>Auto revision control</td></tr>
+<tr><td>2026-08-18 14:25</td><td>QC Inspector</td><td>Document referenced in RFI</td><td>ITR-E-CBL-002</td><td>02</td><td>Approved / Current</td><td>Approved / Current</td><td>RFI-E-0145</td></tr>
+</tbody>
+</table>
+</div>
+<div class="notice">Production implementation should make audit entries non-editable and timestamped so document actions can be reconstructed during quality reviews and audits.</div>
+</div>
+</section>
+
+</main>
+
+<script>
+const docs=[
+{no:"ITP-E-CBL-001",title:"Electrical Cable Inspection & Test Plan",type:"ITP",discipline:"Electrical",equipment:"Cable",system:"SYS-240",subsystem:"SUB-240-E01",rev:"03",status:"Approved / Current",date:"2026-07-15",mandatory:"Yes",originator:"Electrical QC",reviewer:"Engineering / QAQC",approver:"QA/QC Manager",transmittal:"TR-E-2026-0112"},
+{no:"ITP-E-CBL-001",title:"Electrical Cable Inspection & Test Plan",type:"ITP",discipline:"Electrical",equipment:"Cable",system:"SYS-240",subsystem:"SUB-240-E01",rev:"02",status:"Superseded",date:"2026-05-08",mandatory:"Historical",originator:"Electrical QC",reviewer:"Engineering / QAQC",approver:"QA/QC Manager",transmittal:"TR-E-2026-0075"},
+{no:"ITR-E-CBL-001",title:"Cable Installation Inspection & Test Report",type:"ITR",discipline:"Electrical",equipment:"Cable",system:"SYS-240",subsystem:"SUB-240-E01",rev:"02",status:"Approved / Current",date:"2026-06-10",mandatory:"Yes",originator:"Electrical QC",reviewer:"QC Lead",approver:"QA/QC Manager",transmittal:"TR-E-2026-0091"},
+{no:"ITR-E-CBL-002",title:"Cable IR & Continuity Inspection & Test Report",type:"ITR",discipline:"Electrical",equipment:"Cable",system:"SYS-240",subsystem:"SUB-240-E01",rev:"02",status:"Approved / Current",date:"2026-06-18",mandatory:"Yes",originator:"Electrical QC",reviewer:"QC Lead",approver:"QA/QC Manager",transmittal:"TR-E-2026-0098"},
+{no:"DWG-E-240-001",title:"Electrical Cable Routing Layout - Mezzanine Deck",type:"IFC Drawing",discipline:"Electrical",equipment:"Cable",system:"SYS-240",subsystem:"SUB-240-E01",rev:"05",status:"Approved / Current",date:"2026-08-01",mandatory:"Yes",originator:"Engineering",reviewer:"Lead Electrical Engineer",approver:"Company Engineering",transmittal:"TR-ENG-2026-0220"},
+{no:"MS-E-CBL-001",title:"Electrical Cable Installation Method Statement",type:"Method Statement",discipline:"Electrical",equipment:"Cable",system:"SYS-240",subsystem:"SUB-240-E01",rev:"04",status:"Approved / Current",date:"2026-07-20",mandatory:"Yes",originator:"Construction",reviewer:"Engineering / QAQC",approver:"Company PMT",transmittal:"TR-QA-2026-0180"},
+{no:"SPEC-E-001",title:"Project Electrical Installation Specification",type:"Specification",discipline:"Electrical",equipment:"Cable",system:"SYS-240",subsystem:"SUB-240-E01",rev:"01",status:"Approved / Current",date:"2026-01-05",mandatory:"Yes",originator:"Engineering",reviewer:"Project Engineering",approver:"Company",transmittal:"TR-ENG-2026-0011"},
+{no:"DWG-E-245-017",title:"Cable Tray Layout - Main Deck",type:"IFC Drawing",discipline:"Electrical",equipment:"Cable Tray",system:"SYS-245",subsystem:"SUB-245-E02",rev:"03",status:"Under Review",date:"2026-09-07",mandatory:"Yes",originator:"Engineering",reviewer:"Lead Electrical Engineer",approver:"Pending",transmittal:"TR-ENG-2026-0254"},
+{no:"ITP-I-CBL-001",title:"Instrumentation Cable Inspection & Test Plan",type:"ITP",discipline:"Instrumentation",equipment:"Cable",system:"SYS-216",subsystem:"SUB-216-I01",rev:"02",status:"Approved / Current",date:"2026-06-20",mandatory:"Yes",originator:"Instrument QC",reviewer:"Engineering / QAQC",approver:"Instrumentation QA/QC Lead",transmittal:"TR-I-2026-0100"}
+];
+
+const comments=[
+{id:"CMT-001",doc:"ITP-E-CBL-001",rev:"03",reviewer:"Company QA/QC",comment:"Clarify prerequisite for final cable test activity.",response:"Prerequisite updated to require accepted 4.2 and 4.3 activities.",status:"Closed",closedBy:"QA/QC Manager"},
+{id:"CMT-002",doc:"ITR-E-CBL-002",rev:"02",reviewer:"PMT Electrical",comment:"Add calibration certificate reference for test instrument.",response:"Calibration certificate reference field added.",status:"Closed",closedBy:"PMT Electrical"},
+{id:"CMT-003",doc:"DWG-E-245-017",rev:"03",reviewer:"Company Engineering",comment:"Verify support arrangement at reducer and vertical fitting locations.",response:"Under engineering review.",status:"Open",closedBy:"-"}
+];
+
+const gateRules={
+"Electrical|Cable|ITP-E-CBL-001|4.1":["ITP-E-CBL-001","ITR-E-CBL-001","DWG-E-240-001","MS-E-CBL-001","SPEC-E-001"],
+"Electrical|Cable|ITP-E-CBL-001|4.2":["ITP-E-CBL-001","ITR-E-CBL-002","MS-E-CBL-001","SPEC-E-001"],
+"Electrical|Cable Tray|ITP-E-CTR-001|3.2":["DWG-E-245-017"],
+"Instrumentation|Cable|ITP-I-CBL-001|5.1":["ITP-I-CBL-001"]
+};
+
+let filtered=[...docs];
+const uniq=a=>[...new Set(a.filter(Boolean))].sort();
+
+function fillSelect(id,vals,all=true){
+ const el=document.getElementById(id);
+ el.innerHTML=(all?'<option value="">All</option>':'')+vals.map(v=>`<option value="${v}">${v}</option>`).join("");
+}
+
+function init(){
+ fillSelect("fDiscipline",uniq(docs.map(d=>d.discipline)));
+ fillSelect("fType",uniq(docs.map(d=>d.type)));
+ fillSelect("fSystem",uniq(docs.map(d=>d.system)));
+ fillSelect("fSubsystem",uniq(docs.map(d=>d.subsystem)));
+ fillSelect("fEquipment",uniq(docs.map(d=>d.equipment)));
+ fillSelect("fStatus",uniq(docs.map(d=>d.status)));
+ fillSelect("fRevision",uniq(docs.map(d=>d.rev)));
+
+ fillSelect("gateDiscipline",["Electrical","Instrumentation"],false);
+ fillSelect("gateEquipment",["Cable","Cable Tray"],false);
+ fillSelect("gateItp",["ITP-E-CBL-001","ITP-E-CTR-001","ITP-I-CBL-001"],false);
+ fillSelect("gateActivity",["4.1","4.2","3.2","5.1"],false);
+
+ fillSelect("reviewDoc",uniq(docs.map(d=>d.no)),false);
+ fillSelect("revDoc",uniq(docs.map(d=>d.no)),false);
+
+ renderLibrary();renderRegister();renderComments();updateReviewFields();updateRevisionFields();updateKpis();
+}
+
+function statusClass(s){
+ if(s.includes("Approved"))return "ok";
+ if(s.includes("Review"))return "warn";
+ if(s.includes("Superseded"))return "neutral";
+ return "bad";
+}
+
+function renderLibrary(){
+ libraryBody.innerHTML=filtered.map(d=>`<tr>
+ <td><strong>${d.no}</strong></td><td>${d.title}</td><td>${d.type}</td><td>${d.discipline}</td><td>${d.equipment}</td>
+ <td>${d.system}</td><td>${d.subsystem}</td><td>${d.rev}</td><td><span class="status ${statusClass(d.status)}">${d.status}</span></td>
+ <td>${d.date}</td><td>${d.mandatory}</td></tr>`).join("");
+}
+
+function renderRegister(){
+ registerBody.innerHTML=docs.map(d=>`<tr><td>${d.no}</td><td>${d.title}</td><td>${d.type}</td><td>${d.discipline}</td><td>${d.rev}</td><td>${d.status}</td><td>${d.date}</td><td>${d.originator}</td><td>${d.reviewer}</td><td>${d.approver}</td><td>${d.transmittal}</td></tr>`).join("");
+}
+
+function renderComments(){
+ commentBody.innerHTML=comments.map(c=>`<tr><td>${c.id}</td><td>${c.doc}</td><td>${c.rev}</td><td>${c.reviewer}</td><td>${c.comment}</td><td>${c.response}</td><td><span class="status ${c.status==="Closed"?"ok":"warn"}">${c.status}</span></td><td>${c.closedBy}</td></tr>`).join("");
+}
+
+function updateKpis(){
+ kTotal.textContent=docs.length;
+ kApproved.textContent=docs.filter(d=>d.status==="Approved / Current").length;
+ kReview.textContent=docs.filter(d=>d.status==="Under Review").length;
+ kSuperseded.textContent=docs.filter(d=>d.status==="Superseded").length;
+ kComments.textContent=comments.filter(c=>c.status==="Open").length;
+ let blocked=0;
+ Object.values(gateRules).forEach(req=>{
+   if(req.some(no=>{
+      const x=docs.find(d=>d.no===no);
+      return !x || x.status!=="Approved / Current";
+   })) blocked++;
+ });
+ kRfiBlocked.textContent=blocked;
+}
+
+function applyFilters(){
+ const q=fSearch.value.trim().toLowerCase();
+ filtered=docs.filter(d=>{
+   if(fDiscipline.value&&d.discipline!==fDiscipline.value)return false;
+   if(fType.value&&d.type!==fType.value)return false;
+   if(fSystem.value&&d.system!==fSystem.value)return false;
+   if(fSubsystem.value&&d.subsystem!==fSubsystem.value)return false;
+   if(fEquipment.value&&d.equipment!==fEquipment.value)return false;
+   if(fStatus.value&&d.status!==fStatus.value)return false;
+   if(fRevision.value&&d.rev!==fRevision.value)return false;
+   if(q&&!(`${d.no} ${d.title} ${d.type} ${d.system} ${d.subsystem}`.toLowerCase().includes(q)))return false;
+   return true;
+ });
+ renderLibrary();
+}
+function resetFilters(){
+ document.querySelectorAll("select[id^='f']").forEach(x=>x.value="");
+ fSearch.value="";filtered=[...docs];renderLibrary();
+}
+
+function checkRfiReadiness(){
+ const key=`${gateDiscipline.value}|${gateEquipment.value}|${gateItp.value}|${gateActivity.value}`;
+ const required=gateRules[key]||[];
+ if(!required.length){
+   rfiGateResult.className="notice warn";
+   rfiGateResult.innerHTML="<strong>No configured mandatory-document rule for this sample context.</strong>";
+   return;
+ }
+ const rows=required.map(no=>{
+   const d=docs.find(x=>x.no===no);
+   const ok=d&&d.status==="Approved / Current";
+   return {no,d,ok};
+ });
+ const all=rows.every(x=>x.ok);
+ rfiGateResult.className=all?"notice":"notice bad";
+ rfiGateResult.innerHTML=`<strong>${all?"RFI DOCUMENT GATE: READY":"RFI CANNOT PROCEED — DOCUMENT GATE FAILED"}</strong><br><br>`+
+ rows.map(x=>`${x.ok?"✓":"✕"} ${x.no} — ${x.d?`${x.d.rev} / ${x.d.status}`:"Missing"}`).join("<br>")+
+ `<br><br><span class="small">${all?"All mandatory sample documents are available in current approved status.":"Resolve missing, superseded or unapproved mandatory documents before final RFI submission."}</span>`;
+}
+
+function currentDoc(no){
+ return docs.find(d=>d.no===no&&d.status==="Approved / Current") || docs.find(d=>d.no===no);
+}
+function updateReviewFields(){
+ const d=currentDoc(reviewDoc.value); if(!d)return;
+ reviewRev.value=d.rev;reviewStatus.value=d.status;
+}
+function updateRevisionFields(){
+ const d=currentDoc(revDoc.value); if(!d)return;
+ revCurrent.value=d.rev;revCurrentStatus.value=d.status;
+}
+reviewDoc.onchange=updateReviewFields;revDoc.onchange=updateRevisionFields;
+
+document.querySelectorAll(".tab-btn").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active");
+});
+
+init();
+</script>
+</body>
+</html>
