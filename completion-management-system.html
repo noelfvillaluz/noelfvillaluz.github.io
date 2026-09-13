@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Completion Management System | Noel Villaluz, PEE</title>
+<style>
+:root{--n:#071b2f;--b:#0d416d;--g:#f3b632;--l:#d7e0e8;--ok:#1f7a4f;--w:#9c6a00;--bad:#a62d2d}
+*{box-sizing:border-box}body{margin:0;font:14px Arial;background:#eef3f7;color:#263746}
+header{background:var(--n);padding:15px 5%;color:#fff}.nav{max-width:1500px;margin:auto;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.nav a{color:#fff;text-decoration:none;margin-left:14px;font-weight:bold}
+.hero{background:linear-gradient(120deg,var(--n),var(--b));color:#fff;padding:38px 5%}.hero div,main{max-width:1500px;margin:auto}.hero h1{font-size:42px;margin:8px 0}.hero p{max-width:1100px;color:#dce9f3}
+main{padding:25px 20px 60px}.panel{background:#fff;border:1px solid var(--l);border-radius:11px;padding:20px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(8,1fr);gap:9px}.kpi{border:1px solid var(--l);border-radius:8px;padding:13px}.kpi b{display:block;font-size:23px;color:var(--b)}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}.tabs button,button{border:0;border-radius:7px;padding:10px 13px;font-weight:bold;cursor:pointer}.tabs button{background:#dfe8ef;color:var(--n)}.tabs button.on{background:var(--b);color:#fff}.tab{display:none}.tab.on{display:block}
+.wrap{overflow:auto;border:1px solid var(--l);border-radius:8px}table{border-collapse:collapse;width:100%;min-width:1150px}th,td{padding:9px;border-bottom:1px solid #e3e9ee;text-align:left;font-size:11px;vertical-align:top}th{background:#f2f6f9;color:var(--n)}
+.s{padding:4px 7px;border-radius:20px;font-weight:bold;font-size:10px}.ok{background:#e5f4ec;color:var(--ok)}.warn{background:#fff3d8;color:var(--w)}.bad{background:#fde7e7;color:var(--bad)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-weight:bold;font-size:12px}.field input,.field select{padding:9px;border:1px solid #bccbd7;border-radius:6px}
+.notice{margin-top:14px;border-left:4px solid var(--b);padding:12px;background:#f4f8fb}.notice.bad{border-color:var(--bad);background:#fff1f1}.notice.warn{border-color:var(--w);background:#fff8e7}
+.flow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.flow span{background:#e8eff4;padding:9px 12px;border-radius:20px;font-weight:bold}.primary{background:var(--b);color:#fff}.gold{background:var(--g);color:var(--n)}
+.bar{height:8px;background:#e3e9ee;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;background:var(--b)}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:550px){.kpis,.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><div class="nav"><b>NOEL VILLALUZ · PEE</b><div><a href="../index.html">Home</a><a href="inspection-monitoring-matrix.html">IMM</a><a href="construction-precommissioning.html">Construction & Pre-Com</a><a href="quality-improvement-assurance.html">Quality</a></div></div></header>
+
+<section class="hero"><div><small>Home › Technical Resources › Completion Management System</small><h1>Completion Management System (CMS)</h1><p>System and subsystem completion tracking for tag completion, punch/EIL, mechanical completion, pre-commissioning, test packages, certificates, dossiers and handover readiness.</p></div></section>
+
+<main>
+<div class="panel"><h2>Completion Summary</h2><div class="kpis">
+<div class="kpi"><b>3</b>Systems</div><div class="kpi"><b>3</b>Subsystems</div><div class="kpi"><b>5</b>Sample Tags</div><div class="kpi"><b>40%</b>Tag Complete</div><div class="kpi"><b>2</b>Open Punches</div><div class="kpi"><b>0</b>MC Ready</div><div class="kpi"><b>0</b>Pre-Com Complete</div><div class="kpi"><b>0</b>Turnover Ready</div>
+</div></div>
+
+<div class="panel"><h3>Completion Workflow</h3><div class="flow"><span>Tag Completion</span>→<span>Punch / EIL</span>→<span>Mechanical Completion</span>→<span>Pre-Commissioning</span>→<span>Test Package</span>→<span>Certificate</span>→<span>Dossier</span>→<span>Handover</span></div></div>
+
+<div class="tabs">
+<button class="on" data-t="s1">System / Subsystem</button>
+<button data-t="s2">Tag Completion</button>
+<button data-t="s3">Punch / EIL</button>
+<button data-t="s4">Mechanical Completion</button>
+<button data-t="s5">Pre-Commissioning</button>
+<button data-t="s6">Test Packages</button>
+<button data-t="s7">Certificates</button>
+<button data-t="s8">Dossiers</button>
+<button data-t="s9">Completion Status</button>
+</div>
+
+<section id="s1" class="tab on"><div class="panel"><h2>System & Subsystem Register</h2><div class="wrap"><table>
+<thead><tr><th>System</th><th>Subsystem</th><th>Description</th><th>Discipline</th><th>Total Tags</th><th>Construction</th><th>Inspection</th><th>Pre-Com</th><th>Punch</th><th>Overall</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>SYS-240</td><td>SUB-240-E01</td><td>Electrical Distribution / Cable System</td><td>Electrical</td><td>42</td><td>98%</td><td>94%</td><td>88%</td><td>3 B</td><td><div class="bar"><i style="width:93%"></i></div>93%</td><td><span class="s warn">Conditional</span></td></tr>
+<tr><td>SYS-245</td><td>SUB-245-E01</td><td>DC / Battery & Charger System</td><td>Electrical</td><td>28</td><td>94%</td><td>89%</td><td>72%</td><td>5 B</td><td><div class="bar"><i style="width:84%"></i></div>84%</td><td><span class="s bad">Not Ready</span></td></tr>
+<tr><td>SYS-216</td><td>SUB-216-I01</td><td>Instrumentation Cable / Control System</td><td>Instrumentation</td><td>36</td><td>96%</td><td>91%</td><td>81%</td><td>2 B</td><td><div class="bar"><i style="width:89%"></i></div>89%</td><td><span class="s warn">Conditional</span></td></tr>
+</tbody></table></div></div></section>
+
+<section id="s2" class="tab"><div class="panel"><h2>Tag Completion</h2><div class="wrap"><table>
+<thead><tr><th>Tag</th><th>System</th><th>Subsystem</th><th>Discipline</th><th>Construction</th><th>ITP/ITR</th><th>NCR</th><th>Punch</th><th>Pre-Com</th><th>%</th><th>Eligibility</th></tr></thead>
+<tbody>
+<tr><td>408-3J-PC-00801</td><td>SYS-240</td><td>SUB-240-E01</td><td>Electrical</td><td>Complete</td><td>Accepted</td><td>Closed</td><td>Closed</td><td>Passed</td><td>100%</td><td><span class="s ok">Complete</span></td></tr>
+<tr><td>408-3J-PC-00802</td><td>SYS-240</td><td>SUB-240-E01</td><td>Electrical</td><td>Complete</td><td>Accepted</td><td>None</td><td>1 B Open</td><td>Passed</td><td>95%</td><td><span class="s warn">Conditional</span></td></tr>
+<tr><td>408-3J-PC-00803</td><td>SYS-240</td><td>SUB-240-E01</td><td>Electrical</td><td>Rectification</td><td>Rejected / Reinspection</td><td>Open</td><td>Open</td><td>Not Started</td><td>62%</td><td><span class="s bad">Blocked</span></td></tr>
+<tr><td>408-3L-BC-0006</td><td>SYS-245</td><td>SUB-245-E01</td><td>Electrical</td><td>Complete</td><td>Accepted</td><td>None</td><td>2 B Open</td><td>SAT Pending</td><td>82%</td><td><span class="s bad">Not Ready</span></td></tr>
+<tr><td>408-3I-SC-00101</td><td>SYS-216</td><td>SUB-216-I01</td><td>Instrumentation</td><td>Complete</td><td>Accepted</td><td>None</td><td>Closed</td><td>Passed</td><td>100%</td><td><span class="s ok">Complete</span></td></tr>
+</tbody></table></div><div class="notice">Tag completion requires all configured criteria. Final RFI acceptance alone does not equal completion.</div></div></section>
+
+<section id="s3" class="tab"><div class="panel"><h2>Punch List / EIL</h2><div class="wrap"><table>
+<thead><tr><th>Punch / EIL</th><th>Tag</th><th>Category</th><th>Description</th><th>Raised By</th><th>Owner</th><th>Target</th><th>Status</th><th>Closure Evidence</th></tr></thead>
+<tbody>
+<tr><td>EIL-E-0312</td><td>408-3J-PC-00802</td><td>B</td><td>Minor identification / labeling completion.</td><td>Client / PID</td><td>Construction</td><td>2026-09-15</td><td><span class="s warn">Open</span></td><td>Pending</td></tr>
+<tr><td>PL-E-0280</td><td>408-3L-BC-0006</td><td>B</td><td>Battery charger arrangement item pending closure.</td><td>Pre-Commissioning</td><td>Construction / Vendor</td><td>2026-09-18</td><td><span class="s warn">Open</span></td><td>Pending</td></tr>
+<tr><td>PL-E-0218</td><td>408-3J-PC-00801</td><td>B</td><td>Minor cable marker correction.</td><td>QC</td><td>Construction</td><td>2026-08-28</td><td><span class="s ok">Closed</span></td><td>Photo + accepted verification</td></tr>
+</tbody></table></div><div class="notice warn">Punch categorization and turnover rules should remain project-configurable. Blocking categories prevent turnover until formally resolved or accepted.</div></div></section>
+
+<section id="s4" class="tab"><div class="panel"><h2>Mechanical Completion</h2><div class="wrap"><table>
+<thead><tr><th>System</th><th>Subsystem</th><th>Required Tags</th><th>Completed Tags</th><th>Blocking Punch</th><th>Blocking NCR</th><th>ITR Complete</th><th>MC Certificate</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>SYS-240</td><td>SUB-240-E01</td><td>42</td><td>39</td><td>No A / 3 B</td><td>1 Open</td><td>94%</td><td>Draft</td><td><span class="s warn">Conditional</span></td></tr>
+<tr><td>SYS-245</td><td>SUB-245-E01</td><td>28</td><td>24</td><td>No A / 5 B</td><td>0 Blocking</td><td>89%</td><td>Not Issued</td><td><span class="s bad">Not Ready</span></td></tr>
+<tr><td>SYS-216</td><td>SUB-216-I01</td><td>36</td><td>33</td><td>No A / 2 B</td><td>0 Blocking</td><td>91%</td><td>Draft</td><td><span class="s warn">Conditional</span></td></tr>
+</tbody></table></div></div></section>
+
+<section id="s5" class="tab"><div class="panel"><h2>Pre-Commissioning Completion</h2><div class="wrap"><table>
+<thead><tr><th>System</th><th>Subsystem</th><th>Activity</th><th>Required Tests</th><th>Completed</th><th>Pending</th><th>Vendor</th><th>Record</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>SYS-240</td><td>SUB-240-E01</td><td>Electrical cable testing / functional readiness</td><td>18</td><td>16</td><td>2</td><td>No</td><td>PC-E-240-001</td><td><span class="s warn">In Progress</span></td></tr>
+<tr><td>SYS-245</td><td>SUB-245-E01</td><td>Battery / charger / DC pre-commissioning</td><td>12</td><td>8</td><td>4</td><td>Yes</td><td>PC-E-245-001</td><td><span class="s bad">Not Complete</span></td></tr>
+<tr><td>SYS-216</td><td>SUB-216-I01</td><td>Loop / continuity / functional readiness</td><td>20</td><td>17</td><td>3</td><td>As Required</td><td>PC-I-216-001</td><td><span class="s warn">In Progress</span></td></tr>
+</tbody></table></div></div></section>
+
+<section id="s6" class="tab"><div class="panel"><h2>Test Packages</h2><div class="wrap"><table>
+<thead><tr><th>Package No.</th><th>System</th><th>Subsystem</th><th>Scope</th><th>Required Records</th><th>Included</th><th>Missing</th><th>Compiled By</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>TP-E-240-001</td><td>SYS-240</td><td>SUB-240-E01</td><td>Electrical cable and feeder completion records</td><td>48</td><td>44</td><td>4</td><td>Completion Team</td><td><span class="s warn">Compilation</span></td></tr>
+<tr><td>TP-E-245-001</td><td>SYS-245</td><td>SUB-245-E01</td><td>Battery charger / DC completion records</td><td>32</td><td>25</td><td>7</td><td>Completion Team</td><td><span class="s bad">Incomplete</span></td></tr>
+<tr><td>TP-I-216-001</td><td>SYS-216</td><td>SUB-216-I01</td><td>Instrument cable and loop completion records</td><td>41</td><td>37</td><td>4</td><td>Completion Team</td><td><span class="s warn">Compilation</span></td></tr>
+</tbody></table></div></div></section>
+
+<section id="s7" class="tab"><div class="panel"><h2>Completion Certificates</h2><div class="wrap"><table>
+<thead><tr><th>Certificate No.</th><th>Type</th><th>System</th><th>Subsystem</th><th>Prepared By</th><th>Reviewed By</th><th>Approved By</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>MC-CERT-240-001</td><td>Mechanical Completion</td><td>SYS-240</td><td>SUB-240-E01</td><td>Completion Engineer</td><td>QA/QC</td><td>Company / PMT</td><td><span class="s warn">Draft</span></td></tr>
+<tr><td>PC-CERT-216-001</td><td>Pre-Commissioning Completion</td><td>SYS-216</td><td>SUB-216-I01</td><td>Pre-Commissioning</td><td>QA/QC</td><td>Company / PMT</td><td><span class="s warn">Pending</span></td></tr>
+<tr><td>HC-CERT-245-001</td><td>Handover Certificate</td><td>SYS-245</td><td>SUB-245-E01</td><td>Completion Team</td><td>Project Team</td><td>Company</td><td><span class="s bad">Not Ready</span></td></tr>
+</tbody></table></div></div></section>
+
+<section id="s8" class="tab"><div class="panel"><h2>Handover / Dossiers</h2><div class="wrap"><table>
+<thead><tr><th>Dossier No.</th><th>System</th><th>Contents</th><th>Expected Docs</th><th>Compiled</th><th>Missing</th><th>Review</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>DOS-SYS-240-001</td><td>SYS-240</td><td>ITP/ITR, RFI, drawings, NCR, punch, tests, certificates</td><td>125</td><td>116</td><td>9</td><td>In Review</td><td><span class="s warn">Compilation</span></td></tr>
+<tr><td>DOS-SYS-245-001</td><td>SYS-245</td><td>DC system completion and turnover records</td><td>88</td><td>69</td><td>19</td><td>Not Started</td><td><span class="s bad">Incomplete</span></td></tr>
+<tr><td>DOS-SYS-216-001</td><td>SYS-216</td><td>Instrumentation completion and turnover records</td><td>102</td><td>94</td><td>8</td><td>In Review</td><td><span class="s warn">Compilation</span></td></tr>
+</tbody></table></div><div class="notice">Dossiers should pull final controlled records from Document Control, RFI/ITR history, NCR/punch closure, tests and approved completion certificates.</div></div></section>
+
+<section id="s9" class="tab"><div class="panel"><h2>Completion & Turnover Status</h2>
+<div class="grid"><div class="field"><label>System</label><select id="sys"><option>SYS-240</option><option>SYS-245</option><option>SYS-216</option></select></div><div class="field"><label>Stage</label><select><option>Mechanical Completion</option><option>Ready for Commissioning</option><option>Ready for Handover</option></select></div><div class="field"><label>Target Date</label><input type="date" value="2026-09-30"></div><div class="field"><label>Turnover Package</label><input value="TOP-SYS-240-001"></div></div>
+<p><button class="gold" onclick="check()">Evaluate Turnover Readiness</button></p><div id="result" class="notice">Completion readiness is based on mandatory criteria, not percentage alone.</div>
+</div></section>
+
+</main>
+<script>
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button,.tab").forEach(x=>x.classList.remove("on"));b.classList.add("on");document.getElementById(b.dataset.t).classList.add("on")});
+function check(){
+ const data={
+ "SYS-240":["93%","1 open NCR","2 pending pre-commissioning tests","9 dossier records missing"],
+ "SYS-245":["84%","4 pending pre-commissioning tests","19 dossier records missing","handover certificate not ready"],
+ "SYS-216":["89%","3 pending pre-commissioning tests","8 dossier records missing"]
+ };
+ const x=data[sys.value];
+ result.className="notice bad";
+ result.innerHTML="<b>TURNOVER NOT YET READY</b><br>"+sys.value+" overall sample completion: "+x[0]+".<br><br>Blocking / pending items:<br>• "+x.slice(1).join("<br>• ")+"<br><br><small>Production rules should be project-configurable and approval-controlled.</small>";
+}
+</script>
+</body></html>
