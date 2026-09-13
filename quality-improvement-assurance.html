@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quality Improvement & Assurance | Noel Villaluz, PEE</title>
+<style>
+:root{--navy:#071b2f;--blue:#0d416d;--gold:#f3b632;--light:#f4f7fa;--text:#263746;--line:#d7e0e8;--ok:#1f7a4f;--warn:#9c6a00;--bad:#a62d2d;--crit:#651622}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f7;color:var(--text);line-height:1.45}
+header{background:var(--navy);padding:14px 5%;position:sticky;top:0;z-index:30}nav{max-width:1550px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:18px}.logo{color:#fff;font-weight:800}
+nav ul{display:flex;gap:16px;list-style:none;margin:0;padding:0;flex-wrap:wrap}nav a{color:#fff;text-decoration:none;font-weight:700;font-size:13px}nav a:hover{color:var(--gold)}
+.hero{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:38px 5%}.hero .wrap{max-width:1550px;margin:auto}.hero h1{margin:4px 0 8px;font-size:clamp(30px,5vw,48px)}.hero p{margin:0;max-width:1150px;color:#dce9f3}
+main{max-width:1550px;margin:26px auto;padding:0 20px 60px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 5px 18px rgba(7,27,47,.06);margin-bottom:18px}
+h2,h3{color:var(--navy);margin-top:0}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab-btn{border:0;border-radius:8px;padding:10px 14px;font-weight:800;cursor:pointer;background:#dfe8ef;color:var(--navy)}.tab-btn.active{background:var(--blue);color:#fff}.tab{display:none}.tab.active{display:block}
+.kpis{display:grid;grid-template-columns:repeat(8,minmax(120px,1fr));gap:10px}.kpi{background:#fafcfd;border:1px solid var(--line);border-radius:9px;padding:14px}.kpi strong{display:block;font-size:24px;color:var(--blue)}.kpi span{font-size:12px}
+.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:5px}.span-2{grid-column:span 2}.span-4{grid-column:span 4}
+label{font-size:12px;font-weight:800}input,select,textarea{width:100%;padding:10px;border:1px solid #bccbd7;border-radius:7px;font:inherit}textarea{min-height:82px;resize:vertical}
+button{border:0;border-radius:7px;padding:10px 14px;font-weight:800;cursor:pointer}.primary{background:var(--blue);color:#fff}.gold{background:var(--gold);color:var(--navy)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px;max-height:550px}table{width:100%;border-collapse:collapse;min-width:1100px;background:#fff}th,td{padding:9px;border-bottom:1px solid #e3e9ee;text-align:left;font-size:11px;vertical-align:top}th{background:#f2f6f9;color:var(--navy);position:sticky;top:0}
+.status{display:inline-block;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}.ok{background:#e5f4ec;color:var(--ok)}.warn{background:#fff3d8;color:var(--warn)}.bad{background:#fde7e7;color:var(--bad)}.critical{background:#f2dce0;color:var(--crit)}
+.notice{border-left:4px solid var(--blue);background:#f4f8fb;padding:12px 14px;border-radius:6px;margin-top:12px}.notice.warn{border-left-color:var(--warn);background:#fff8e7}.notice.bad{border-left-color:var(--bad);background:#fff1f1}
+.risk-boxes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.risk-box{padding:14px;border:1px solid var(--line);border-radius:9px;background:#fafcfd}.risk-box strong{display:block;font-size:22px;color:var(--navy)}
+@media(max-width:1150px){.kpis{grid-template-columns:repeat(4,1fr)}.form-grid{grid-template-columns:repeat(2,1fr)}.span-2,.span-4{grid-column:span 2}.risk-boxes{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.kpis{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.span-2,.span-4{grid-column:span 1}.risk-boxes{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><nav><div class="logo">NOEL VILLALUZ · PEE</div><ul>
+<li><a href="../index.html">Home</a></li><li><a href="rfi-generator.html">RFI Generator</a></li><li><a href="inspection-monitoring-matrix.html">IMM</a></li><li><a href="document-management-control.html">Document Control</a></li>
+</ul></nav></header>
+<section class="hero"><div class="wrap"><div style="font-size:13px;color:#bfd0de">Home › Technical Resources › Quality Improvement & Assurance</div><h1>Quality Improvement & Assurance</h1><p>Integrated NCR, proactive quality, focused assessment, audit, calibration control, best practices, lessons learned and risk-based trend monitoring.</p></div></section>
+<main>
+<section class="panel"><h2>Quality Performance Summary</h2><div class="kpis">
+<div class="kpi"><strong id="kNcrOpen">0</strong><span>Open NCRs</span></div><div class="kpi"><strong id="kNcrOverdue">0</strong><span>Overdue NCRs</span></div><div class="kpi"><strong id="kProactive">0</strong><span>Proactive Notifications</span></div><div class="kpi"><strong id="kFocused">1</strong><span>Focused Assessments</span></div><div class="kpi"><strong id="kAudit">0</strong><span>Open Audit Findings</span></div><div class="kpi"><strong id="kCalibration">0</strong><span>Calibration Alerts</span></div><div class="kpi"><strong id="kHighRisk">0</strong><span>High/Critical Risks</span></div><div class="kpi"><strong id="kClosed">0%</strong><span>NCR Closure Rate</span></div>
+</div></section>
+
+<div class="tabs">
+<button class="tab-btn active" data-tab="ncrTab">NCR Management</button><button class="tab-btn" data-tab="proactiveTab">Proactive Quality</button><button class="tab-btn" data-tab="focusedTab">Focused Assessment</button><button class="tab-btn" data-tab="auditTab">Audit Management</button><button class="tab-btn" data-tab="instrumentTab">Test Instrument Control</button><button class="tab-btn" data-tab="bestTab">Best Practices</button><button class="tab-btn" data-tab="lessonTab">Lessons Learned</button><button class="tab-btn" data-tab="trendTab">Risk & Trend Analysis</button>
+</div>
+
+<section id="ncrTab" class="tab active">
+<div class="panel"><h2>NCR Management</h2><div class="form-grid">
+<div class="field"><label>NCR No.</label><input value="NCR-E-0041"></div><div class="field"><label>Discipline</label><select><option>Electrical</option><option>Instrumentation</option></select></div><div class="field"><label>Equipment Tag</label><input value="408-3J-PC-00803"></div><div class="field"><label>Related RFI</label><input value="RFI-E-0208"></div>
+<div class="field"><label>ITP / Activity</label><input value="ITP-E-CBL-001 / 4.1"></div><div class="field"><label>Risk Level</label><select id="ncrRisk"><option>Low</option><option>Medium</option><option selected>High</option><option>Critical</option></select></div><div class="field"><label>Target Closure</label><input type="date" value="2026-09-15"></div><div class="field"><label>Status</label><select><option>Open</option><option>Corrective Action In Progress</option><option>Pending Verification</option><option>Closed</option></select></div>
+<div class="field span-2"><label>Nonconformity</label><textarea>Installation did not meet approved inspection acceptance criteria.</textarea></div><div class="field span-2"><label>Requirement / Reference</label><textarea>Approved ITP, IFC drawing, project specification and applicable inspection requirements.</textarea></div>
+<div class="field span-2"><label>Root Cause</label><textarea>Insufficient verification of installation readiness and applicable requirements before inspection.</textarea></div><div class="field span-2"><label>Corrective Action</label><textarea>Rectify, internally verify compliance, then raise reinspection RFI.</textarea></div>
+<div class="field span-4"><label>Preventive / Systemic Action</label><textarea>Strengthen prerequisite verification and targeted surveillance for similar installations.</textarea></div>
+</div><div class="actions"><button class="primary" onclick="evaluateNcr()">Evaluate Risk Priority</button></div><div id="ncrAdvice" class="notice warn">High-risk NCRs should receive priority corrective action and verification.</div></div>
+<div class="panel"><h3>NCR Register</h3><div class="table-wrap"><table><thead><tr><th>NCR</th><th>Discipline</th><th>Tag / Area</th><th>RFI</th><th>Issue</th><th>Risk</th><th>Cause</th><th>Target</th><th>Status</th><th>Reinspection</th></tr></thead><tbody id="ncrBody"></tbody></table></div></div>
+</section>
+
+<section id="proactiveTab" class="tab"><div class="panel"><h2>Proactive Quality Notification</h2><div class="table-wrap"><table><thead><tr><th>No.</th><th>Discipline</th><th>Area</th><th>Observation</th><th>Risk</th><th>Owner</th><th>Target</th><th>Status</th></tr></thead><tbody id="proactiveBody"></tbody></table></div><div class="notice">Use proactive notifications for potential risks before a nonconformance occurs. Existing nonconformities should follow NCR control.</div></div></section>
+
+<section id="focusedTab" class="tab"><div class="panel"><h2>Focused Assessment</h2><div class="form-grid">
+<div class="field"><label>Assessment No.</label><input value="FA-E-2026-006"></div><div class="field"><label>Trigger</label><select><option>Recurring NCR</option><option selected>Repeated Installation Concern</option><option>High Risk Activity</option><option>Audit Finding</option><option>Trend Alert</option></select></div><div class="field"><label>Discipline</label><select><option>Electrical</option><option>Instrumentation</option></select></div><div class="field"><label>Area</label><input value="PDM 216/221"></div>
+<div class="field span-2"><label>Scope</label><textarea>Cable tray supports, fittings, alignment, coating readiness and installation compliance.</textarea></div><div class="field span-2"><label>Criteria</label><textarea>Approved IFC drawings, project specifications, ITP, NEMA VE-2 and approved method statement.</textarea></div>
+<div class="field"><label>Field Engineer</label><input value="Field Engineering"></div><div class="field"><label>Construction</label><input value="Construction Supervisor"></div><div class="field"><label>QC</label><input value="Electrical QC"></div><div class="field"><label>Priority</label><select><option>Normal</option><option selected>High</option><option>Critical</option></select></div>
+</div><div class="notice warn">Findings can lead to proactive actions, NCRs, additional training, procedure revision, or increased inspection coverage.</div></div></section>
+
+<section id="auditTab" class="tab"><div class="panel"><h2>Quality Audit Management</h2><div class="table-wrap"><table><thead><tr><th>Audit</th><th>Type</th><th>Scope</th><th>Area</th><th>Date</th><th>Lead</th><th>Findings</th><th>Open</th><th>Status</th></tr></thead><tbody id="auditBody"></tbody></table></div></div></section>
+
+<section id="instrumentTab" class="tab"><div class="panel"><h2>Test Instrument Monitoring & Control</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Description</th><th>Serial</th><th>Range</th><th>Calibration Date</th><th>Expiry</th><th>Days Remaining</th><th>Status</th><th>Assigned</th></tr></thead><tbody id="instrumentBody"></tbody></table></div><div class="notice bad">Expired instruments should be blocked from inspection/test selection until valid calibration is restored.</div></div></section>
+
+<section id="bestTab" class="tab"><div class="panel"><h2>Best Practices</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Discipline</th><th>Practice</th><th>Benefit</th><th>Source</th><th>Status</th></tr></thead><tbody id="bestBody"></tbody></table></div></div></section>
+
+<section id="lessonTab" class="tab"><div class="panel"><h2>Lessons Learned</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Source Event</th><th>Issue</th><th>Lesson</th><th>Required Change</th><th>Owner</th><th>Status</th></tr></thead><tbody id="lessonBody"></tbody></table></div></div></section>
+
+<section id="trendTab" class="tab"><div class="panel"><h2>Risk & Trend Analysis</h2><div class="risk-boxes">
+<div class="risk-box"><span>Top Recurring Issue</span><strong>Cable Tray Support</strong><span>4 related findings</span></div><div class="risk-box"><span>Highest Risk Category</span><strong>HIGH</strong><span>Electrical installation</span></div><div class="risk-box"><span>Repeat Rejection Rate</span><strong>12%</strong><span>Sample prototype</span></div><div class="risk-box"><span>Recommended Action</span><strong>Focused Assessment</strong><span>Targeted verification</span></div>
+</div><div class="notice warn">Risk-based trend logic should increase attention when repeat findings, rejected RFIs, NCRs, overdue actions or calibration issues indicate deteriorating quality performance. It should not reduce contractual inspection requirements automatically.</div></div></section>
+</main>
+
+<script>
+const TODAY=new Date("2026-09-11");
+const ncrs=[
+{no:"NCR-E-0041",discipline:"Electrical",tag:"408-3J-PC-00803",rfi:"RFI-E-0208",issue:"Cable installation failed inspection acceptance criteria.",risk:"High",cause:"Readiness / Workmanship",target:"2026-09-15",status:"Open",reinspection:"RFI-E-0238"},
+{no:"NCR-E-0035",discipline:"Electrical",tag:"408-3M-JB-0256",rfi:"-",issue:"Equipment grounding conductor below required minimum size.",risk:"High",cause:"Material / Requirement Verification",target:"2026-09-05",status:"Pending Verification",reinspection:"-"},
+{no:"NCR-E-0029",discipline:"Electrical",tag:"Cable Tray / PDM 216",rfi:"-",issue:"Insufficient cable tray support arrangement.",risk:"Medium",cause:"Installation Planning",target:"2026-08-30",status:"Closed",reinspection:"-"},
+{no:"NCR-I-0018",discipline:"Instrumentation",tag:"JB-0139",rfi:"RFI-I-0271",issue:"Installation detail required rectification prior to acceptance.",risk:"Medium",cause:"Installation / Interface",target:"2026-09-18",status:"Corrective Action In Progress",reinspection:"-"}];
+const proactive=[
+{no:"PQN-E-2026-018",discipline:"Electrical",area:"PDM 216/221",obs:"Cable tray support and alignment concern before replication.",risk:"Medium",owner:"Construction / FE",target:"2026-09-13",status:"Open"},
+{no:"PQN-E-2026-015",discipline:"Electrical",area:"Offshore / Store",obs:"Verify uninstalled banding straps by PMI prior to offshore installation.",risk:"High",owner:"Material / QC",target:"2026-09-05",status:"Verified"},
+{no:"PQN-I-2026-007",discipline:"Instrumentation",area:"Zulf-228/233",obs:"Verify prerequisite readiness before final inspection requests.",risk:"Medium",owner:"Construction / QC",target:"2026-09-16",status:"Actioned"}];
+const audits=[
+{no:"AUD-Q-2026-04",type:"Internal Quality Audit",scope:"RFI / ITR workflow and document traceability",area:"E&I",date:"2026-08-20",lead:"Lead Auditor",findings:5,open:2,status:"Action in Progress"},
+{no:"AUD-E-2026-02",type:"Process Audit",scope:"Cable installation and inspection readiness",area:"PDM 216/221",date:"2026-09-01",lead:"Electrical QA/QC",findings:3,open:3,status:"Open"},
+{no:"AUD-Q-2026-01",type:"Internal Quality Audit",scope:"Calibration control",area:"QA/QC",date:"2026-06-12",lead:"Lead Auditor",findings:2,open:0,status:"Closed"}];
+const instruments=[
+{id:"TI-E-001",desc:"Insulation Resistance Tester",serial:"MIT-88421",range:"0-1000 MΩ",cal:"2025-10-10",expiry:"2026-10-10",assigned:"Electrical QC"},
+{id:"TI-E-002",desc:"Digital Multimeter",serial:"DMM-14055",range:"0-1000 V",cal:"2025-09-01",expiry:"2026-09-01",assigned:"Electrical QC"},
+{id:"TI-I-003",desc:"Loop Calibrator",serial:"LC-30211",range:"4-20 mA",cal:"2026-01-15",expiry:"2027-01-15",assigned:"Instrument QC"},
+{id:"TI-E-004",desc:"Torque Wrench",serial:"TW-72218",range:"20-200 Nm",cal:"2025-09-25",expiry:"2026-09-25",assigned:"Electrical Construction"}];
+const bestPractices=[
+{id:"BP-001",discipline:"Electrical",practice:"Benchmark one cable tray installation before mass replication.",benefit:"Reduces support/alignment rework.",source:"Focused assessment / field experience",status:"Recommended"},
+{id:"BP-002",discipline:"Electrical",practice:"Verify prerequisites before RFI submission.",benefit:"Reduces rejected RFIs.",source:"IMM / NCR trend",status:"Implemented"},
+{id:"BP-003",discipline:"E&I",practice:"Use current controlled documents linked to RFI.",benefit:"Prevents obsolete-document use.",source:"Document control review",status:"Implemented"}];
+const lessons=[
+{id:"LL-001",source:"Repeated tray support concerns",issue:"Support-only verification may not establish final tray position.",lesson:"Verify representative tray placement with supports where alignment/location is critical.",change:"Benchmark + focused assessment",owner:"FE / Construction / QC",status:"Open"},
+{id:"LL-002",source:"Material verification",issue:"MTC stated 316 SS but rust prompted further verification.",lesson:"Use risk-based PMI when field evidence creates doubt.",change:"PMI verification for affected materials",owner:"Material / QC",status:"Implemented"},
+{id:"LL-003",source:"RFI readiness",issue:"Inspection requested before prerequisites completed.",lesson:"Gate RFI by prerequisite and document status.",change:"IMM + RFI hard gate",owner:"QC / System Admin",status:"In Progress"}];
+
+function rc(r){return r==="Critical"?"critical":r==="High"?"bad":r==="Medium"?"warn":"ok"}
+function sc(s){return ["Closed","Verified","Implemented"].includes(s)?"ok":"warn"}
+ncrBody.innerHTML=ncrs.map(x=>`<tr><td>${x.no}</td><td>${x.discipline}</td><td>${x.tag}</td><td>${x.rfi}</td><td>${x.issue}</td><td><span class="status ${rc(x.risk)}">${x.risk}</span></td><td>${x.cause}</td><td>${x.target}</td><td><span class="status ${sc(x.status)}">${x.status}</span></td><td>${x.reinspection}</td></tr>`).join("");
+proactiveBody.innerHTML=proactive.map(x=>`<tr><td>${x.no}</td><td>${x.discipline}</td><td>${x.area}</td><td>${x.obs}</td><td><span class="status ${rc(x.risk)}">${x.risk}</span></td><td>${x.owner}</td><td>${x.target}</td><td><span class="status ${sc(x.status)}">${x.status}</span></td></tr>`).join("");
+auditBody.innerHTML=audits.map(x=>`<tr><td>${x.no}</td><td>${x.type}</td><td>${x.scope}</td><td>${x.area}</td><td>${x.date}</td><td>${x.lead}</td><td>${x.findings}</td><td>${x.open}</td><td><span class="status ${sc(x.status)}">${x.status}</span></td></tr>`).join("");
+instrumentBody.innerHTML=instruments.map(x=>{const d=Math.ceil((new Date(x.expiry)-TODAY)/86400000),s=d<0?"Expired":d<=30?"Due Soon":"Valid",c=s==="Expired"?"bad":s==="Due Soon"?"warn":"ok";return `<tr><td>${x.id}</td><td>${x.desc}</td><td>${x.serial}</td><td>${x.range}</td><td>${x.cal}</td><td>${x.expiry}</td><td>${d}</td><td><span class="status ${c}">${s}</span></td><td>${x.assigned}</td></tr>`}).join("");
+bestBody.innerHTML=bestPractices.map(x=>`<tr><td>${x.id}</td><td>${x.discipline}</td><td>${x.practice}</td><td>${x.benefit}</td><td>${x.source}</td><td><span class="status ${sc(x.status)}">${x.status}</span></td></tr>`).join("");
+lessonBody.innerHTML=lessons.map(x=>`<tr><td>${x.id}</td><td>${x.source}</td><td>${x.issue}</td><td>${x.lesson}</td><td>${x.change}</td><td>${x.owner}</td><td><span class="status ${sc(x.status)}">${x.status}</span></td></tr>`).join("");
+
+function updateKpis(){const open=ncrs.filter(x=>x.status!=="Closed").length,over=ncrs.filter(x=>x.status!=="Closed"&&new Date(x.target)<TODAY).length,closed=ncrs.filter(x=>x.status==="Closed").length,aud=audits.reduce((s,x)=>s+x.open,0),cal=instruments.filter(x=>Math.ceil((new Date(x.expiry)-TODAY)/86400000)<=30).length,high=ncrs.filter(x=>["High","Critical"].includes(x.risk)).length+proactive.filter(x=>["High","Critical"].includes(x.risk)).length;kNcrOpen.textContent=open;kNcrOverdue.textContent=over;kProactive.textContent=proactive.length;kAudit.textContent=aud;kCalibration.textContent=cal;kHighRisk.textContent=high;kClosed.textContent=Math.round(closed/ncrs.length*100)+"%"}updateKpis();
+function evaluateNcr(){const r=ncrRisk.value;ncrAdvice.className=(r==="Critical"||r==="High")?"notice bad":"notice";ncrAdvice.innerHTML=`<strong>${r.toUpperCase()} RISK NCR</strong><br>`+(r==="Critical"?"Immediate containment, management attention, corrective action and effectiveness verification recommended.":r==="High"?"Priority corrective action, reinspection control, root-cause review and trend monitoring recommended.":r==="Medium"?"Manage through normal NCR workflow with timely verification.":"Routine NCR controls with recurrence monitoring.")}
+
+document.querySelectorAll(".tab-btn").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active")});
+</script>
+</body></html>
