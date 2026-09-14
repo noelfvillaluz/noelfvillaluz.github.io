@@ -6,7 +6,57 @@
 <title>RFI Generator | Noel Villaluz, PEE</title>
 <meta name="description" content="Dynamic Request for Inspection generator with ITP, ITR, IMM, barcode and inspection workflow integration.">
 
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js">
+(function initRequesterPresentation(){
+  const now=new Date();
+  const local=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString();
+  if(document.getElementById("requestDate")&&!requestDate.value)requestDate.value=local.slice(0,10);
+  if(document.getElementById("requestTime")&&!requestTime.value)requestTime.value=local.slice(11,16);
+  setRequiredInspectionDate();
+})();
+
+
+function openIMM(){
+  const candidates=[
+    "inspection-monitoring-matrix.html",
+    "technical-resources/inspection-monitoring-matrix.html",
+    "../technical-resources/inspection-monitoring-matrix.html"
+  ];
+  // Prototype navigation uses the expected same-folder IMM page.
+  window.location.href=candidates[0];
+}
+
+
+function saveIMMAuditEvent(evt){
+  try{
+    const key="noelIMMInspectionHistory";
+    const rows=JSON.parse(localStorage.getItem(key)||"[]");
+    rows.push(Object.assign({
+      eventId:"EVT-"+Date.now()+"-"+Math.random().toString(36).slice(2,7),
+      timestamp:new Date().toISOString()
+    },evt));
+    localStorage.setItem(key,JSON.stringify(rows));
+  }catch(e){ console.warn("IMM audit history could not be saved",e); }
+}
+function recordRequesterSubmissionToIMM(){
+  const items=(typeof requesterSubmittedItems!=="undefined" && requesterSubmittedItems.length)
+    ? requesterSubmittedItems : [];
+  items.forEach(x=>saveIMMAuditEvent({
+    requestNo:value("requestNo"),
+    tag:x.tag||"",
+    activityNo:x.activityNo||value("activity"),
+    activityDescription:x.activityDescription||value("activityDescription"),
+    event:"REQUESTED",
+    requestDate:value("requestDate"),
+    requestedInspectionDate:value("requiredInspectionDate"),
+    department:value("requestDepartment"),
+    requester:value("requesterName"),
+    urgency:value("requestUrgency"),
+    status:"Requested / Pending QC"
+  }));
+}
+
+</script>
 
 <style>
 :root{
@@ -111,7 +161,8 @@ tr:last-child td{border-bottom:0}
 <nav>
   <div class="logo">NOEL VILLALUZ · PEE</div>
   <ul>
-    <li><a href="../index.html">Home</a></li>
+    <li><a href="../index.html">Home</a>
+          <a href="inspection-monitoring-matrix.html">Inspection Monitoring Matrix (IMM)</a></li>
     <li><a href="../index.html#services">Services</a></li>
     <li><a href="../index.html#technical-resources">Technical Resources</a></li>
     <li><a href="../index.html#resume">Resume</a></li>
@@ -132,8 +183,145 @@ tr:last-child td{border-bottom:0}
 <main>
 <div class="grid">
 
-<section class="panel span-12">
-  <div class="section-kicker">Sheet 1 Data</div>
+<section class="panel span-12 no-print">
+  <div class="section-kicker">Module Presentation</div>
+  <h2>Select Module Function</h2>
+  <p class="small">Choose only one function for the current session. The module can be used either to submit an inspection request to QC or to prepare/process a formal RFI.</p>
+  <div class="actions" style="gap:24px;align-items:center">
+    <label style="display:flex;gap:8px;align-items:center;font-weight:700">
+      <input type="radio" name="moduleMode" value="requester" checked onchange="renderRequesterSignatories();
+setModuleMode(this.value)"> Requester / Inspection Request
+    </label>
+    <label style="display:flex;gap:8px;align-items:center;font-weight:700">
+      <input type="radio" name="moduleMode" value="rfi" onchange="setModuleMode(this.value)"> Make / Process RFI
+    </label>
+  </div>
+  <div id="roleNotice" class="validation-box">Requester mode: prepare and submit an inspection request to QC. Formal RFI controls are hidden.</div>
+</section>
+<section class="panel span-12 no-print requester-panel">
+  <div class="section-kicker">Requester / Inspection Request</div>
+  <h2>Inspection Request to QC</h2>
+  <p class="small">Complete the fields from left to right and top to bottom. ITP-controlled information is populated automatically.</p>
+
+  
+  <input id="requestStatus" type="hidden" value="Draft">
+  <input id="inspectionLevel" type="hidden">
+  <input id="itrSheet" type="hidden">
+  <input id="prerequisite" type="hidden">
+
+  <div class="form-grid">
+    <div class="field span-4"><label>1. Request No.</label><input id="requestNo" value="REQ-E-0001" placeholder="Request No."></div>
+    <div class="field"><label>2. Department</label>
+      <select id="requestDepartment"><option>Construction</option><option>Material</option><option>Preservation</option><option>Pre-Commissioning</option><option>Commissioning</option><option>Vendor</option><option>Other</option></select>
+    </div>
+    <div class="field"><label>3. Requester</label><input id="requesterName" placeholder="Select or enter requester"></div>
+    <div class="field"><label>4. Requester Email</label><input id="requesterEmail" type="email" placeholder="name@company.com"></div>
+    <div class="field"><label>5. Request Date</label><input id="requestDate" type="date" onchange="setRequiredInspectionDate()"></div>
+    <div class="field"><label>6. Request Time</label><input id="requestTime" type="time"></div>
+    <div class="field"><label>7. Required Inspection Date</label><input id="requiredInspectionDate" type="date"><span class="small">Default: request date + 1 day</span></div>
+
+    <div class="field"><label>8. Discipline</label><select id="discipline"></select></div>
+    <div class="field"><label>9. Main Equipment / Work Category</label><select id="equipment"></select></div>
+    <div class="field"><label>10. Type of Urgency</label>
+      <select id="requestUrgency">
+        <option>Normal</option><option>Priority</option><option>Urgent</option><option>Critical / Immediate Coordination</option>
+      </select>
+      <span class="small">Inspection time will be coordinated by QC.</span>
+    </div>
+
+    <div class="field span-2">
+      <label>11. Activity No.</label>
+      <div style="display:flex;gap:8px;align-items:end">
+        <select id="activity" style="flex:1"></select>
+        <button type="button" class="btn-light" onclick="toggleActivityReferenceTable()">Show Activity Description</button>
+      </div>
+    </div>
+    <div id="activityReferencePanel" class="field span-4" style="display:none">
+      <label>ITP Activity Reference</label>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ITP No.</th><th>Activity No.</th><th>Activity Description</th></tr></thead>
+          <tbody id="activityReferenceBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="field"><label>12. ITP No.</label><input id="itpDisplay" readonly><select id="itp" style="display:none"></select></div>
+    <div class="field span-2"><label>13. Activity Description</label><input id="activityDescription" readonly></div>
+    <div class="field"><label>14. ITP Revision No.</label><input id="itpRevision" readonly></div>
+    <div class="field"><label>15. Risk Category</label><input id="riskCategory" readonly></div>
+    <div class="field"><label>16. ITR No.</label><input id="itrNo" readonly></div>
+
+    <div class="field span-4"><label>17. Request Description</label><textarea id="requestDescription" readonly></textarea></div>
+    <div class="field span-4"><label>Requester Remarks / Additional Information</label><textarea id="requestRemarks" placeholder="Optional remarks, access information, work-front details or special coordination notes."></textarea></div>
+  </div>
+
+  <div id="initiatorGate" class="validation-box" style="margin-top:14px">Select the activity and equipment tag(s), then validate Tag + Activity readiness before submission.</div>
+</section>
+
+
+
+
+<section class="panel span-12 rfi-panel no-print">
+  <div class="section-kicker">QC Request Screening</div>
+  <h2>Requester Items – QC Screening & Comments</h2>
+  <p class="small">When the Requester submits an inspection request to QC, all requested Tag + Activity items are automatically populated in this QC Screening table under Make / Process RFI. Activity No. and Activity Description are shown for each item. QC can review each item and add comments where required. Any ready item with no QC comment is automatically cleared to proceed to formal RFI. Items with QC comments or failed readiness/prerequisite validation are returned/held and isolated from formal RFI generation.</p>
+
+  <div class="form-grid">
+    <div class="field span-2"><label>Common QC Comment / Return Reason</label>
+      <select id="commonRejectComment">
+        <option value="">-- Select common comment --</option>
+        <option>Installation / work is not completed.</option>
+        <option>Prerequisite inspection is not completed.</option>
+        <option>Prerequisite inspection was rejected / not accepted.</option>
+        <option>Required ITR / checklist / test report is incomplete.</option>
+        <option>Required supporting document is missing.</option>
+        <option>Approved/current drawing revision is not available.</option>
+        <option>Method statement / procedure is not approved.</option>
+        <option>Material inspection / approval is not completed.</option>
+        <option>Coating / painting clearance is not completed.</option>
+        <option>Required test is not completed.</option>
+        <option>Installation does not comply with IFC drawing.</option>
+        <option>Installation does not comply with applicable specification / standard.</option>
+        <option>Open NCR affects the requested inspection.</option>
+        <option>Open Punch / EIL affects the requested inspection.</option>
+        <option>Inspection area / access is not ready.</option>
+        <option>Required vendor / specialist is not available.</option>
+        <option>Tag / identification is incorrect or missing.</option>
+        <option>Duplicate request / existing active RFI.</option>
+        <option>Wrong inspection activity was requested.</option>
+        <option value="OTHER">Other – Specify</option>
+      </select>
+    </div>
+    <div class="field span-2"><label>QC Additional Comment</label>
+      <input id="rejectQcComment" placeholder="Enter QC-specific comment, required action or clarification">
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-light" onclick="refreshRejectedItems()">Refresh Rejected Items</button>
+    <button class="btn-gold" onclick="applyRejectComment()">Apply Comment to Selected Items</button>
+    <button class="btn-light" onclick="summarizeRejectedItems()">Summarize QC Comments</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Select</th><th>No.</th><th>Equipment Tag</th><th>Item Decision</th><th>Activity No.</th>
+        <th>Activity Description</th><th>Requester Status / Validation</th>
+        <th>Requester Remarks</th><th>Common QC Comment</th><th>QC Remarks</th><th>QC Screening Status</th><th>Action Required</th>
+      </tr></thead>
+      <tbody id="rejectedItemsBody"><tr><td colspan="11">Requester Tag + Activity items will automatically populate here for QC screening.</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="field" style="margin-top:12px">
+    <label>QC Rejected Items Summary</label>
+    <textarea id="rejectedSummary" style="min-height:150px" readonly></textarea>
+  </div>
+</section>
+
+<section class="panel span-12 rfi-panel">
+  <div class="section-kicker">Formal RFI · Sheet 1 Data</div>
   <h2>Project & RFI Information</h2>
   <div class="form-grid">
     <div class="field"><label>Project No.</label><input id="projectNo" value="ZULF-PKG3"></div>
@@ -156,33 +344,10 @@ tr:last-child td{border-bottom:0}
   </div>
 </section>
 
-<section class="panel span-8">
-  <div class="section-kicker">ITP Library</div>
-  <h2>Inspection Activity Selection</h2>
-  <div class="form-grid">
-    <div class="field"><label>Discipline</label><select id="discipline"></select></div>
-    <div class="field"><label>Main Equipment / Work Category</label><select id="equipment"></select></div>
-    <div class="field"><label>ITP No.</label><select id="itp"></select></div>
-    <div class="field"><label>Activity No.</label><select id="activity"></select></div>
-
-    <div class="field span-2"><label>Activity Description</label><input id="activityDescription" readonly></div>
-    <div class="field"><label>ITP Revision</label><input id="itpRevision" readonly></div>
-    <div class="field"><label>Risk Category</label><input id="riskCategory" readonly></div>
-
-    <div class="field"><label>Inspection Level</label><input id="inspectionLevel" readonly></div>
-    <div class="field"><label>ITR No.</label><input id="itrNo" readonly></div>
-    <div class="field"><label>ITR Sheet No.</label><input id="itrSheet" readonly></div>
-    <div class="field"><label>Prerequisite Activity</label><input id="prerequisite" readonly></div>
-
-    <div class="field span-2"><label>Reference Standard / Specification</label><textarea id="referenceStandard" readonly></textarea></div>
-    <div class="field span-2"><label>Procedure / Method Statement</label><textarea id="procedure" readonly></textarea></div>
-  </div>
-  <p class="footer-note">Risk category, inspection level, ITR, references and prerequisites are controlled by the selected ITP activity and are read-only.</p>
-</section>
 
 <section class="panel span-4">
-  <div class="section-kicker">Readiness</div>
-  <h2>Inspection Gate</h2>
+  <div class="section-kicker">17 · Tag Validation</div>
+  <h2>Tag Validation / Readiness Gate</h2>
   <div class="stat-row">
     <div class="stat"><strong id="statSelected">0</strong><span>Selected Tags</span></div>
     <div class="stat"><strong id="statEligible">0</strong><span>Eligible</span></div>
@@ -193,8 +358,8 @@ tr:last-child td{border-bottom:0}
 </section>
 
 <section class="panel span-6">
-  <div class="section-kicker">Equipment Tags</div>
-  <h2>Tag Selection & Entry</h2>
+  <div class="section-kicker">18 · Equipment Tags</div>
+  <h2>Equipment Tag Selection</h2>
   <div class="mode-row">
     <label><input type="radio" name="tagMode" value="list" checked> Select from List</label>
     <label><input type="radio" name="tagMode" value="paste"> Copy & Paste</label>
@@ -225,7 +390,7 @@ tr:last-child td{border-bottom:0}
 </section>
 
 <section class="panel span-6">
-  <div class="section-kicker">Validation Results</div>
+  <div class="section-kicker">19 · Status</div>
   <h2>Tag + Activity Status</h2>
   <div class="table-wrap" style="max-height:390px">
     <table>
@@ -236,9 +401,38 @@ tr:last-child td{border-bottom:0}
 </section>
 
 <section class="panel span-12">
-  <div class="section-kicker">Document Management Integration</div>
-  <h2>Reference Documents & Drawings</h2>
-  <div class="form-grid">
+  <div class="section-kicker">20 · Register</div>
+  <h2>Equipment Tag & Barcode Register</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>No.</th><th>Equipment Tag</th><th>Activity No.</th><th>Barcode</th><th>System</th><th>Subsystem</th><th>Location</th><th>IMM Status</th><th>Tag Disposition</th></tr></thead>
+      <tbody id="barcodeBody"><tr><td colspan="9">Validate eligible tags to populate Sheet 2.</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="actions">
+    <button class="btn-gold" onclick="generateRFI()">Generate / Refresh RFI</button>
+    <button class="btn-primary" onclick="simulatePIDAcceptance()">Simulate PID Acceptance & IMM Update</button>
+  </div>
+  <p class="footer-note">Prototype behavior: PID acceptance updates the in-memory IMM for each accepted Tag + Activity. A production version requires authentication, backend database, audit trail and controlled authorization.</p>
+</section>
+
+<section class="panel span-12">
+  <div class="section-kicker">21–24 · References</div>
+  <h2>Reference Standards, Procedures, Drawings & Additional Documents</h2>
+  <div class="form-grid" style="margin-bottom:14px">
+    <div class="field span-2"><label>21. Reference Standard</label>
+      <div style="display:flex;gap:6px"><input id="referenceStandard" readonly><input id="referenceStandardRev" readonly style="max-width:110px" placeholder="Rev."><button class="btn-light" type="button" onclick="openReference('standard')">Open</button></div>
+    </div>
+    <div class="field span-2"><label>22. Reference Procedure</label>
+      <div style="display:flex;gap:6px"><input id="procedure" readonly><input id="procedureRev" readonly style="max-width:110px" placeholder="Rev."><button class="btn-light" type="button" onclick="openReference('procedure')">Open</button></div>
+    </div>
+    <div class="field span-4"><label>23. Reference Drawing / Documents</label>
+      <div id="automaticReferenceDocs" class="validation-box">Select an activity to load applicable drawings/documents and revisions.</div>
+    </div>
+  </div>
+  <div class="section-kicker">24 · Additional Reference Documents</div>
+<div class="form-grid">
     <div class="field span-2"><label>Search / Select Reference</label>
       <select id="docSelect"></select>
     </div>
@@ -256,7 +450,93 @@ tr:last-child td{border-bottom:0}
   </div>
 </section>
 
-<section class="panel span-12">
+
+
+<section class="panel span-12 requester-panel">
+  <div class="section-kicker">25 · Disposition & Signatory</div>
+  <h2>Requester Disposition & Signatories</h2>
+  <p class="small">This section is for the requesting work department before submission to QC. It is separate from the formal QC/Client RFI disposition and signatories.</p>
+
+  <div class="form-grid">
+    <div class="field span-2">
+      <label>Requester Disposition</label>
+      <select id="requesterDisposition">
+        <option value="">-- Select disposition --</option>
+        <option>Ready for QC Inspection</option>
+        <option>Ready with Remarks</option>
+        <option>Hold – Work Not Ready</option>
+        <option>Cancelled</option>
+      </select>
+    </div>
+    <div class="field span-2">
+      <label>Disposition Remarks</label>
+      <textarea id="requesterDispositionRemarks" placeholder="Enter remarks, limitations, outstanding items or other information for QC."></textarea>
+    </div>
+  </div>
+
+  <div class="form-grid" style="margin-top:12px">
+    <div class="field">
+      <label>Signatory Position</label>
+      <select id="newSignatoryPosition" onchange="populateSignatoryPeople(this.value,'newSignatoryPerson')">
+        <option value="">-- Select position --</option>
+        <option>Lead Performer</option>
+        <option>Supervisor</option>
+        <option>Construction Manager</option>
+        <option>Material Supervisor</option>
+        <option>Preservation Supervisor</option>
+        <option>Pre-Commissioning Supervisor</option>
+        <option>Commissioning Supervisor</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Signatory Person</label>
+      <select id="newSignatoryPerson"><option value="">-- Select person --</option></select>
+    </div>
+    <div class="field">
+      <label>&nbsp;</label>
+      <button type="button" class="btn-gold" onclick="addRequesterSignatory()">Add Signatory</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Role</th><th>Name</th><th>Signature / Initial</th><th>Date</th></tr>
+      </thead>
+      <tbody id="requesterSignatoryBody"></tbody>
+    </table>
+  </div>
+
+  
+</section>
+
+<section class="panel span-12 no-print requester-panel">
+  <div class="section-kicker">Email Notification</div>
+  <h2>Inspection Request Email Notification</h2>
+  <p class="small">Prepare the notification to QC after the work department completes the inspection request.</p>
+  <div class="form-grid">
+    <div class="field span-2"><label>To – QC Recipient(s)</label><input id="requestEmailTo" placeholder="qc.inspector@company.com; qc.team@company.com"></div>
+    <div class="field span-2"><label>CC</label><input id="requestEmailCc" placeholder="construction@company.com; supervisor@company.com"></div>
+    <div class="field span-2"><label>Email Subject</label><input id="requestEmailSubject" readonly></div>
+    <div class="field span-2"><label>Email Preview</label><textarea id="requestEmailPreview" style="min-height:260px" readonly></textarea></div>
+  </div>
+  <div class="actions">
+    <button class="btn-gold" onclick="prepareRequesterNotification()">Prepare Email</button>
+    <button class="btn-primary"
+  
+ onclick="openRequesterNotification()">Open in Outlook</button>
+    <button class="btn-light" onclick="copyRequesterNotification()">Copy Email</button>
+  </div>
+  
+  <p class="footer-note">This notification is for the inspection request only. Formal RFI disposition and signatories remain under Make / Process RFI.</p>
+
+  <div class="actions no-print" style="margin-top:18px;border-top:2px solid #d7e0e8;padding-top:16px;justify-content:flex-end">
+    <button type="button" class="btn-primary requester-only" onclick="captureRequesterItems();recordRequesterSubmissionToIMM();submitInitiatorRequest()">Submit Request to QC</button>
+  </div>
+</section>
+
+<section class="panel span-12 rfi-panel">
   <div class="section-kicker">Inspection Result</div>
   <h2>Disposition & Signatories</h2>
   <div class="form-grid">
@@ -286,23 +566,33 @@ tr:last-child td{border-bottom:0}
   </div>
 </section>
 
-<section class="panel span-12">
-  <div class="section-kicker">Sheet 2</div>
-  <h2>Equipment Tag & Barcode Register</h2>
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>No.</th><th>Equipment Tag</th><th>Activity No.</th><th>Barcode</th><th>System</th><th>Subsystem</th><th>Location</th><th>IMM Status</th><th>Tag Disposition</th></tr></thead>
-      <tbody id="barcodeBody"><tr><td colspan="9">Validate eligible tags to populate Sheet 2.</td></tr></tbody>
-    </table>
+<section class="panel span-12 no-print rfi-panel">
+  <div class="section-kicker">Formal RFI Notification</div>
+  <h2>RFI Email Notification & Recipient Register</h2>
+  <div class="form-grid">
+    <div class="field span-2"><label>To</label><input id="emailTo" placeholder="recipient1@company.com; recipient2@company.com"></div>
+    <div class="field span-2"><label>CC</label><input id="emailCc" placeholder="cc1@company.com; cc2@company.com"></div>
+    <div class="field span-2"><label>Email Subject</label><input id="emailSubject" readonly></div>
+    <div class="field span-2"><label>Notification Status</label>
+      <select id="emailStatus"><option>RFI Submitted / Notification</option><option>RFI Rescheduled</option><option>RFI Cancellation</option><option>Reinspection</option><option>Rejection / Action Required</option><option>RFI Acceptance / Closure</option></select>
+    </div>
+    <div class="field span-4"><label>Email Preview</label><textarea id="emailPreview" style="min-height:260px" readonly></textarea></div>
   </div>
-
   <div class="actions">
-    <button class="btn-gold" onclick="generateRFI()">Generate / Refresh RFI</button>
-    <button class="btn-primary" onclick="simulatePIDAcceptance()">Simulate PID Acceptance & IMM Update</button>
-    <button class="btn-light" onclick="window.print()">Print RFI Package</button>
+    <button class="btn-gold" onclick="prepareEmail()">Prepare Email</button>
+    <button class="btn-primary" onclick="openOutlook()">Open in Outlook</button>
+    <button class="btn-light" onclick="copyEmail()">Copy Email</button>
   </div>
-  <p class="footer-note">Prototype behavior: PID acceptance updates the in-memory IMM for each accepted Tag + Activity. A production version requires authentication, backend database, audit trail and controlled authorization.</p>
+  <p class="footer-note">Static GitHub version: Open in Outlook uses your device's configured email application. server-side sending requires a protected email service/backend.</p>
+
+  <div class="actions no-print" style="margin-top:20px;border-top:2px solid #d7e0e8;padding-top:18px;justify-content:flex-end;gap:10px">
+    <button type="button" class="btn-primary" onclick="captureRequesterItems();submitInitiatorRequest()">Generate RFI</button>
+    <button type="button" class="btn-light" onclick="window.print()">Print RFI Package</button>
+    <button type="button" class="btn-light" onclick="openIMM()">IMM</button>
+  </div>
 </section>
+
+
 
 </div>
 </main>
@@ -314,7 +604,7 @@ tr:last-child td{border-bottom:0}
 
 <script>
 const today = new Date().toISOString().slice(0,10);
-["inspectionDate","dateConstruction","dateQC","dateQCSup","datePMT","datePID"].forEach(id=>{
+["inspectionDate","dateConstruction","dateQC","dateQCSup","datePMT","datePID","requestDate","requiredInspectionDate"].forEach(id=>{
   document.getElementById(id).value = today;
 });
 
@@ -322,46 +612,37 @@ const itpLibrary = [
   {
     discipline:"Electrical", equipment:"Cable", itpNo:"ITP-E-CBL-001", revision:"03",
     activities:[
-      {no:"4.1", desc:"Cable Installation Inspection", risk:"B", level:"Witness", itr:"ITR-E-CBL-001", sheet:"1", refs:"Approved IFC cable routing drawings; project specification; SAIC/SAES requirements as applicable", proc:"Approved Electrical Cable Installation Method Statement", prereq:[]},
-      {no:"4.2", desc:"Insulation Resistance & Continuity Test", risk:"B", level:"Witness", itr:"ITR-E-CBL-002", sheet:"2", refs:"Approved testing procedure; cable datasheet; applicable IEC/project requirements", proc:"Approved Cable IR & Continuity Test Procedure", prereq:["4.1"]},
-      {no:"4.3", desc:"Cable Termination Inspection", risk:"B", level:"Witness", itr:"ITR-E-CBL-003", sheet:"3", refs:"Approved termination drawings; cable schedule; project specification", proc:"Approved Cable Termination Method Statement", prereq:["4.1"]},
-      {no:"4.4", desc:"Final Cable Test / Completion Verification", risk:"A", level:"Hold", itr:"ITR-E-CBL-004", sheet:"4", refs:"Approved ITP; final test procedure; project specification", proc:"Approved Final Cable Test Procedure", prereq:["4.2","4.3"]}
+      {no:"4.1", desc:"Cable Installation Inspection", rfiDesc:"Inspection and verification of electrical cable installation in accordance with the approved cable schedule, cable routing layout, typical installation details, ITP, project specifications and applicable requirements. For equipment tag(s), please see the Tag List in the next sheet.", risk:"B", level:"Witness", itr:"ITR-E-CBL-001", sheet:"1", refs:"Approved IFC cable routing drawings; project specification; SAIC/SAES requirements as applicable", proc:"Approved Electrical Cable Installation Method Statement", prereq:[]},
+      {no:"4.2", desc:"Insulation Resistance & Continuity Test", rfiDesc:"Inspection and witnessing of electrical cable insulation resistance and continuity testing in accordance with the approved cable schedule, typical installation details, ITP, approved test procedure, project specifications and applicable requirements. For equipment tag(s), please see the Tag List in the next sheet.", risk:"B", level:"Witness", itr:"ITR-E-CBL-002", sheet:"2", refs:"Approved testing procedure; cable datasheet; applicable IEC/project requirements", proc:"Approved Cable IR & Continuity Test Procedure", prereq:["4.1"]},
+      {no:"4.3", desc:"Cable Termination Inspection", rfiDesc:"Inspection and verification of electrical cable termination in accordance with the approved cable schedule, wiring diagram, ITP, approved termination method statement, project specifications and applicable requirements. For equipment tag(s), please see the Tag List in the next sheet.", risk:"B", level:"Witness", itr:"ITR-E-CBL-003", sheet:"3", refs:"Approved termination drawings; cable schedule; project specification", proc:"Approved Cable Termination Method Statement", prereq:["4.1"]},
+      {no:"4.4", desc:"Final Cable Test / Completion Verification", rfiDesc:"Final inspection, testing and completion verification of electrical cables in accordance with the approved ITP, cable schedule, final test procedure, project specifications and applicable requirements. For equipment tag(s), please see the Tag List in the next sheet.", risk:"A", level:"Hold", itr:"ITR-E-CBL-004", sheet:"4", refs:"Approved ITP; final test procedure; project specification", proc:"Approved Final Cable Test Procedure", prereq:["4.2","4.3"]}
     ]
   },
   {
     discipline:"Instrumentation", equipment:"Cable", itpNo:"ITP-I-CBL-001", revision:"02",
     activities:[
-      {no:"5.1", desc:"Instrument Cable Installation Inspection", risk:"B", level:"Witness", itr:"ITR-I-CBL-001", sheet:"1", refs:"Approved instrument cable routing/layout drawings; project specification", proc:"Approved Instrument Cable Installation Method Statement", prereq:[]},
-      {no:"5.2", desc:"Continuity / Insulation Test", risk:"B", level:"Witness", itr:"ITR-I-CBL-002", sheet:"2", refs:"Approved test procedure and instrument cable requirements", proc:"Approved Instrument Cable Testing Procedure", prereq:["5.1"]},
-      {no:"5.3", desc:"Instrument Cable Termination Inspection", risk:"B", level:"Witness", itr:"ITR-I-CBL-003", sheet:"3", refs:"Approved termination/interconnection drawings", proc:"Approved Instrument Cable Termination Method Statement", prereq:["5.1"]}
+      {no:"5.1", desc:"Instrument Cable Installation Inspection", rfiDesc:"Inspection and verification of instrument cable installation in accordance with the approved instrument cable schedule, cable routing/layout drawings, typical installation details, ITP, project specifications and applicable requirements. For equipment tag(s), please see the Tag List in the next sheet.", risk:"B", level:"Witness", itr:"ITR-I-CBL-001", sheet:"1", refs:"Approved instrument cable routing/layout drawings; project specification", proc:"Approved Instrument Cable Installation Method Statement", prereq:[]},
+      {no:"5.2", desc:"Continuity / Insulation Test", rfiDesc:"Inspection and witnessing of instrument cable continuity and insulation testing in accordance with the approved instrument cable schedule, typical installation details, ITP, approved test procedure and applicable requirements. For equipment tag(s), please see the Tag List in the next sheet.", risk:"B", level:"Witness", itr:"ITR-I-CBL-002", sheet:"2", refs:"Approved test procedure and instrument cable requirements", proc:"Approved Instrument Cable Testing Procedure", prereq:["5.1"]},
+      {no:"5.3", desc:"Instrument Cable Termination Inspection", rfiDesc:"Inspection and verification of instrument cable termination in accordance with the approved instrument cable schedule, wiring/interconnection diagram, ITP, approved termination method statement and applicable requirements. For equipment tag(s), please see the Tag List in the next sheet.", risk:"B", level:"Witness", itr:"ITR-I-CBL-003", sheet:"3", refs:"Approved termination/interconnection drawings", proc:"Approved Instrument Cable Termination Method Statement", prereq:["5.1"]}
     ]
   },
   {
     discipline:"Electrical", equipment:"Cable Tray", itpNo:"ITP-E-CTR-001", revision:"01",
     activities:[
-      {no:"3.1", desc:"Cable Tray Support Installation Inspection", risk:"B", level:"Surveillance", itr:"ITR-E-CTR-001", sheet:"1", refs:"Approved IFC support/layout drawings; NEMA VE-2; project specification", proc:"Approved Cable Tray Installation Method Statement", prereq:[]},
-      {no:"3.2", desc:"Cable Tray / Ladder Installation Inspection", risk:"B", level:"Witness", itr:"ITR-E-CTR-002", sheet:"2", refs:"Approved IFC cable tray routing drawings; NEMA VE-2; project specification", proc:"Approved Cable Tray Installation Method Statement", prereq:["3.1"]}
+      {no:"3.1", desc:"Cable Tray Support Installation Inspection", rfiDesc:"Inspection and verification of cable tray support installation in accordance with the approved typical installation details, ITP, project specifications, NEMA VE-2 and applicable requirements. For equipment tag(s), please see the Tag List in the next sheet.", risk:"B", level:"Surveillance", itr:"ITR-E-CTR-001", sheet:"1", refs:"Approved IFC support/layout drawings; NEMA VE-2; project specification", proc:"Approved Cable Tray Installation Method Statement", prereq:[]},
+      {no:"3.2", desc:"Cable Tray / Ladder Installation Inspection", rfiDesc:"Inspection and verification of cable tray/ladder installation in accordance with the approved cable tray/ladder layout drawing, typical installation details, ITP, project specifications, NEMA VE-2 and applicable requirements. For equipment tag(s), please see the Tag List in the next sheet.", risk:"B", level:"Witness", itr:"ITR-E-CTR-002", sheet:"2", refs:"Approved IFC cable tray routing drawings; NEMA VE-2; project specification", proc:"Approved Cable Tray Installation Method Statement", prereq:["3.1"]}
     ]
   }
 ];
 
-const tags = [
-  "408-3J-PC-00801","408-3J-PC-00802","408-3J-PC-00803","408-3J-PC-00804","408-3J-PC-00805",
-  "408-3J-PC-00806","408-3J-PC-00807","408-3J-PC-00808","408-3J-PC-00809","408-3J-PC-00810",
-  "408-3M-PC-00781","408-3M-PC-00782","408-3M-PC-00783","408-3M-PC-00784","408-3M-PC-00785",
-  "408-3M-PC-00786","408-3M-PC-00787","408-3M-PC-00788","408-3M-PC-00789","408-3M-PC-00790"
+const tagLibrary=[
+..."408-3J-PC-00801,408-3J-PC-00802,408-3J-PC-00803,408-3J-PC-00804,408-3J-PC-00805,408-3J-PC-00806,408-3J-PC-00807,408-3J-PC-00808,408-3J-PC-00809,408-3J-PC-00810".split(",").map(tag=>({tag,discipline:"Electrical",equipment:"Cable",system:"SYS-240",subsystem:"SUB-240-E01",location:"Mezzanine Deck"})),
+..."408-3M-PC-00781,408-3M-PC-00782,408-3M-PC-00783,408-3M-PC-00784,408-3M-PC-00785,408-3M-PC-00786,408-3M-PC-00787,408-3M-PC-00788,408-3M-PC-00789,408-3M-PC-00790".split(",").map(tag=>({tag,discipline:"Electrical",equipment:"Cable",system:"SYS-245",subsystem:"SUB-245-E01",location:"Main Deck"})),
+..."408-3J-CTR-00101,408-3J-CTR-00102,408-3J-CTR-00103,408-3J-CTR-00104,408-3J-CTR-00105".split(",").map(tag=>({tag,discipline:"Electrical",equipment:"Cable Tray",system:"SYS-240",subsystem:"SUB-240-E01",location:"Mezzanine Deck"})),
+..."408-3I-SC-00101,408-3I-SC-00102,408-3I-SC-00103,408-3I-SC-00104,408-3I-SC-00105".split(",").map(tag=>({tag,discipline:"Instrumentation",equipment:"Cable",system:"SYS-216",subsystem:"SUB-216-I01",location:"Main Deck"}))
 ];
-
-const tagMeta = {};
-tags.forEach((t,i)=>{
-  tagMeta[t] = {
-    discipline: t.includes("3J") ? "Electrical" : "Electrical",
-    equipment:"Cable",
-    system: i < 10 ? "SYS-240" : "SYS-245",
-    subsystem: i < 10 ? "SUB-240-E01" : "SUB-245-E01",
-    location: i < 10 ? "Mezzanine Deck" : "Main Deck"
-  };
-});
+const tags=tagLibrary.map(x=>x.tag);
+const tagMeta=Object.fromEntries(tagLibrary.map(x=>[x.tag,x]));
 
 const imm = {
   "408-3J-PC-00801|4.1":"Accepted",
@@ -377,13 +658,17 @@ const activeRFI = {
   "408-3J-PC-00804|4.1":"RFI-E-0098"
 };
 
-const documents = [
-  {type:"IFC Drawing", no:"408-E-EL-240-001", title:"Electrical Cable Routing Layout - Mezzanine Deck", rev:"C", status:"Approved / Current"},
-  {type:"IFC Drawing", no:"408-E-EL-245-002", title:"Electrical Cable Routing Layout - Main Deck", rev:"B", status:"Approved / Current"},
-  {type:"ITP", no:"ITP-E-CBL-001", title:"Inspection & Test Plan - Electrical Cables", rev:"03", status:"Approved / Current"},
-  {type:"ITR", no:"ITR-E-CBL-002", title:"Cable IR & Continuity Inspection and Test Report", rev:"02", status:"Approved / Current"},
-  {type:"Procedure", no:"MS-E-CBL-001", title:"Electrical Cable Installation Method Statement", rev:"04", status:"Approved / Current"},
-  {type:"Specification", no:"PROJECT-SPEC-E-001", title:"Project Electrical Installation Specification", rev:"1", status:"Approved / Current"}
+const documents=[
+{type:"Cable Schedule",no:"SCH-E-240-CBL-001",title:"Electrical Cable Schedule",rev:"03",status:"Approved / Current",discipline:"Electrical",equipment:"Cable",activities:["4.1","4.2","4.3","4.4"]},
+{type:"IFC Drawing",no:"408-E-EL-240-001",title:"Electrical Cable Routing Layout",rev:"C",status:"Approved / Current",discipline:"Electrical",equipment:"Cable",activities:["4.1"]},
+{type:"Typical Detail",no:"DWG-E-CBL-DET-001",title:"Cable Typical Installation Details",rev:"01",status:"Approved / Current",discipline:"Electrical",equipment:"Cable",activities:["4.1","4.2"]},
+{type:"Wiring Diagram",no:"DWG-E-WIR-001",title:"Electrical Wiring Diagram",rev:"01",status:"Approved / Current",discipline:"Electrical",equipment:"Cable",activities:["4.3"]},
+{type:"IFC Drawing",no:"DWG-E-CTR-LAY-001",title:"Cable Tray / Ladder Layout Drawing",rev:"02",status:"Approved / Current",discipline:"Electrical",equipment:"Cable Tray",activities:["3.2"]},
+{type:"Typical Detail",no:"DWG-E-CTR-DET-001",title:"Cable Tray / Ladder Typical Installation Details",rev:"02",status:"Approved / Current",discipline:"Electrical",equipment:"Cable Tray",activities:["3.1","3.2"]},
+{type:"Cable Schedule",no:"SCH-I-216-CBL-001",title:"Instrument Cable Schedule",rev:"02",status:"Approved / Current",discipline:"Instrumentation",equipment:"Cable",activities:["5.1","5.2","5.3"]},
+{type:"IFC Drawing",no:"DWG-I-CBL-ROUTE-001",title:"Instrument Cable Routing Layout",rev:"02",status:"Approved / Current",discipline:"Instrumentation",equipment:"Cable",activities:["5.1"]},
+{type:"Typical Detail",no:"DWG-I-CBL-DET-001",title:"Instrument Cable Typical Installation Details",rev:"01",status:"Approved / Current",discipline:"Instrumentation",equipment:"Cable",activities:["5.1","5.2"]},
+{type:"Wiring Diagram",no:"DWG-I-WIR-001",title:"Instrument Wiring / Interconnection Diagram",rev:"01",status:"Approved / Current",discipline:"Instrumentation",equipment:"Cable",activities:["5.3"]}
 ];
 
 let selectedTags = [];
@@ -401,16 +686,57 @@ function fillSelect(id, values){
   const el = document.getElementById(id);
   el.innerHTML = values.map(v=>`<option value="${v}">${v}</option>`).join("");
 }
+function toggleActivityReferenceTable(){
+  const panel=document.getElementById("activityReferencePanel");
+  if(!panel)return;
+  const opening=panel.style.display==="none" || !panel.style.display;
+  panel.style.display=opening?"block":"none";
+  if(opening)renderActivityReferenceTable();
+}
+function renderActivityReferenceTable(){
+  const body=document.getElementById("activityReferenceBody"); if(!body)return;
+  const i=currentITP();
+  if(!i){body.innerHTML='<tr><td colspan="3">Select Discipline, Main Equipment / Work Category and ITP first.</td></tr>';return;}
+  body.innerHTML=i.activities.map(a=>`<tr>
+    <td>${esc(i.itpNo)}</td>
+    <td>${esc(a.no)}</td>
+    <td>${esc(a.desc)}</td>
+  </tr>`).join("");
+}
+
+function setRequiredInspectionDate(){
+  const d=value("requestDate"); if(!d)return;
+  const x=new Date(d+"T00:00:00"); x.setDate(x.getDate()+1);
+  const y=x.getFullYear(),m=String(x.getMonth()+1).padStart(2,"0"),day=String(x.getDate()).padStart(2,"0");
+  requiredInspectionDate.value=`${y}-${m}-${day}`;
+}
+function openReference(kind){
+  const title=kind==="standard"?value("referenceStandard"):value("procedure");
+  const rev=kind==="standard"?value("referenceStandardRev"):value("procedureRev");
+  if(!title){alert("Select an inspection activity first.");return;}
+  alert(`${kind==="standard"?"Reference Standard":"Reference Procedure"}\n\n${title}\nRevision: ${rev||"Current approved revision"}\n\nPrototype: this button will open the controlled document from the Document Library in the production system.`);
+}
+function automaticDrawingMap(discipline,equipment,activityNo){
+  const map={
+    "Electrical|Cable|4.1":[["Cable Schedule","Rev. Current"],["Cable Routing Layout","Rev. Current"],["Typical Installation Details","Rev. Current"]],
+    "Electrical|Cable|4.2":[["Cable Schedule","Rev. Current"],["Typical Installation Details","Rev. Current"]],
+    "Electrical|Cable|4.3":[["Cable Schedule","Rev. Current"],["Wiring Diagram","Rev. Current"]]
+  };
+  return map[`${discipline}|${equipment}|${activityNo}`]||[];
+}
+function renderAutomaticReferences(){
+  const box=document.getElementById("automaticReferenceDocs"); if(!box)return;
+  const a=currentActivity(); if(!a){box.textContent="Select an activity to load applicable drawings/documents and revisions.";return;}
+  const docs=automaticDrawingMap(value("discipline"),value("equipment"),a.no);
+  box.innerHTML=docs.length?docs.map((d,i)=>`${i+1}. <strong>${esc(d[0])}</strong> — ${esc(d[1])} <button type="button" class="btn-light" onclick="alert('Prototype: open controlled ${d[0]} from Document Library.')">Open</button>`).join("<br>"):"Applicable controlled drawings/documents will populate from the Document Library for this activity.";
+}
+
 function updateEquipment(){
   const d = discipline.value;
   fillSelect("equipment", uniq(itpLibrary.filter(x=>x.discipline===d).map(x=>x.equipment)));
   updateITP();
 }
-function updateITP(){
-  const d=discipline.value,e=equipment.value;
-  fillSelect("itp", itpLibrary.filter(x=>x.discipline===d&&x.equipment===e).map(x=>x.itpNo));
-  updateActivity();
-}
+function updateITP(){const d=discipline.value,e=equipment.value;selectedTags=[];selectedDocuments=[];fillSelect("itp",itpLibrary.filter(x=>x.discipline===d&&x.equipment===e).map(x=>x.itpNo));if(document.getElementById("itpDisplay"))itpDisplay.value=itp.value||"";renderTagList();renderDocuments();updateActivity();}
 function currentITP(){ return itpLibrary.find(x=>x.itpNo===itp.value); }
 function currentActivity(){
   const i=currentITP(); return i ? i.activities.find(a=>a.no===activity.value) : null;
@@ -418,12 +744,13 @@ function currentActivity(){
 function updateActivity(){
   const i=currentITP();
   fillSelect("activity", i ? i.activities.map(a=>a.no) : []);
-  populateActivity();
+  populateActivity(); if(document.getElementById("activityReferencePanel") && activityReferencePanel.style.display!=="none")renderActivityReferenceTable();
 }
 function populateActivity(){
   const i=currentITP(),a=currentActivity();
   if(!i||!a)return;
   activityDescription.value=a.desc;
+  if(document.getElementById("itpDisplay"))itpDisplay.value=i.itpNo;
   itpRevision.value=i.revision;
   riskCategory.value=a.risk;
   inspectionLevel.value=a.level;
@@ -431,18 +758,24 @@ function populateActivity(){
   itrSheet.value=a.sheet;
   prerequisite.value=a.prereq.length?a.prereq.join(", "):"None";
   referenceStandard.value=a.refs;
+  if(document.getElementById("referenceStandardRev"))referenceStandardRev.value="Current";
   procedure.value=a.proc;
+  if(document.getElementById("procedureRev"))procedureRev.value="Current";
+  if(a.rfiDesc) rfiDescription.value=a.rfiDesc;
+  if(document.getElementById("requestDescription"))requestDescription.value=a.rfiDesc;
+  renderAutomaticReferences();
+  selectedDocuments=selectedDocuments.filter(d=>d.discipline===discipline.value&&d.equipment===equipment.value&&d.activities.includes(a.no));
+  renderDocuments();renderDocumentSelect();
   validateSelection(false);
+  if(document.getElementById("emailPreview")) prepareEmail();
 }
 discipline.addEventListener("change",updateEquipment);
 equipment.addEventListener("change",updateITP);
 itp.addEventListener("change",updateActivity);
 activity.addEventListener("change",populateActivity);
 
-function renderTagList(){
-  tagList.innerHTML = tags.map(t=>`<label><input type="checkbox" class="tagCheck" value="${t}"> ${t}</label>`).join("");
-  tagSuggestions.innerHTML = tags.map(t=>`<option value="${t}"></option>`).join("");
-}
+function applicableTags(){return tagLibrary.filter(x=>x.discipline===discipline.value&&x.equipment===equipment.value).map(x=>x.tag);}
+function renderTagList(){const list=applicableTags();tagList.innerHTML=list.map(t=>`<label><input type="checkbox" class="tagCheck" value="${t}"> ${t}</label>`).join("");tagSuggestions.innerHTML=list.map(t=>`<option value="${t}"></option>`).join("");}
 document.querySelectorAll('input[name="tagMode"]').forEach(r=>r.addEventListener("change",e=>{
   modeList.classList.toggle("hidden",e.target.value!=="list");
   modePaste.classList.toggle("hidden",e.target.value!=="paste");
@@ -564,10 +897,8 @@ function renderBarcodes(){
   });
 }
 
-function initDocuments(){
-  docSelect.innerHTML=documents.map((d,i)=>`<option value="${i}">${d.type} | ${d.no} | ${d.title}</option>`).join("");
-  syncDocumentFields();
-}
+function initDocuments(){renderDocumentSelect();}
+function renderDocumentSelect(){const a=currentActivity(),n=a?a.no:"";const list=documents.filter(d=>d.discipline===discipline.value&&d.equipment===equipment.value&&d.activities.includes(n));docSelect.innerHTML=list.map(d=>`<option value="${documents.indexOf(d)}">${d.type} | ${d.no} | ${d.title}</option>`).join("");if(list.length){docSelect.value=documents.indexOf(list[0]);syncDocumentFields();}else{docNo.value="";docRevStatus.value="";}}
 function syncDocumentFields(){
   const d=documents[+docSelect.value];
   if(!d)return;
@@ -575,8 +906,9 @@ function syncDocumentFields(){
 }
 docSelect.addEventListener("change",syncDocumentFields);
 function addDocument(){
-  const d=documents[+docSelect.value];
-  if(!d)return;
+  const d=documents[+docSelect.value],a=currentActivity();
+  if(!d||!a)return;
+  if(d.discipline!==discipline.value||d.equipment!==equipment.value||!d.activities.includes(a.no)){alert("Reference is not applicable to the selected Discipline / Equipment / Activity.");return;}
   if(!selectedDocuments.some(x=>x.no===d.no))selectedDocuments.push(d);
   renderDocuments();
 }
@@ -593,6 +925,338 @@ function renderDocuments(){
 
 function value(id){return document.getElementById(id).value||"";}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+
+function setModuleMode(role){
+  if(role==="rfi"){setTimeout(()=>{refreshRejectedItems();summarizeRejectedItems();},0);}
+  const requester = role === "requester";
+  document.querySelectorAll(".requester-only").forEach(el=>el.style.display=requester?"":"none");
+  document.querySelectorAll(".qc-only").forEach(el=>el.style.display=requester?"none":"");
+  document.querySelectorAll(".requester-panel").forEach(el=>el.style.display=requester?"":"none");
+  document.querySelectorAll(".rfi-panel").forEach(el=>el.style.display=requester?"none":"");
+  const notice=document.getElementById("roleNotice");
+  if(notice) notice.innerHTML=requester
+    ? "<strong>Requester / Inspection Request Mode.</strong> Prepare and submit the inspection request to QC. QC verification controls are hidden."
+    : "<strong>Make / Process RFI Mode.</strong> Review readiness, prerequisites and feedback, then process eligible items for formal RFI generation.";
+}
+let requesterSubmittedItems=[];
+
+function captureRequesterItems(){
+  validateSelection(false);
+  const a=currentActivity();
+  requesterSubmittedItems=(validationResults||[]).map(x=>({
+    tag:x.tag,
+    activity:x.activity||a?.no||"",
+    activityDesc:a?.desc||"",
+    requesterRemarks:value("requestRemarks")||"—",
+    validationOk:!!x.ok,
+    validationReason:x.reason||(x.ok?"Ready":"Not ready")
+  }));
+  try{sessionStorage.setItem("rfiRequesterSubmittedItems",JSON.stringify(requesterSubmittedItems));}catch(e){}
+  return requesterSubmittedItems;
+}
+function loadRequesterItems(){
+  if(requesterSubmittedItems.length)return requesterSubmittedItems;
+  try{
+    const saved=JSON.parse(sessionStorage.getItem("rfiRequesterSubmittedItems")||"[]");
+    if(Array.isArray(saved))requesterSubmittedItems=saved;
+  }catch(e){}
+  return requesterSubmittedItems;
+}
+
+let rejectedRequestItems=[];
+
+function autoQcComment(reason){
+  const r=(reason||"").toLowerCase();
+  if(r.includes("prerequisite") && r.includes("reject")) return "Prerequisite inspection was rejected / not accepted.";
+  if(r.includes("prerequisite")) return "Prerequisite inspection is not completed.";
+  if(r.includes("duplicate") || r.includes("existing rfi")) return "Duplicate request / existing active RFI.";
+  if(r.includes("discipline")) return "Wrong discipline / work category for the requested inspection.";
+  if(r.includes("already inspected")) return "Requested activity has already been inspected.";
+  if(r.includes("not found")) return "Tag / identification is incorrect or missing.";
+  return "";
+}
+function refreshRejectedItems(){
+  const submitted=loadRequesterItems();
+  rejectedRequestItems=submitted.map((x,idx)=>{
+    const old=rejectedRequestItems.find(y=>y.tag===x.tag && y.activity===x.activity);
+    if(old){
+      old.activityDesc=x.activityDesc;
+      old.requesterRemarks=x.requesterRemarks;
+      return old;
+    }
+    return {
+      tag:x.tag,
+      activity:x.activity,
+      activityDesc:x.activityDesc,
+      requesterRemarks:x.requesterRemarks,
+      ready:!!x.validationOk,
+      reason:x.validationReason,
+      common:x.validationOk?"":autoQcComment(x.validationReason),
+      qc:"",
+      action:x.validationOk?"QC to verify / accept for formal RFI.":"Rectify / complete the identified requirement and resubmit to QC."
+    };
+  });
+  renderRejectedItems();
+  return rejectedRequestItems;
+}
+function renderRejectedItems(){
+  const body=document.getElementById("rejectedItemsBody"); if(!body)return;
+  if(!rejectedRequestItems.length){
+    body.innerHTML='<tr><td colspan="11">No requester Tag + Activity items available. Submit/select requester tags first.</td></tr>';
+    return;
+  }
+  body.innerHTML=rejectedRequestItems.map((x,i)=>`<tr>
+    <td><input type="checkbox" class="rejectPick" data-i="${i}"></td>
+    <td>${i+1}</td>
+    <td>${esc(x.tag)}</td>
+    <td>${esc(x.activity)}</td>
+    <td>${esc(x.activityDesc)}</td>
+    <td>${esc(x.ready?"READY / FOR QC VERIFICATION":x.reason)}</td>
+    <td>${esc(x.requesterRemarks||"—")}</td>
+    <td>${esc(x.common||"—")}</td>
+    <td><input type="text" value="${esc(x.qc||"")}" placeholder="QC remarks" oninput="setQcRowRemark(${i},this.value)" style="min-width:180px"></td>
+    <td>${esc((x.ready && !x.common && !x.qc)?"PROCEED TO RFI":"RETURN / HOLD")}</td>
+    <td>${esc((x.ready && !x.common && !x.qc)?"No QC comment – item may proceed to formal RFI.":x.action)}</td>
+  </tr>`).join("");
+}
+function setQcRowRemark(i,text){
+  const x=rejectedRequestItems[i]; if(!x)return;
+  x.qc=(text||"").trim();
+  if(x.qc){
+    x.ready=false;
+    x.action="Address QC remarks and resubmit the request to QC.";
+  }
+}
+function applyRejectComment(){
+  let common=value("commonRejectComment");
+  const qc=value("rejectQcComment");
+  if(common==="OTHER") common=qc||"Other – QC comment required.";
+  if(!common && !qc){alert("Select a common QC comment or enter an additional QC comment.");return;}
+  document.querySelectorAll(".rejectPick:checked").forEach(c=>{
+    const x=rejectedRequestItems[Number(c.dataset.i)];
+    if(common)x.common=common;
+    if(qc)x.qc=qc;
+    x.ready=false;
+    x.action="Rectify / complete the identified requirement and resubmit the request to QC.";
+  });
+  renderRejectedItems();
+  summarizeRejectedItems();
+}
+function qcProceedItems(){return rejectedRequestItems.filter(x=>x.ready && !x.common && !x.qc);}
+function qcHeldItems(){return rejectedRequestItems.filter(x=>!x.ready || x.common || x.qc);}
+function summarizeRejectedItems(){
+  const box=document.getElementById("rejectedSummary"); if(!box)return;
+  const proceed=qcProceedItems();
+  const rejected=qcHeldItems();
+  if(!rejected.length){box.value=`No rejected/returned request items. ${proceed.length} item(s) have no QC comment and may proceed to formal RFI.`;return;}
+  const groups={};
+  rejected.forEach(x=>{
+    const key=x.common||x.reason||"QC review required.";
+    (groups[key]??=[]).push(`${x.tag} (Activity ${x.activity} - ${x.activityDesc})`);
+  });
+  const lines=["QC REJECTED / RETURNED REQUEST ITEMS SUMMARY",""];
+  Object.entries(groups).forEach(([comment,tags],i)=>{
+    lines.push(`${i+1}. ${comment}`);
+    lines.push(`   Items: ${tags.join(", ")}`);
+  });
+  const additional=[...new Set(rejected.map(x=>x.qc).filter(Boolean))];
+  if(additional.length){lines.push("","QC Additional Comments:");additional.forEach((c,i)=>lines.push(`${i+1}. ${c}`));}
+  lines.push("","Rejected/returned items are isolated from the formal RFI and shall be rectified/completed and resubmitted.");
+  box.value=lines.join("\n");
+}
+
+function requestSummary(){validateSelection(false);const a=currentActivity(),i=currentITP();if(!a||!i)return null;return{a,i,all:validationResults,ok:validationResults.filter(x=>x.ok),bad:validationResults.filter(x=>!x.ok)};}
+function requestFeedbackLines(rows){return rows.map(r=>`${r.tag} | Activity ${r.activity} | ${r.ok?"READY":"NOT READY"} | ${r.reason}`).join("\n");}
+function submitInitiatorRequest(){
+  captureRequesterItems();const s=requestSummary();if(!s||!s.all.length){alert("Select activity and equipment tag(s) first.");return;}requestStatus.value="Submitted to QC";initiatorGate.className="validation-box";initiatorGate.innerHTML=`<strong>${value("requestNo")} SUBMITTED TO QC.</strong> ${s.all.length} Tag + Activity item(s) submitted for readiness verification.`;prepareInitiatorEmail("submission");}
+function prepareInitiatorEmail(mode="feedback"){const s=requestSummary();if(!s)return;const sub=mode==="submission";const subject=`${sub?"Inspection Request to QC":"QC Verification Feedback"} | ${value("requestNo")} | ${s.a.no} - ${s.a.desc}`;const body=`Dear ${value("requesterName")||"Requester"},\n\n${sub?"The following inspection request has been submitted to QC for internal verification. Formal RFI generation is subject to successful readiness and prerequisite validation.":"Please refer to the QC verification results below. Accepted/ready items may proceed to formal RFI generation. Blocked items shall be completed/rectified and resubmitted."}\n\nRequest No.: ${value("requestNo")}\nRequesting Department: ${value("requestDepartment")}\nDiscipline: ${value("discipline")}\nWork Category: ${value("equipment")}\nActivity: ${s.a.no} - ${s.a.desc}\nITP / Rev.: ${s.i.itpNo} / ${s.i.revision}\nITR: ${s.a.itr}\nRequired Inspection: ${value("requiredInspectionDate")} ${value("requiredInspectionTime")}\nLocation: ${value("location")} / ${value("area")}\nRequested Tags: ${s.all.length}\nReady: ${s.ok.length}\nBlocked: ${s.bad.length}\nQC Result: ${value("qcRequestResult")}\nReturn / Rejection Reason: ${value("returnReason")||"N/A"}\nQC Comments / Action Required: ${value("qcFeedback")||"N/A"}\n\nTAG + ACTIVITY VERIFICATION\n${requestFeedbackLines(s.all)}\n\nRequest Description:\n${value("requestDescription")||value("rfiDescription")}\n\nRegards,\nQC Inspection Team`;initiatorEmailPreview.value=body;return{subject,body};}
+function openInitiatorEmail(){const m=prepareInitiatorEmail(requestStatus.value==="Submitted to QC"?"submission":"feedback");if(!m)return;window.location.href=`mailto:${encodeURIComponent(value("requesterEmail"))}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`;}
+function processInitiatorRequest(){const s=requestSummary();if(!s||!s.all.length){alert("No Tag + Activity items available.");return;}let result=value("qcRequestResult");if(result==="Pending QC Verification"){result=s.bad.length?(s.ok.length?"Partially Accepted":"Returned to Initiator"):"Accepted for RFI";qcRequestResult.value=result;}requestStatus.value=result==="Accepted for RFI"?"QC Verified / RFI Ready":result;if(s.ok.length){selectedTags=s.ok.map(x=>x.tag);document.querySelectorAll(".tagCheck").forEach(c=>c.checked=selectedTags.includes(c.value));validateSelection(false);}initiatorGate.className=s.bad.length?"validation-box bad":"validation-box ok";initiatorGate.innerHTML=s.bad.length?`<strong>${result.toUpperCase()}.</strong> ${s.ok.length} item(s) ready for RFI; ${s.bad.length} item(s) blocked/returned.`:`<strong>QC VERIFIED.</strong> All ${s.ok.length} item(s) are ready for formal RFI generation.`;refreshRejectedItems(); summarizeRejectedItems(); prepareInitiatorEmail("feedback");}
+
+const requesterPeopleDirectory = {
+  "Lead Performer":["Sample Lead Performer A","Sample Lead Performer B"],
+  "Supervisor":["Sample Supervisor A","Sample Supervisor B"],
+  "Construction Manager":["Sample Construction Manager"],
+  "Material Supervisor":["Sample Material Supervisor"],
+  "Preservation Supervisor":["Sample Preservation Supervisor"],
+  "Pre-Commissioning Supervisor":["Sample Pre-Commissioning Supervisor"],
+  "Commissioning Supervisor":["Sample Commissioning Supervisor"],
+  "Other":["Other / Manual Entry"]
+};
+let requesterSignatories=[];
+
+function populateSignatoryPeople(position,targetId){
+  const sel=document.getElementById(targetId); if(!sel)return;
+  const people=requesterPeopleDirectory[position]||[];
+  sel.innerHTML='<option value="">-- Select person --</option>'+people.map(p=>`<option>${esc(p)}</option>`).join("");
+}
+function addRequesterSignatory(){
+  const position=value("newSignatoryPosition"), person=value("newSignatoryPerson");
+  if(!position||!person){alert("Please select both signatory position and person.");return;}
+  requesterSignatories.push({position,person,signature:"",date:""});
+  renderRequesterSignatories();
+}
+function renderRequesterSignatories(){
+  const body=document.getElementById("requesterSignatoryBody"); if(!body)return;
+  if(!requesterSignatories.length){
+    body.innerHTML='<tr><td colspan="4">Select a position and person, then click Add Signatory.</td></tr>';return;
+  }
+  body.innerHTML=requesterSignatories.map((s,i)=>`<tr>
+    <td><select onchange="changeRequesterSignatoryPosition(${i},this.value)">
+      ${Object.keys(requesterPeopleDirectory).map(p=>`<option ${p===s.position?"selected":""}>${esc(p)}</option>`).join("")}
+    </select></td>
+    <td><select onchange="requesterSignatories[${i}].person=this.value">
+      ${(requesterPeopleDirectory[s.position]||[]).map(p=>`<option ${p===s.person?"selected":""}>${esc(p)}</option>`).join("")}
+    </select></td>
+    <td><input placeholder="Signature / Initial" value="${esc(s.signature)}" oninput="requesterSignatories[${i}].signature=this.value"></td>
+    <td><input type="date" value="${esc(s.date)}" oninput="requesterSignatories[${i}].date=this.value">
+      <button type="button" class="btn-light" onclick="removeRequesterSignatory(${i})" style="margin-top:5px">Remove</button></td>
+  </tr>`).join("");
+}
+function changeRequesterSignatoryPosition(i,position){
+  requesterSignatories[i].position=position;
+  requesterSignatories[i].person=(requesterPeopleDirectory[position]||[])[0]||"";
+  renderRequesterSignatories();
+}
+function removeRequesterSignatory(i){requesterSignatories.splice(i,1);renderRequesterSignatories();}
+function requesterSignatorySummary(){
+  return requesterSignatories.length
+    ? requesterSignatories.map(s=>`${s.position}: ${s.person}${s.date?` | Date: ${s.date}`:""}`).join("\n")
+    : "No signatory selected";
+}
+
+function requesterTagCount(){
+  try{ validateSelection(false); return validationResults.length || getSelectedTags().length || 0; }
+  catch(e){ return getSelectedTags().length || 0; }
+}
+function requesterReferenceDocs(){
+  if(!selectedDocuments || !selectedDocuments.length) return "No reference document selected";
+  return selectedDocuments.map(d=>`${d.type}: ${d.no} Rev.${d.rev} - ${d.title}`).join("; ");
+}
+function prepareRequesterNotification(){
+  const a=currentActivity(),i=currentITP();
+  if(!a||!i){alert("Please select the applicable ITP activity first.");return;}
+  const subject=`Inspection Request | ${value("requestNo")} | ${a.no} - ${a.desc}`;
+  requestEmailSubject.value=subject;
+  const body=`Dear QC Team,
+
+Please be informed that the following inspection request has been submitted for QC verification and inspection readiness review. Formal RFI generation shall be subject to successful QC verification and completion of applicable prerequisites.
+
+INSPECTION REQUEST INFORMATION
+Request No.: ${value("requestNo")}
+Requesting Department: ${value("requestDepartment")}
+Requester / Initiator: ${value("requesterName")}
+Requester Email: ${value("requesterEmail")}
+Discipline: ${value("discipline")}
+Main Equipment / Work Category: ${value("equipment")}
+Inspection Activity: ${a.no} - ${a.desc}
+ITP No. / Rev.: ${i.itpNo} / ${i.revision}
+ITR / Test Report No.: ${a.itr}
+Required Inspection Date: ${value("requiredInspectionDate")}\nType of Urgency: ${value("requestUrgency")}
+Location: ${value("location")} / ${value("area")}
+System / Subsystem: ${value("systemNo")} / ${value("subsystemNo")}
+Number of Tags: ${requesterTagCount()}
+Reference Document No(s.): ${requesterReferenceDocs()}
+
+Request Description:
+${value("requestDescription") || value("rfiDescription")}
+
+Requester Remarks:
+${value("requestRemarks") || "N/A"}
+
+REQUESTER DISPOSITION & APPROVAL
+Disposition: ${value("requesterDisposition") || "Not selected"}
+Disposition Remarks: ${value("requesterDispositionRemarks") || "N/A"}
+Signatories:
+${requesterSignatorySummary()}
+
+For equipment tag(s), please see the Tag List in the next sheet.
+
+Kindly review the request and arrange QC verification accordingly.
+
+Regards,
+${value("requesterName") || "Requester"}
+${value("requestDepartment")}`;
+  requestEmailPreview.value=body;
+  return {subject,body};
+}
+function requestNormalizeEmails(text){
+  return (text||"").split(/[;,]+/).map(x=>x.trim()).filter(Boolean).join(",");
+}
+function openRequesterNotification(){
+  const mail=prepareRequesterNotification(); if(!mail)return;
+  const to=requestNormalizeEmails(value("requestEmailTo"));
+  const cc=requestNormalizeEmails(value("requestEmailCc"));
+  window.location.href=`mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(mail.subject)}&body=${encodeURIComponent(mail.body)}`;
+}
+async function copyRequesterNotification(){
+  const mail=prepareRequesterNotification(); if(!mail)return;
+  const full=`To: ${value("requestEmailTo")}\nCC: ${value("requestEmailCc")}\nSubject: ${mail.subject}\n\n${mail.body}`;
+  try{await navigator.clipboard.writeText(full);alert("Inspection request email copied.");}
+  catch(e){requestEmailPreview.removeAttribute("readonly");requestEmailPreview.select();document.execCommand("copy");requestEmailPreview.setAttribute("readonly","");alert("Inspection request email copied.");}
+}
+
+function emailDocList(){
+  if(!selectedDocuments.length) return "No reference document selected";
+  return selectedDocuments.map(d=>`${d.type}: ${d.no} Rev.${d.rev} - ${d.title}`).join("; ");
+}
+function emailTagCount(){
+  const eligible=eligibleResults();
+  return eligible.length || getSelectedTags().length || 0;
+}
+function prepareEmail(){
+  validateSelection(false);
+  const a=currentActivity(),i=currentITP();
+  if(!a||!i){alert("Please select an ITP activity first.");return;}
+  const subject=`${value("rfiNo")} | ${a.no} - ${a.desc} | ${value("inspectionDate")} ${value("inspectionTime")}`;
+  emailSubject.value=subject;
+  const body=`Dear All,
+
+Please be informed that the following RFI has been raised for inspection and notification. Kindly arrange the required attendance and coordination.
+
+RFI INFORMATION
+RFI No.: ${value("rfiNo")}
+Status: ${value("emailStatus")}
+Discipline: ${value("discipline")}
+Main Equipment / Work Category: ${value("equipment")}
+Inspection Activity: ${a.no} - ${a.desc}
+ITP No. / Rev.: ${i.itpNo} / ${i.revision}
+ITR / Test Report No.: ${a.itr} / Sheet ${a.sheet}
+Risk Category: ${a.risk}
+Inspection Level: ${a.level}
+Location: ${value("location")} / ${value("area")}
+System / Subsystem: ${value("systemNo")} / ${value("subsystemNo")}
+Inspection Date / Time: ${value("inspectionDate")} / ${value("inspectionTime")}
+Number of Tags: ${emailTagCount()}
+Reference Document No(s.): ${emailDocList()}
+
+RFI Description:
+${value("rfiDescription")}
+
+For equipment tag(s), please see the Tag List in the next sheet.
+
+Regards,
+Contractor QC`;
+  emailPreview.value=body;
+  return {subject,body};
+}
+function normalizedEmails(text){
+  return text.split(/[;,]+/).map(x=>x.trim()).filter(Boolean).join(",");
+}
+function openOutlook(){
+  const mail=prepareEmail(); if(!mail)return;
+  const to=normalizedEmails(value("emailTo"));
+  const cc=normalizedEmails(value("emailCc"));
+  const url=`mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(mail.subject)}&body=${encodeURIComponent(mail.body)}`;
+  window.location.href=url;
+}
+async function copyEmail(){
+  const mail=prepareEmail(); if(!mail)return;
+  const full=`To: ${value("emailTo")}\nCC: ${value("emailCc")}\nSubject: ${mail.subject}\n\n${mail.body}`;
+  try{await navigator.clipboard.writeText(full);alert("Email notification copied.");}
+  catch(e){emailPreview.removeAttribute("readonly");emailPreview.select();document.execCommand("copy");emailPreview.setAttribute("readonly","");alert("Email notification copied.");}
+}
+emailStatus?.addEventListener("change",()=>prepareEmail());
 
 function generateRFI(){
   validateSelection();
@@ -691,8 +1355,8 @@ function simulatePIDAcceptance(){
   alert("Prototype IMM updated according to each Tag + Activity disposition.");
 }
 
-renderTagList();
 initSelectors();
+renderTagList();
 initDocuments();
 </script>
 
