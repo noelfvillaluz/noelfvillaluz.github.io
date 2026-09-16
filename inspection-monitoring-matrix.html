@@ -36,6 +36,22 @@ button{border:0;border-radius:7px;padding:10px 14px;font-weight:800;cursor:point
 </div></section>
 
 <main>
+<section class="panel span-12" id="inspectionHistoryPanel">
+  <div class="section-kicker">Inspection Traceability</div>
+  <h2>Request / Return / Resubmission / Acceptance History</h2>
+  <p class="small">Immutable event history by Equipment Tag + Activity No. Original request, QC return, resubmission and acceptance dates are retained for transparent traceability.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Request No.</th><th>Equipment Tag</th><th>Activity No.</th>
+        <th>Original Request Date</th><th>QC Return Date</th><th>Resubmission Date</th>
+        <th>Accepted Date</th><th>Current Status</th><th>History</th>
+      </tr></thead>
+      <tbody id="immTraceBody"></tbody>
+    </table>
+  </div>
+</section>
+
 <section class="panel">
 <h2>IMM Summary</h2>
 <div class="kpis">
@@ -126,6 +142,47 @@ function applyFilters(){const m={discipline:fDiscipline.value,equipment:fEquipme
 function resetFilters(){document.querySelectorAll("select[id^='f']").forEach(x=>x.value="");fSearch.value="";filtered=[...records];render()}
 function assessRevisionImpact(){const itp=revItp.value,oldR=oldRev.value,newR=newRev.value;const a=records.filter(r=>r.itp===itp),old=a.filter(r=>r.rev===oldR),acc=old.filter(r=>r.status==="Accepted").length,p=a.filter(r=>r.status!=="Accepted"&&!r.status.includes("Rejected")).length,n=a.filter(r=>!r.rfi).length,rej=a.filter(r=>r.status.includes("Rejected")).length;revisionImpact.innerHTML=`<strong>NEW ITP REVISION IMPACT ASSESSMENT</strong><br>${itp} · Rev. ${oldR} → Rev. ${newR}<br><br>Affected IMM records: <strong>${a.length}</strong><br>Historical inspections using Rev. ${oldR}: <strong>${old.length}</strong><br>Already accepted under Rev. ${oldR}: <strong>${acc}</strong><br>Pending / active activities: <strong>${p}</strong><br>Not yet raised: <strong>${n}</strong><br>Rejected / reinspection: <strong>${rej}</strong><br><br>Change category: <strong>${changeType.value}</strong>.<br><small>Historical accepted records retain their original revision. Pending/not-started activities should be reviewed for applicability of the new revision before the next RFI is raised.</small>`}
 init();render();
+
+function immHistoryRows(){
+  try{return JSON.parse(localStorage.getItem("noelIMMInspectionHistory")||"[]");}catch(e){return []}
+}
+function fmtIMMDate(v){ if(!v)return "—"; const d=new Date(v); return isNaN(d)?v:d.toLocaleString(); }
+function renderIMMTraceability(){
+  const body=document.getElementById("immTraceBody"); if(!body)return;
+  const events=immHistoryRows(), groups={};
+  events.forEach(e=>{
+    const k=[e.requestNo,e.tag,e.activityNo].join("|");
+    (groups[k]||(groups[k]=[])).push(e);
+  });
+  const rows=Object.values(groups);
+  body.innerHTML=rows.length?rows.map(g=>{
+    g.sort((a,b)=>String(a.timestamp).localeCompare(String(b.timestamp)));
+    const first=g.find(x=>x.event==="REQUESTED")||g[0];
+    const ret=[...g].reverse().find(x=>x.event==="QC_SCREENING"&&(x.qcDecision==="Return to Requester"||x.qcDecision==="Hold"||x.qcDecision==="Reinspection Required"));
+    const res=g.find(x=>x.event==="RESUBMITTED");
+    const acc=[...g].reverse().find(x=>x.event==="ACCEPTED");
+    const last=g[g.length-1];
+    const key=[first.requestNo,first.tag,first.activityNo].join("|").replace(/'/g,"");
+    return `<tr>
+      <td>${first.requestNo||"—"}</td><td>${first.tag||"—"}</td><td>${first.activityNo||"—"}</td>
+      <td>${fmtIMMDate(first.requestDate||first.timestamp)}</td>
+      <td>${fmtIMMDate(ret&&(ret.returnDate||ret.timestamp))}</td>
+      <td>${fmtIMMDate(res&&res.timestamp)}</td>
+      <td>${fmtIMMDate(acc&&acc.timestamp)}</td>
+      <td>${last.status||last.event||"—"}</td>
+      <td><button type="button" onclick="showIMMHistory('${key}')">View History</button></td>
+    </tr>`;
+  }).join(""):'<tr><td colspan="9">No inspection history recorded yet.</td></tr>';
+}
+function showIMMHistory(key){
+  const ev=immHistoryRows().filter(x=>[x.requestNo,x.tag,x.activityNo].join("|")===key)
+    .sort((a,b)=>String(a.timestamp).localeCompare(String(b.timestamp)));
+  const txt=ev.map(x=>`${fmtIMMDate(x.timestamp)} — ${x.event}${x.qcDecision?" — "+x.qcDecision:""}${x.status?" — "+x.status:""}`).join("\n");
+  alert(txt||"No history available.");
+}
+window.addEventListener("load",renderIMMTraceability);
+window.addEventListener("storage",renderIMMTraceability);
+
 </script>
 </body>
 </html>
