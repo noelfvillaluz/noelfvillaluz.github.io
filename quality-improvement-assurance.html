@@ -1,115 +1,1060 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quality Improvement & Assurance | Noel Villaluz, PEE</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quality Improvement & Assurance</title>
 <style>
-:root{--navy:#071b2f;--blue:#0d416d;--gold:#f3b632;--light:#f4f7fa;--text:#263746;--line:#d7e0e8;--ok:#1f7a4f;--warn:#9c6a00;--bad:#a62d2d;--crit:#651622}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f7;color:var(--text);line-height:1.45}
-header{background:var(--navy);padding:14px 5%;position:sticky;top:0;z-index:30}nav{max-width:1550px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:18px}.logo{color:#fff;font-weight:800}
-nav ul{display:flex;gap:16px;list-style:none;margin:0;padding:0;flex-wrap:wrap}nav a{color:#fff;text-decoration:none;font-weight:700;font-size:13px}nav a:hover{color:var(--gold)}
-.hero{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:38px 5%}.hero .wrap{max-width:1550px;margin:auto}.hero h1{margin:4px 0 8px;font-size:clamp(30px,5vw,48px)}.hero p{margin:0;max-width:1150px;color:#dce9f3}
-main{max-width:1550px;margin:26px auto;padding:0 20px 60px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 5px 18px rgba(7,27,47,.06);margin-bottom:18px}
-h2,h3{color:var(--navy);margin-top:0}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab-btn{border:0;border-radius:8px;padding:10px 14px;font-weight:800;cursor:pointer;background:#dfe8ef;color:var(--navy)}.tab-btn.active{background:var(--blue);color:#fff}.tab{display:none}.tab.active{display:block}
-.kpis{display:grid;grid-template-columns:repeat(8,minmax(120px,1fr));gap:10px}.kpi{background:#fafcfd;border:1px solid var(--line);border-radius:9px;padding:14px}.kpi strong{display:block;font-size:24px;color:var(--blue)}.kpi span{font-size:12px}
-.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:5px}.span-2{grid-column:span 2}.span-4{grid-column:span 4}
-label{font-size:12px;font-weight:800}input,select,textarea{width:100%;padding:10px;border:1px solid #bccbd7;border-radius:7px;font:inherit}textarea{min-height:82px;resize:vertical}
-button{border:0;border-radius:7px;padding:10px 14px;font-weight:800;cursor:pointer}.primary{background:var(--blue);color:#fff}.gold{background:var(--gold);color:var(--navy)}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px;max-height:550px}table{width:100%;border-collapse:collapse;min-width:1100px;background:#fff}th,td{padding:9px;border-bottom:1px solid #e3e9ee;text-align:left;font-size:11px;vertical-align:top}th{background:#f2f6f9;color:var(--navy);position:sticky;top:0}
-.status{display:inline-block;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}.ok{background:#e5f4ec;color:var(--ok)}.warn{background:#fff3d8;color:var(--warn)}.bad{background:#fde7e7;color:var(--bad)}.critical{background:#f2dce0;color:var(--crit)}
-.notice{border-left:4px solid var(--blue);background:#f4f8fb;padding:12px 14px;border-radius:6px;margin-top:12px}.notice.warn{border-left-color:var(--warn);background:#fff8e7}.notice.bad{border-left-color:var(--bad);background:#fff1f1}
-.risk-boxes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.risk-box{padding:14px;border:1px solid var(--line);border-radius:9px;background:#fafcfd}.risk-box strong{display:block;font-size:22px;color:var(--navy)}
-@media(max-width:1150px){.kpis{grid-template-columns:repeat(4,1fr)}.form-grid{grid-template-columns:repeat(2,1fr)}.span-2,.span-4{grid-column:span 2}.risk-boxes{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.kpis{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.span-2,.span-4{grid-column:span 1}.risk-boxes{grid-template-columns:1fr}}
+:root{--navy:#071b2f;--blue:#0d416d;--gold:#f3b632;--light:#f4f7fa;--text:#263746;--line:#d7e0e8;--white:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:var(--text);background:var(--light)}
+header{background:var(--navy);color:#fff;padding:18px 24px}.brand{font-weight:800;letter-spacing:.6px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}nav a{color:#fff;text-decoration:none;padding:8px 10px;border-radius:7px}nav a:hover{background:#123956}
+main{max-width:1450px;margin:auto;padding:22px}.hero,.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+.hero h1{margin:4px 0}.kicker{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--blue);font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-6{grid-column:span 6}.span-12{grid-column:span 12}
+.card{background:#fff;border:1px solid var(--line);border-radius:11px;padding:15px}.metric{font-size:30px;font-weight:800;color:var(--navy)}
+.small{font-size:12px;color:#607080}.badge{display:inline-block;padding:4px 8px;border-radius:20px;background:#edf3f7;font-size:12px;font-weight:700}
+.alert{border-left:5px solid var(--gold);background:#fff8e7;padding:12px;border-radius:8px;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#eef3f7}
+button,.btn{border:0;border-radius:7px;padding:9px 12px;cursor:pointer;font-weight:700}.primary{background:var(--blue);color:#fff}.secondary{background:#e9eef2;color:var(--navy)}
+input,select,textarea{width:100%;padding:9px;border:1px solid #bdcad4;border-radius:7px;background:#fff}textarea{min-height:72px}
+.form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.field label{font-size:12px;font-weight:700;display:block;margin-bottom:5px}
+.modules{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.module{border:1px solid var(--line);border-radius:10px;padding:14px;background:#fff}.module h3{margin:0 0 7px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+@media(max-width:900px){.span-3,.span-4,.span-6{grid-column:span 12}.modules,.form{grid-template-columns:1fr}}
+@media print{header,.no-print{display:none}#ncrPreview,#pqnPreview,#rncPreview{display:block!important;page-break-inside:avoid}body{background:#fff}.panel,.hero,.card{box-shadow:none}}
 </style>
 </head>
 <body>
-<header><nav><div class="logo">NOEL VILLALUZ · PEE</div><ul>
-<li><a href="../index.html">Home</a></li><li><a href="rfi-generator.html">RFI Generator</a></li><li><a href="inspection-monitoring-matrix.html">IMM</a></li><li><a href="document-management-control.html">Document Control</a></li>
-</ul></nav></header>
-<section class="hero"><div class="wrap"><div style="font-size:13px;color:#bfd0de">Home › Technical Resources › Quality Improvement & Assurance</div><h1>Quality Improvement & Assurance</h1><p>Integrated NCR, proactive quality, focused assessment, audit, calibration control, best practices, lessons learned and risk-based trend monitoring.</p></div></section>
+<header>
+ <div class="brand">NOEL VILLALUZ · PEE</div>
+ <nav>
+  <a href="../index.html">Home</a><a href="rfi-generator.html">RFI Generator</a>
+  <a href="inspection-monitoring-matrix.html">Inspection Monitoring Matrix (IMM)</a>
+  <a href="#">Quality Improvement & Assurance</a><a href="integrated-project-dashboard.html">Integrated Project Dashboard</a>
+ </nav>
+</header>
 <main>
-<section class="panel"><h2>Quality Performance Summary</h2><div class="kpis">
-<div class="kpi"><strong id="kNcrOpen">0</strong><span>Open NCRs</span></div><div class="kpi"><strong id="kNcrOverdue">0</strong><span>Overdue NCRs</span></div><div class="kpi"><strong id="kProactive">0</strong><span>Proactive Notifications</span></div><div class="kpi"><strong id="kFocused">1</strong><span>Focused Assessments</span></div><div class="kpi"><strong id="kAudit">0</strong><span>Open Audit Findings</span></div><div class="kpi"><strong id="kCalibration">0</strong><span>Calibration Alerts</span></div><div class="kpi"><strong id="kHighRisk">0</strong><span>High/Critical Risks</span></div><div class="kpi"><strong id="kClosed">0%</strong><span>NCR Closure Rate</span></div>
-</div></section>
-
-<div class="tabs">
-<button class="tab-btn active" data-tab="ncrTab">NCR Management</button><button class="tab-btn" data-tab="proactiveTab">Proactive Quality</button><button class="tab-btn" data-tab="focusedTab">Focused Assessment</button><button class="tab-btn" data-tab="auditTab">Audit Management</button><button class="tab-btn" data-tab="instrumentTab">Test Instrument Control</button><button class="tab-btn" data-tab="bestTab">Best Practices</button><button class="tab-btn" data-tab="lessonTab">Lessons Learned</button><button class="tab-btn" data-tab="trendTab">Risk & Trend Analysis</button>
-</div>
-
-<section id="ncrTab" class="tab active">
-<div class="panel"><h2>NCR Management</h2><div class="form-grid">
-<div class="field"><label>NCR No.</label><input value="NCR-E-0041"></div><div class="field"><label>Discipline</label><select><option>Electrical</option><option>Instrumentation</option></select></div><div class="field"><label>Equipment Tag</label><input value="408-3J-PC-00803"></div><div class="field"><label>Related RFI</label><input value="RFI-E-0208"></div>
-<div class="field"><label>ITP / Activity</label><input value="ITP-E-CBL-001 / 4.1"></div><div class="field"><label>Risk Level</label><select id="ncrRisk"><option>Low</option><option>Medium</option><option selected>High</option><option>Critical</option></select></div><div class="field"><label>Target Closure</label><input type="date" value="2026-09-15"></div><div class="field"><label>Status</label><select><option>Open</option><option>Corrective Action In Progress</option><option>Pending Verification</option><option>Closed</option></select></div>
-<div class="field span-2"><label>Nonconformity</label><textarea>Installation did not meet approved inspection acceptance criteria.</textarea></div><div class="field span-2"><label>Requirement / Reference</label><textarea>Approved ITP, IFC drawing, project specification and applicable inspection requirements.</textarea></div>
-<div class="field span-2"><label>Root Cause</label><textarea>Insufficient verification of installation readiness and applicable requirements before inspection.</textarea></div><div class="field span-2"><label>Corrective Action</label><textarea>Rectify, internally verify compliance, then raise reinspection RFI.</textarea></div>
-<div class="field span-4"><label>Preventive / Systemic Action</label><textarea>Strengthen prerequisite verification and targeted surveillance for similar installations.</textarea></div>
-</div><div class="actions"><button class="primary" onclick="evaluateNcr()">Evaluate Risk Priority</button></div><div id="ncrAdvice" class="notice warn">High-risk NCRs should receive priority corrective action and verification.</div></div>
-<div class="panel"><h3>NCR Register</h3><div class="table-wrap"><table><thead><tr><th>NCR</th><th>Discipline</th><th>Tag / Area</th><th>RFI</th><th>Issue</th><th>Risk</th><th>Cause</th><th>Target</th><th>Status</th><th>Reinspection</th></tr></thead><tbody id="ncrBody"></tbody></table></div></div>
+<section class="hero">
+ <div class="kicker">Quality Improvement & Assurance</div>
+ <h1>Quality Assurance Management Dashboard</h1>
+ <p>Integrated QA control for inspection trends, proactive notifications, focused assessments, NCRs, audits, corrective actions, calibration, risks and lessons learned.</p>
 </section>
 
-<section id="proactiveTab" class="tab"><div class="panel"><h2>Proactive Quality Notification</h2><div class="table-wrap"><table><thead><tr><th>No.</th><th>Discipline</th><th>Area</th><th>Observation</th><th>Risk</th><th>Owner</th><th>Target</th><th>Status</th></tr></thead><tbody id="proactiveBody"></tbody></table></div><div class="notice">Use proactive notifications for potential risks before a nonconformance occurs. Existing nonconformities should follow NCR control.</div></div></section>
+<section class="grid">
+ <div class="card span-3"><div class="small">Open NCR</div><div class="metric" id="mNcr">3</div><span class="badge">1 overdue</span></div>
+ <div class="card span-3"><div class="small">QC Return Rate</div><div class="metric" id="mReturn">—</div><span class="badge">From IMM history</span></div>
+ <div class="card span-3"><div class="small">Open Quality Concerns</div><div class="metric">6</div><span class="badge">2 high priority</span></div>
+ <div class="card span-3"><div class="small">Corrective Action Closure</div><div class="metric">82%</div><span class="badge">Current period</span></div>
+</section>
 
-<section id="focusedTab" class="tab"><div class="panel"><h2>Focused Assessment</h2><div class="form-grid">
-<div class="field"><label>Assessment No.</label><input value="FA-E-2026-006"></div><div class="field"><label>Trigger</label><select><option>Recurring NCR</option><option selected>Repeated Installation Concern</option><option>High Risk Activity</option><option>Audit Finding</option><option>Trend Alert</option></select></div><div class="field"><label>Discipline</label><select><option>Electrical</option><option>Instrumentation</option></select></div><div class="field"><label>Area</label><input value="PDM 216/221"></div>
-<div class="field span-2"><label>Scope</label><textarea>Cable tray supports, fittings, alignment, coating readiness and installation compliance.</textarea></div><div class="field span-2"><label>Criteria</label><textarea>Approved IFC drawings, project specifications, ITP, NEMA VE-2 and approved method statement.</textarea></div>
-<div class="field"><label>Field Engineer</label><input value="Field Engineering"></div><div class="field"><label>Construction</label><input value="Construction Supervisor"></div><div class="field"><label>QC</label><input value="Electrical QC"></div><div class="field"><label>Priority</label><select><option>Normal</option><option selected>High</option><option>Critical</option></select></div>
-</div><div class="notice warn">Findings can lead to proactive actions, NCRs, additional training, procedure revision, or increased inspection coverage.</div></div></section>
+<section class="panel">
+ <div class="kicker">Integrated Quality Intelligence</div><h2>Proactive Alerts & Trends</h2>
+ <div id="trendAlerts"><div class="alert"><strong>IMM Integration:</strong> Submit and QC-return history will be analyzed by Tag + Activity to identify repeated return reasons and recurring quality concerns.</div></div>
+</section>
 
-<section id="auditTab" class="tab"><div class="panel"><h2>Quality Audit Management</h2><div class="table-wrap"><table><thead><tr><th>Audit</th><th>Type</th><th>Scope</th><th>Area</th><th>Date</th><th>Lead</th><th>Findings</th><th>Open</th><th>Status</th></tr></thead><tbody id="auditBody"></tbody></table></div></div></section>
+<section class="panel">
+ <div class="kicker">Quality Modules</div><h2>Assurance & Improvement Controls</h2>
+ <div class="modules">
+  <div class="module"><h3>NCR Management</h3><p class="small">Raise, classify, investigate, correct, verify effectiveness and close NCRs.</p><button class="primary" onclick="document.getElementById('ncrGenerator').scrollIntoView({behavior:'smooth'})">Open NCR Generator</button></div>
+  <div class="module"><h3>Proactive Quality Notification</h3><p class="small">Notify stakeholders before recurring observations escalate to formal nonconformance.</p><button class="primary" onclick="document.getElementById('pqnGenerator').scrollIntoView({behavior:'smooth'})">Open PQN Generator</button></div>
+  <div class="module"><h3>Focused Assessment</h3><p class="small">Target repeated or high-risk concerns by area, system, discipline, equipment or activity.</p><button class="primary" onclick="showModule('FA')">Start Assessment</button></div>
+  <div class="module"><h3>Quality Audit Management</h3><p class="small">Plan audits, record findings, assign actions and track closure.</p><button class="primary" onclick="showModule('AUDIT')">Audit Register</button></div>
+  <div class="module"><h3>Test Instrument Control</h3><p class="small">Calibration status, expiry alerts, instrument assignment and traceability.</p><button class="primary" onclick="showModule('CAL')">Calibration Register</button></div>
+  <div class="module"><h3>Best Practices</h3><p class="small">Capture verified good practices and approved benchmark installations.</p><button class="primary" onclick="showModule('BP')">Best Practices</button></div>
+  <div class="module"><h3>Lessons Learned</h3><p class="small">Convert recurring findings and successful corrective actions into reusable lessons.</p><button class="primary" onclick="showModule('LL')">Lessons Register</button></div>
+  <div class="module"><h3>Risk & Trend Analysis</h3><p class="small">Analyze return rate, repeated reasons, NCR recurrence, aging and quality risk.</p><button class="primary" onclick="showModule('RISK')">Analyze Trends</button></div>
+  <div class="module"><h3>Repeated Issues / Violations</h3><p class="small">Track recurring nonconformities, repeated QC returns, violations, repeated observations and ineffective corrective actions.</p><button class="primary" onclick="document.getElementById('repeatedIssues').scrollIntoView({behavior:'smooth'})">Open Repeated Issues</button></div>
+ </div>
+</section>
 
-<section id="instrumentTab" class="tab"><div class="panel"><h2>Test Instrument Monitoring & Control</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Description</th><th>Serial</th><th>Range</th><th>Calibration Date</th><th>Expiry</th><th>Days Remaining</th><th>Status</th><th>Assigned</th></tr></thead><tbody id="instrumentBody"></tbody></table></div><div class="notice bad">Expired instruments should be blocked from inspection/test selection until valid calibration is restored.</div></div></section>
 
-<section id="bestTab" class="tab"><div class="panel"><h2>Best Practices</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Discipline</th><th>Practice</th><th>Benefit</th><th>Source</th><th>Status</th></tr></thead><tbody id="bestBody"></tbody></table></div></div></section>
 
-<section id="lessonTab" class="tab"><div class="panel"><h2>Lessons Learned</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Source Event</th><th>Issue</th><th>Lesson</th><th>Required Change</th><th>Owner</th><th>Status</th></tr></thead><tbody id="lessonBody"></tbody></table></div></div></section>
+<section class="panel" id="ncrManagementFunctions">
+ <div class="kicker">Quality Improvement & Assurance</div>
+ <h2>NCR Management</h2>
+ <p class="small">Control confirmed non-conformances / violations from NCR generation through corrective action, effectiveness verification, closure, recurrence review and trend analysis.</p>
+ <div class="actions no-print">
+  <button class="primary" onclick="document.getElementById('ncrGenerator').scrollIntoView({behavior:'smooth'})">NCR Generator</button>
+  <button class="secondary" onclick="document.getElementById('ncrRegisterBody').scrollIntoView({behavior:'smooth'})">NCR Register</button>
+  <button class="secondary" onclick="document.getElementById('repeatedNC').scrollIntoView({behavior:'smooth'})">Repeated Non-Conformance / Violation</button>
+ </div>
+ <div style="overflow:auto;margin-top:16px">
+  <table>
+   <thead><tr><th>NCR Management Function</th><th>Purpose</th></tr></thead>
+   <tbody>
+    <tr><td><strong>NCR Generator</strong></td><td>Create, save, edit, view and print formal NCR records.</td></tr>
+    <tr><td>NCR Register</td><td>Maintain current and historical NCR status and traceability.</td></tr>
+    <tr><td>Open / Overdue NCR Monitoring</td><td>Identify NCRs requiring immediate follow-up or escalation.</td></tr>
+    <tr><td>Corrective Action Tracking</td><td>Track correction, root cause, corrective action, responsible party and target date.</td></tr>
+    <tr><td>Effectiveness Verification & Closure</td><td>Verify objective evidence before final NCR closure.</td></tr>
+    <tr><td>Repeated Non-Conformance / Violation</td><td>Detect recurrence and reassess previous root cause and corrective-action effectiveness.</td></tr>
+    <tr><td>NCR Trend & Recurrence Analysis</td><td>Analyze recurring NCRs by discipline, area, system, activity, requirement and responsible team.</td></tr>
+   </tbody>
+  </table>
+ </div>
+</section>
 
-<section id="trendTab" class="tab"><div class="panel"><h2>Risk & Trend Analysis</h2><div class="risk-boxes">
-<div class="risk-box"><span>Top Recurring Issue</span><strong>Cable Tray Support</strong><span>4 related findings</span></div><div class="risk-box"><span>Highest Risk Category</span><strong>HIGH</strong><span>Electrical installation</span></div><div class="risk-box"><span>Repeat Rejection Rate</span><strong>12%</strong><span>Sample prototype</span></div><div class="risk-box"><span>Recommended Action</span><strong>Focused Assessment</strong><span>Targeted verification</span></div>
-</div><div class="notice warn">Risk-based trend logic should increase attention when repeat findings, rejected RFIs, NCRs, overdue actions or calibration issues indicate deteriorating quality performance. It should not reduce contractual inspection requirements automatically.</div></div></section>
+<section class="panel" id="ncrGenerator">
+ <div class="kicker">NCR Management</div>
+ <h2>Non-Conformance Report (NCR) Generator</h2>
+ <p class="small">Create, review, view and print controlled NCR records. The NCR can be linked to RFI, IMM, ITP, drawings, specifications, equipment tags and quality concerns.</p>
+
+ <div class="form no-print">
+  <div class="field"><label>NCR No.</label><input id="ncrNo" value="NCR-2026-001"></div>
+  <div class="field"><label>Date Raised</label><input id="ncrDate" type="date"></div>
+  <div class="field"><label>Initiator Name</label><input id="ncrInitiator" placeholder="Name of NCR initiator"></div>
+  <div class="field"><label>Initiator Position</label><input id="ncrInitiatorPosition" placeholder="Position / designation"></div>
+  <div class="field"><label>Initiator Department / Team</label><select id="ncrInitiatorDept"><option>QC</option><option>QA</option><option>Construction</option><option>Engineering</option><option>Material</option><option>Preservation</option><option>Pre-Commissioning</option><option>Commissioning</option><option>PMT / PMC</option><option>Client / Company</option><option>Other</option></select></div>
+  <div class="field"><label>Initiator Company</label><input id="ncrInitiatorCompany" placeholder="Company"></div>
+  <div class="field"><label>Initiator Email</label><input id="ncrInitiatorEmail" type="email" placeholder="Email address"></div>
+  <div class="field"><label>Discipline</label><select id="ncrDiscipline"><option>Electrical</option><option>Instrumentation</option><option>Telecommunication</option><option>Multi-Discipline</option></select></div>
+  <div class="field"><label>Priority / Severity</label><select id="ncrPriority"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div>
+  <div class="field"><label>Project / Area / PDM</label><input id="ncrArea" placeholder="Area / PDM"></div>
+  <div class="field"><label>System / Subsystem</label><input id="ncrSystem" placeholder="System / Subsystem"></div>
+  <div class="field"><label>Equipment Tag(s)</label><input id="ncrTags" placeholder="Tag(s)"></div>
+  <div class="field"><label>Activity No.</label><input id="ncrActivity" placeholder="e.g. 4.1"></div>
+
+  <div class="field"><label>Source</label><select id="ncrSource"><option>Site Surveillance</option><option>QC Screening / IMM</option><option>RFI Inspection</option><option>Focused Assessment</option><option>Quality Audit</option><option>Client Observation</option><option>Material Inspection</option></select></div>
+  <div class="field"><label>Responsible Department</label><select id="ncrOwner"><option>Construction</option><option>Material</option><option>Preservation</option><option>QC</option><option>Engineering</option><option>Pre-Commissioning</option><option>Commissioning</option><option>Vendor</option></select></div>
+  <div class="field"><label>Due Date</label><input id="ncrDue" type="date"></div>
+  <div class="field"><label>NCR Status</label><select id="ncrStatus"><option>Draft</option><option>Issued</option><option>Under Review</option><option>Corrective Action</option><option>Effectiveness Verification</option><option>Closed</option></select></div>
+  <div class="field"><label>Related Proactive Quality Notification (PQN)</label><select id="ncrPQN"><option value="">None / Not Applicable</option></select></div>
+  <div class="field"><label>PQN Effectiveness</label><select id="ncrPQNEffect"><option>Not Evaluated</option><option>Effective</option><option>Partially Effective</option><option>Ineffective</option><option>Not Applicable</option></select></div>
+  <div class="field"><label>PQN Issue Date</label><input id="ncrPQNDate" type="date"></div>
+  <div class="field"><label>Occurrence After PQN</label><select id="ncrAfterPQN"><option>No</option><option>Yes</option><option>Under Monitoring</option></select></div>
+  <div class="field"><label>Occurrences Before PQN</label><input id="ncrBeforeCount" type="number" min="0" value="0"></div>
+  <div class="field"><label>Occurrences After PQN</label><input id="ncrAfterCount" type="number" min="0" value="0"></div>
+  <div class="field"><label>Effectiveness Review Date</label><input id="ncrPQNReviewDate" type="date"></div>
+  <div class="field"><label>Effectiveness Verified By</label><input id="ncrPQNVerifiedBy" placeholder="QA/QC reviewer"></div>
+  <div class="field" style="grid-column:span 4"><label>PQN Effectiveness Evaluation / Evidence</label><textarea id="ncrPQNEvidence" placeholder="Compare recurrence before and after the proactive notification. Record field verification, inspection trend, affected area/tag/activity, and objective evidence."></textarea></div>
+
+  <div class="field" style="grid-column:span 2"><label>Non-Conformance Description</label><textarea id="ncrDescription" placeholder="Describe the observed nonconforming condition, location, equipment/tag and objective evidence."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Requirement / Reference</label><textarea id="ncrRequirement" placeholder="Applicable specification, standard, ITP, drawing, procedure and clause."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Root Cause</label><textarea id="ncrRootCause" placeholder="Root cause / investigation result"></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Correction / Immediate Action</label><textarea id="ncrCorrection" placeholder="Immediate correction or containment"></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Corrective Action</label><textarea id="ncrCorrective" placeholder="Corrective action to prevent recurrence"></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Effectiveness Verification / Closure Evidence</label><textarea id="ncrEffectiveness" placeholder="Verification performed and objective evidence"></textarea></div>
+ </div>
+
+ <div class="actions no-print">
+   <button class="primary" onclick="saveNCR()">Save NCR</button>
+   <button class="secondary" onclick="viewNCR()">View NCR</button>
+   <button class="secondary" onclick="printNCR()">Print NCR</button>
+ </div>
+ <div class="alert" id="pqnEffectivenessSummary">
+   <strong>PQN Effectiveness Measurement:</strong> Link the NCR to the applicable proactive notification and compare occurrences before and after issuance. A recurrence after PQN is retained as evidence for effectiveness review and possible escalation.
+ </div>
+
+ <div id="ncrPreview" style="display:none;margin-top:18px;border:1px solid #d7e0e8;border-radius:10px;padding:18px;background:#fff">
+   <div style="display:flex;justify-content:space-between;gap:15px;border-bottom:2px solid #071b2f;padding-bottom:10px">
+    <div><strong>NON-CONFORMANCE REPORT</strong><div class="small">Quality Improvement & Assurance</div></div>
+    <div><strong id="pvNo"></strong><div id="pvStatus" class="badge"></div></div>
+   </div>
+   <table style="margin-top:12px"><tbody id="ncrPreviewBody"></tbody></table>
+ </div>
+
+ <div style="overflow:auto;margin-top:18px">
+  <h3>NCR Register</h3>
+  <table><thead><tr><th>NCR No.</th><th>Date</th><th>Area</th><th>Tag(s)</th><th>Description</th><th>Priority</th><th>Owner</th><th>Due</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody id="ncrRegisterBody"></tbody></table>
+ </div>
+</section>
+
+
+
+
+
+
+
+<div class="panel" id="ncrEmailNotification" style="margin-top:18px">
+ <div class="kicker">NCR Management · Controlled Approval Workflow</div>
+ <h3>NCR Email Routing, Review & Approval</h3>
+ <p class="small">The NCR is routed sequentially. It starts with the QC Inspector, proceeds through the configured QC approval workflow, and is released to the corrective-action department only after the final required QC approval.</p>
+
+ <div class="form">
+  <div class="field"><label>NCR No.</label><input id="ncrMailNo" readonly></div>
+  <div class="field"><label>Workflow Template</label>
+   <select id="ncrWorkflowTemplate" onchange="setNCRWorkflowTemplate()">
+    <option value="standard">QC Inspector → QC Supervisor → QC Manager → Corrective Action Department</option>
+    <option value="inspector-manager">QC Inspector → QC Manager → Corrective Action Department</option>
+    <option value="inspector-supervisor">QC Inspector → QC Supervisor → Corrective Action Department</option>
+    <option value="custom">Custom Company Approval Workflow</option>
+   </select>
+  </div>
+  <div class="field"><label>QC Inspector / Initiator</label><input id="ncrWFInspector" placeholder="QC Inspector name"></div>
+  <div class="field"><label>QC Inspector Email</label><input id="ncrWFInspectorEmail" type="email" placeholder="inspector@company.com"></div>
+  <div class="field"><label>QC Supervisor / Approver 1</label><input id="ncrWFSupervisor" placeholder="QC Supervisor name"></div>
+  <div class="field"><label>QC Supervisor Email</label><input id="ncrWFSupervisorEmail" type="email" placeholder="supervisor@company.com"></div>
+  <div class="field"><label>QC Manager / Approver 2</label><input id="ncrWFManager" placeholder="QC Manager name"></div>
+  <div class="field"><label>QC Manager Email</label><input id="ncrWFManagerEmail" type="email" placeholder="manager@company.com"></div>
+  <div class="field"><label>Corrective Action Department</label><input id="ncrWFDept" placeholder="Construction / Engineering / Material / Vendor / etc."></div>
+  <div class="field"><label>Corrective Action Recipient Email</label><input id="ncrWFDeptEmail" type="email" placeholder="responsible@company.com"></div>
+ </div>
+
+ <div style="overflow:auto;margin-top:16px">
+  <table>
+   <thead><tr><th>Stage</th><th>From</th><th>To</th><th>Purpose</th><th>Status</th><th>Action</th></tr></thead>
+   <tbody>
+    <tr><td>1</td><td>QC Inspector</td><td id="wfTo1">QC Supervisor</td><td>Submit NCR for review and approval</td><td id="wfStatus1">Draft / Pending Submission</td><td><button class="primary no-print" onclick="prepareNCRWorkflowEmail(1)">Prepare Email</button></td></tr>
+    <tr><td>2</td><td id="wfFrom2">QC Supervisor</td><td id="wfTo2">QC Manager</td><td>Forward approved NCR for management approval</td><td id="wfStatus2">Locked — Awaiting Stage 1 Approval</td><td><button class="secondary no-print" id="wfBtn2" onclick="prepareNCRWorkflowEmail(2)" disabled>Prepare Email</button></td></tr>
+    <tr><td>3</td><td id="wfFrom3">QC Manager</td><td>Corrective Action Department</td><td>Issue approved NCR for response and corrective action</td><td id="wfStatus3">Locked — Awaiting Final QC Approval</td><td><button class="secondary no-print" id="wfBtn3" onclick="prepareNCRWorkflowEmail(3)" disabled>Prepare Email</button></td></tr>
+   </tbody>
+  </table>
+ </div>
+
+ <div class="form" style="margin-top:16px">
+  <div class="field"><label>Current Workflow Stage</label><input id="ncrWFCurrentStage" value="Stage 1 — QC Review" readonly></div>
+  <div class="field"><label>Approval Status</label><input id="ncrWFApprovalStatus" value="Pending QC Supervisor Review" readonly></div>
+  <div class="field" style="grid-column:span 2"><label>To Recipient</label><input id="ncrMailTo" readonly></div>
+  <div class="field" style="grid-column:span 2"><label>Email Subject</label><input id="ncrMailSubject"></div>
+  <div class="field" style="grid-column:span 2"><label>Email Statement</label><textarea id="ncrMailBody" rows="18"></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Reviewer / Approver Comments</label><textarea id="ncrWFComments" placeholder="Review comments, conditions of approval or return comments."></textarea></div>
+ </div>
+
+ <div class="actions no-print">
+  <button class="secondary" onclick="openNCREmail()">Open Current Email in Outlook / Mail</button>
+  <button class="secondary" onclick="copyNCREmail()">Copy Current Email</button>
+  <button class="primary" id="approveStageBtn" onclick="approveNCRStage()">Approve Current Stage</button>
+  <button class="secondary" onclick="returnNCRStage()">Return for Revision</button>
+  <button class="secondary" onclick="saveNCRWorkflow()">Save Workflow</button>
+ </div>
+
+ <div class="alert" style="margin-top:14px"><strong>Release control:</strong> The corrective-action department cannot receive the NCR until all configured QC approval stages are approved. QC Supervisor and QC Manager stages are configurable to suit the company approval workflow.</div>
+</div>
+
+<div class="panel" id="ncrRecipientResponse" style="margin-top:18px">
+ <div class="kicker">NCR Management · Recipient Response</div>
+ <h3>Recipient Corrective Action & Initial Root Cause Response</h3>
+ <p class="small">The designated NCR recipient / responsible department may provide the initial root cause, correction and proposed corrective action. The final root cause is subject to QC review, verification and acceptance.</p>
+ <div class="form">
+  <div class="field"><label>Recipient / Responsible Person</label><input id="ncrRecipientName" placeholder="Name"></div>
+  <div class="field"><label>Position</label><input id="ncrRecipientPosition" placeholder="Position"></div>
+  <div class="field"><label>Department / Team</label><input id="ncrRecipientDept" placeholder="Department / Team"></div>
+  <div class="field"><label>Recipient Email</label><input id="ncrRecipientEmail" type="email" placeholder="name@company.com"></div>
+  <div class="field" style="grid-column:span 2"><label>Correction / Immediate Action Taken</label><textarea id="ncrRecipientCorrection" placeholder="Describe the immediate correction or containment completed by the recipient / responsible department."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Initial Root Cause — Recipient</label><textarea id="ncrInitialRootCause" placeholder="Recipient's initial root cause analysis for QC review."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Proposed Corrective Action — Recipient</label><textarea id="ncrRecipientCA" placeholder="Describe the proposed corrective action to eliminate the cause and prevent recurrence."></textarea></div>
+  <div class="field"><label>Proposed Completion Date</label><input id="ncrRecipientDue" type="date"></div>
+  <div class="field"><label>Recipient Response Status</label><select id="ncrRecipientStatus"><option>Pending Response</option><option>Response Submitted to QC</option><option>Returned by QC for Revision</option><option>Accepted for Final QC Review</option></select></div>
+  <div class="field" style="grid-column:span 2"><label>Recipient Supporting Evidence / Reference</label><textarea id="ncrRecipientEvidence" placeholder="Reference documents, photos, inspection records, reports or other objective evidence."></textarea></div>
+ </div>
+</div>
+
+<div class="panel" id="ncrQCFinalReview" style="margin-top:18px">
+ <div class="kicker">NCR Management · QC Control</div>
+ <h3>QC Review & Final Root Cause</h3>
+ <p class="small">QC reviews the recipient's initial root cause and proposed corrective action. The final root cause is completed and controlled by QC after review of the response and objective evidence.</p>
+ <div class="form">
+  <div class="field"><label>QC Reviewer</label><input id="ncrQCReviewer" placeholder="QC reviewer name"></div>
+  <div class="field"><label>QC Review Date</label><input id="ncrQCReviewDate" type="date"></div>
+  <div class="field"><label>Initial Root Cause Review</label><select id="ncrInitialRCReview"><option>Pending QC Review</option><option>Accepted as Basis</option><option>Requires Revision</option><option>Rejected / Further Analysis Required</option></select></div>
+  <div class="field"><label>Corrective Action Review</label><select id="ncrCAReview"><option>Pending QC Review</option><option>Accepted</option><option>Accepted with Comments</option><option>Requires Revision</option></select></div>
+  <div class="field" style="grid-column:span 2"><label>QC Review Comments</label><textarea id="ncrQCComments" placeholder="QC comments on initial root cause, correction, proposed corrective action and supporting evidence."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Final Root Cause — QC</label><textarea id="ncrFinalRootCause" placeholder="Final root cause established / confirmed by QC after review and verification."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Final Corrective Action — QC Verified</label><textarea id="ncrFinalCA" placeholder="Final corrective action accepted / verified by QC."></textarea></div>
+  <div class="field"><label>QC Final Review Status</label><select id="ncrQCFinalStatus"><option>Pending</option><option>Response Accepted</option><option>Further Action Required</option><option>Ready for Effectiveness Verification</option><option>Ready for Closure</option></select></div>
+  <div class="field"><label>Effectiveness Review Date</label><input id="ncrEffectivenessReviewDate" type="date"></div>
+ </div>
+</div>
+
+<section class="panel" id="pqnManagementFunctions">
+ <div class="kicker">Quality Improvement & Assurance</div>
+ <h2>Proactive Quality Notification (PQN) Management</h2>
+ <p class="small">Manage preventive quality notifications for potential violations or quality concerns requiring action before they become actual non-conformances / violations.</p>
+ <div class="actions no-print">
+  <button class="primary" onclick="document.getElementById('pqnGenerator').scrollIntoView({behavior:'smooth'})">PQN Generator</button>
+  <button class="secondary" onclick="document.getElementById('pqnRegisterBody').scrollIntoView({behavior:'smooth'})">PQN Register</button>
+ </div>
+ <div style="overflow:auto;margin-top:16px">
+  <table>
+   <thead><tr><th>PQN Management Function</th><th>Purpose</th></tr></thead>
+   <tbody>
+    <tr><td><strong>PQN Generator</strong></td><td>Create, save, edit, view and print formal Proactive Quality Notifications.</td></tr>
+    <tr><td>PQN Register</td><td>Maintain issued, open, under-monitoring, effective and escalated PQNs.</td></tr>
+    <tr><td>Preventive Action Tracking</td><td>Track action required to prevent the potential concern from becoming an actual violation.</td></tr>
+    <tr><td>Monitoring & Follow-Up</td><td>Monitor recurrence or development of the potential issue during the defined review period.</td></tr>
+    <tr><td>PQN Effectiveness Verification</td><td>Verify whether preventive action successfully avoided an actual non-conformance / violation.</td></tr>
+    <tr><td>PQN → NCR Escalation</td><td>Link to NCR Management only when an actual non-conformance / violation subsequently occurs.</td></tr>
+    <tr><td>PQN Trend Analysis</td><td>Analyze preventive notifications by discipline, area, activity, category, risk and responsible team.</td></tr>
+   </tbody>
+  </table>
+ </div>
+</section>
+
+<section class="panel" id="pqnGenerator">
+ <div class="kicker">Proactive Quality</div>
+ <h2>Proactive Quality Notification (PQN) Generator</h2>
+ <p class="small">Generate a formal proactive notification for emerging, repeated or high-risk quality concerns before escalation to a formal NCR. Each PQN remains traceable to subsequent observations and NCRs for effectiveness measurement.</p>
+
+ <div class="form no-print">
+  <div class="field"><label>PQN No.</label><input id="pqnNo" value="PQN-2026-003"></div>
+  <div class="field"><label>Revision No.</label><input id="pqnRev" value="0"></div>
+  <div class="field"><label>Date Issued</label><input id="pqnDate" type="date"></div>
+  <div class="field"><label>Initiator Name</label><input id="pqnInitiator" placeholder="Name of PQN initiator"></div>
+  <div class="field"><label>Initiator Position</label><input id="pqnInitiatorPosition" placeholder="Position / designation"></div>
+  <div class="field"><label>Initiator Department / Team</label><select id="pqnInitiatorDept"><option>QC</option><option>QA</option><option>Construction</option><option>Engineering</option><option>Material</option><option>Preservation</option><option>Pre-Commissioning</option><option>Commissioning</option><option>PMT / PMC</option><option>Client / Company</option><option>Other</option></select></div>
+  <div class="field"><label>Initiator Company</label><input id="pqnInitiatorCompany" placeholder="Company"></div>
+  <div class="field"><label>Initiator Email</label><input id="pqnInitiatorEmail" type="email" placeholder="Email address"></div>
+  <div class="field"><label>Status</label><select id="pqnStatus"><option>Draft</option><option>Issued</option><option>Under Monitoring</option><option>Effectiveness Review</option><option>Closed - Effective</option><option>Closed - Escalated</option></select></div>
+
+  <div class="field"><label>Discipline</label><select id="pqnDiscipline"><option>Electrical</option><option>Instrumentation</option><option>Telecommunication</option><option>Multi-Discipline</option></select></div>
+  <div class="field"><label>Category</label><select id="pqnCategory"><option>Installation Quality</option><option>Material Quality</option><option>Inspection Readiness</option><option>Documentation</option><option>Testing / Calibration</option><option>Preservation</option><option>Repeated Observation</option><option>Potential Violation</option><option>Other</option></select></div>
+  <div class="field"><label>Risk / Priority</label><select id="pqnRisk"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div>
+  <div class="field"><label>Source</label><select id="pqnSource"><option>Site Surveillance</option><option>IMM / QC Return Trend</option><option>Repeated Issues / Violations</option><option>RFI Inspection</option><option>Audit / Assessment</option><option>Client Observation</option><option>Lessons Learned</option></select></div>
+
+  <div class="field"><label>Area / PDM</label><input id="pqnArea" placeholder="Area / PDM"></div>
+  <div class="field"><label>System / Subsystem</label><input id="pqnSystem" placeholder="System / Subsystem"></div>
+  <div class="field"><label>Equipment / Tag(s)</label><input id="pqnTags" placeholder="Equipment / tag(s)"></div>
+  <div class="field"><label>Activity No.</label><input id="pqnActivity" placeholder="e.g. 3.1 / 4.1"></div>
+
+  <div class="field" style="grid-column:span 2"><label>Quality Concern / Potential Nonconformance</label><textarea id="pqnConcern" placeholder="Describe the observed condition, emerging trend or potential nonconformance and objective evidence."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Applicable Requirement / Reference</label><textarea id="pqnReference" placeholder="Specification, standard, ITP, drawing, procedure and clause."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Potential Impact / Risk</label><textarea id="pqnImpact" placeholder="Describe potential impact on quality, compliance, rework, schedule, safety or handover if the issue continues."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Required Preventive / Proactive Action</label><textarea id="pqnAction" placeholder="Actions required to prevent recurrence or escalation."></textarea></div>
+
+  <div class="field"><label>Responsible Department</label><select id="pqnOwner"><option>Construction</option><option>QC</option><option>Engineering</option><option>Material</option><option>Preservation</option><option>Pre-Commissioning</option><option>Commissioning</option><option>Vendor</option></select></div>
+  <div class="field"><label>Responsible Person</label><input id="pqnPerson" placeholder="Name / position"></div>
+  <div class="field"><label>Target Completion Date</label><input id="pqnDue" type="date"></div>
+  <div class="field"><label>Monitoring Period / Review Date</label><input id="pqnReview" type="date"></div>
+
+  <div class="field"><label>Occurrences Before PQN</label><input id="pqnBefore" type="number" min="0" value="0"></div>
+  <div class="field"><label>Occurrences After PQN</label><input id="pqnAfter" type="number" min="0" value="0"></div>
+  <div class="field"><label>Effectiveness</label><select id="pqnEffect"><option>Not Evaluated</option><option>Effective</option><option>Partially Effective</option><option>Ineffective</option></select></div>
+  <div class="field"><label>Related NCR No.</label><input id="pqnNCR" placeholder="If escalated"></div>
+
+  <div class="field" style="grid-column:span 2"><label>Action Taken / Response</label><textarea id="pqnResponse" placeholder="Response and preventive/proactive actions completed by responsible team."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Effectiveness Verification / Objective Evidence</label><textarea id="pqnEvidence" placeholder="Record field verification, trend comparison, inspection results and evidence confirming whether the PQN was effective."></textarea></div>
+ </div>
+
+ <div class="actions no-print">
+  <button class="primary" onclick="savePQN()">Save PQN</button>
+  <button class="secondary" onclick="viewPQN()">View PQN</button>
+  <button class="secondary" onclick="printPQN()">Print PQN</button>
+  <button class="secondary" onclick="evaluatePQN()">Evaluate Effectiveness</button>
+  <button class="secondary" onclick="createNCRFromPQN()">Escalate to NCR</button>
+ </div>
+
+ <div class="alert" id="pqnEvalSummary"><strong>Effectiveness:</strong> Not yet evaluated. Monitor recurrence after issuance and compare with the pre-PQN baseline.</div>
+
+ <div id="pqnPreview" style="display:none;margin-top:18px;border:1px solid #d7e0e8;border-radius:10px;padding:18px;background:#fff">
+  <div style="display:flex;justify-content:space-between;gap:15px;border-bottom:2px solid #071b2f;padding-bottom:10px">
+   <div><strong>PROACTIVE QUALITY NOTIFICATION</strong><div class="small">Quality Improvement & Assurance</div></div>
+   <div><strong id="pqnPvNo"></strong><div id="pqnPvStatus" class="badge"></div></div>
+  </div>
+  <table style="margin-top:12px"><tbody id="pqnPreviewBody"></tbody></table>
+ </div>
+
+ <div style="overflow:auto;margin-top:18px">
+  <h3>Proactive Quality Notification Register</h3>
+  <table><thead><tr><th>PQN No.</th><th>Date</th><th>Area</th><th>Concern</th><th>Risk</th><th>Owner</th><th>Due</th><th>Before / After</th><th>Effectiveness</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody id="pqnRegisterBody"></tbody></table>
+ </div>
+</section>
+
+
+
+<section class="panel" id="repeatedNC">
+ <div class="kicker">Quality Improvement & Assurance</div>
+ <h2>NCR Management · Repeated Non-Conformance / Violation Analysis</h2>
+ <p class="small">Use this NCR Management function when the same or substantially similar actual non-conformance / violation occurs again after a previous NCR and corrective action. This is separate from PQN, which is preventive and is used before an actual violation/nonconformance occurs.</p>
+
+ <div class="form no-print">
+  <div class="field"><label>Repeated NC No.</label><input id="rncNo" value="RNC-2026-001"></div>
+  <div class="field"><label>Current NCR No.</label><select id="rncCurrentNCR"><option value="">Select current NCR</option></select></div>
+  <div class="field"><label>Previous NCR No.(s)</label><input id="rncPreviousNCR" placeholder="e.g. NCR-2026-001, NCR-2026-008"></div>
+  <div class="field"><label>Recurrence Count</label><input id="rncCount" type="number" min="2" value="2"></div>
+
+  <div class="field"><label>Discipline</label><select id="rncDiscipline"><option>Electrical</option><option>Instrumentation</option><option>Telecommunication</option><option>Multi-Discipline</option></select></div>
+  <div class="field"><label>Area / PDM</label><input id="rncArea" placeholder="Area / PDM"></div>
+  <div class="field"><label>System / Subsystem</label><input id="rncSystem" placeholder="System / Subsystem"></div>
+  <div class="field"><label>Equipment / Tag(s)</label><input id="rncTags" placeholder="Equipment / Tag(s)"></div>
+
+  <div class="field"><label>First Occurrence Date</label><input id="rncFirstDate" type="date"></div>
+  <div class="field"><label>Latest Recurrence Date</label><input id="rncLatestDate" type="date"></div>
+  <div class="field"><label>Responsible Department</label><select id="rncOwner"><option>Construction</option><option>QC</option><option>Engineering</option><option>Material</option><option>Preservation</option><option>Pre-Commissioning</option><option>Commissioning</option><option>Vendor</option></select></div>
+  <div class="field"><label>Escalation Status</label><select id="rncStatus"><option>Under Review</option><option>Root Cause Reassessment</option><option>Revised Corrective Action Required</option><option>Management Escalation</option><option>Effectiveness Monitoring</option><option>Closed</option></select></div>
+
+  <div class="field" style="grid-column:span 2"><label>Repeated Non-Conformance Description</label><textarea id="rncDescription" placeholder="Describe the repeated actual nonconformance and objective evidence showing recurrence."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Requirement / Clause Violated</label><textarea id="rncRequirement" placeholder="Specification, standard, drawing, ITP, procedure and clause."></textarea></div>
+
+  <div class="field" style="grid-column:span 2"><label>Previous Root Cause</label><textarea id="rncPrevRoot" placeholder="Root cause identified in the previous NCR."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Previous Corrective Action</label><textarea id="rncPrevCA" placeholder="Corrective action implemented for the previous NCR."></textarea></div>
+
+  <div class="field"><label>Previous Effectiveness</label><select id="rncPrevEffect"><option>Previously Considered Effective</option><option>Partially Effective</option><option>Ineffective</option><option>Not Verified</option></select></div>
+  <div class="field"><label>Recurrence Classification</label><select id="rncClass"><option>Same Requirement / Same Cause</option><option>Same Requirement / Different Cause</option><option>Similar Non-Conformance</option><option>Systemic / Cross-Area Recurrence</option></select></div>
+  <div class="field"><label>Management Review Required</label><select id="rncMgmt"><option>No</option><option>Yes</option></select></div>
+  <div class="field"><label>Focused Assessment Required</label><select id="rncFA"><option>No</option><option>Yes</option></select></div>
+
+  <div class="field" style="grid-column:span 2"><label>Reason for Recurrence / Root Cause Reassessment</label><textarea id="rncReason" placeholder="Explain why the previous corrective action did not prevent recurrence."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Revised / Additional Corrective Action</label><textarea id="rncRevisedCA" placeholder="Define strengthened corrective action to prevent further recurrence."></textarea></div>
+
+  <div class="field" style="grid-column:span 2"><label>Effectiveness Verification Plan</label><textarea id="rncVerifyPlan" placeholder="Define monitoring period, sampling, inspection or audit needed to verify effectiveness."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Final Effectiveness / Closure Evidence</label><textarea id="rncClosure" placeholder="Objective evidence demonstrating whether recurrence has been prevented."></textarea></div>
+ </div>
+
+ <div class="actions no-print">
+  <button class="primary" onclick="saveRNC()">Save Repeated NC</button>
+  <button class="secondary" onclick="viewRNC()">View Analysis</button>
+  <button class="secondary" onclick="printRNC()">Print Analysis</button>
+  <button class="secondary" onclick="loadCurrentNCRToRNC()">Load Current NCR</button>
+ </div>
+
+ <div id="rncPreview" style="display:none;margin-top:18px;border:1px solid #d7e0e8;border-radius:10px;padding:18px;background:#fff">
+  <div style="display:flex;justify-content:space-between;gap:15px;border-bottom:2px solid #071b2f;padding-bottom:10px">
+   <div><strong>REPEATED NON-CONFORMANCE ANALYSIS</strong><div class="small">Quality Improvement & Assurance</div></div>
+   <div><strong id="rncPvNo"></strong><div id="rncPvStatus" class="badge"></div></div>
+  </div>
+  <table style="margin-top:12px"><tbody id="rncPreviewBody"></tbody></table>
+ </div>
+
+ <div style="overflow:auto;margin-top:18px">
+  <h3>Repeated Non-Conformance Register</h3>
+  <table><thead><tr><th>Repeated NC</th><th>Current NCR</th><th>Previous NCR(s)</th><th>Area</th><th>Non-Conformance</th><th>Recurrences</th><th>Previous Effectiveness</th><th>Owner</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody id="rncRegisterBody"></tbody></table>
+ </div>
+</section>
+
+<section class="panel" id="repeatedIssues">
+ <div class="kicker">Quality Assurance & Improvement</div>
+ <h2>Repeated Issues / Violations Register</h2>
+ <p class="small">Consolidates repeated QC returns, surveillance observations, NCRs, audit findings, client observations and violations so recurring conditions can be escalated before they continue across areas, systems or equipment.</p>
+
+ <div class="form no-print">
+  <div class="field"><label>Repeated Issue No.</label><input id="riNo" value="RI-2026-001"></div>
+  <div class="field"><label>Issue Type</label><select id="riType"><option>Repeated QC Return</option><option>Repeated Site Observation</option><option>Repeated Nonconformance</option><option>Repeated NCR</option><option>Violation</option><option>Repeated Client Observation</option><option>Ineffective Corrective Action</option></select></div>
+  <div class="field"><label>Discipline</label><select id="riDiscipline"><option>Electrical</option><option>Instrumentation</option><option>Telecommunication</option><option>Multi-Discipline</option></select></div>
+  <div class="field"><label>Risk / Severity</label><select id="riRisk"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div>
+  <div class="field"><label>Area / PDM</label><input id="riArea" placeholder="Area / PDM"></div>
+  <div class="field"><label>System / Subsystem</label><input id="riSystem" placeholder="System / Subsystem"></div>
+  <div class="field"><label>Equipment / Tag(s)</label><input id="riTags" placeholder="Equipment / tag(s)"></div>
+  <div class="field"><label>Activity No.</label><input id="riActivity" placeholder="e.g. 4.1"></div>
+  <div class="field"><label>Occurrence Count</label><input id="riCount" type="number" min="1" value="2"></div>
+  <div class="field"><label>First Occurrence Date</label><input id="riFirst" type="date"></div>
+  <div class="field"><label>Latest Occurrence Date</label><input id="riLatest" type="date"></div>
+  <div class="field"><label>Responsible Team</label><select id="riOwner"><option>Construction</option><option>QC</option><option>Engineering</option><option>Material</option><option>Preservation</option><option>Pre-Commissioning</option><option>Commissioning</option><option>Vendor</option></select></div>
+  <div class="field" style="grid-column:span 2"><label>Repeated Issue / Violation Description</label><textarea id="riDescription" placeholder="Describe the recurring condition and objective evidence."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Applicable Requirement / Reference</label><textarea id="riReference" placeholder="Specification, standard, ITP, drawing, procedure and clause."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Previous Action / Why It Recurred</label><textarea id="riPrevious" placeholder="Previous correction/corrective action and reason for recurrence, if known."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Recommended QA Action</label><select id="riAction"><option>Continue Monitoring</option><option>Proactive Quality Notification</option><option>Focused Assessment</option><option>Quality Audit</option><option>Raise NCR</option><option>Escalate Existing NCR</option><option>Lessons Learned / Best Practice Review</option></select></div>
+ </div>
+ <div class="actions no-print"><button class="primary" onclick="addRepeatedIssue()">Add Repeated Issue</button><button class="secondary" onclick="scanRepeatedIMM()">Scan IMM History</button></div>
+
+ <div style="overflow:auto;margin-top:14px">
+  <table><thead><tr><th>Issue No.</th><th>Type</th><th>Area</th><th>Tag / Activity</th><th>Issue / Violation</th><th>Occurrences</th><th>Severity</th><th>Owner</th><th>QA Action</th><th>Status</th></tr></thead>
+  <tbody id="repeatedIssueBody">
+   <tr><td>RI-2026-001</td><td>Repeated Site Observation</td><td>PDM 216/221</td><td>Cable Tray / 3.1</td><td>Repeated missing / insufficient cable tray supports</td><td>3</td><td>High</td><td>Construction</td><td>Focused Assessment</td><td>Open</td></tr>
+  </tbody></table>
+ </div>
+</section>
+
+<section class="panel" id="concernPanel">
+ <div class="kicker">Central Register</div><h2>Quality Concern Register</h2>
+ <div class="form no-print">
+  <div class="field"><label>Concern No.</label><input id="concernNo" value="QC-2026-001"></div>
+  <div class="field"><label>Source</label><select id="source"><option>IMM / QC Return</option><option>Site Surveillance</option><option>RFI</option><option>Audit</option><option>NCR</option><option>Client Observation</option></select></div>
+  <div class="field"><label>Discipline</label><select><option>Electrical</option><option>Instrumentation</option><option>Telecommunication</option><option>Multi-Discipline</option></select></div>
+  <div class="field"><label>Priority</label><select><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div>
+  <div class="field"><label>Area / PDM</label><input placeholder="Area / PDM"></div>
+  <div class="field"><label>System / Subsystem</label><input placeholder="System / Subsystem"></div>
+  <div class="field"><label>Equipment Tag</label><input placeholder="Tag or multiple tags"></div>
+  <div class="field"><label>Activity No.</label><input placeholder="e.g. 4.1"></div>
+  <div class="field" style="grid-column:span 2"><label>Concern / Observation</label><textarea placeholder="Describe the quality concern"></textarea></div>
+  <div class="field"><label>Responsible Team</label><select><option>Construction</option><option>QC</option><option>Engineering</option><option>Material</option><option>Preservation</option><option>Pre-Commissioning</option><option>Vendor</option></select></div>
+  <div class="field"><label>Due Date</label><input type="date"></div>
+ </div>
+ <div class="actions no-print"><button class="primary" onclick="addConcern()">Add Quality Concern</button><button class="secondary" onclick="alert('Prototype: link selected concern to RFI / IMM / NCR / EIL / Drawing / ITP.')">Link Records</button></div>
+ <div style="overflow:auto;margin-top:14px">
+ <table><thead><tr><th>Concern No.</th><th>Source</th><th>Area</th><th>Tag / Activity</th><th>Concern</th><th>Priority</th><th>Owner</th><th>Due</th><th>Status</th><th>Action</th></tr></thead>
+ <tbody id="concernBody">
+  <tr><td>QC-2026-001</td><td>Site Surveillance</td><td>PDM 216/221</td><td>Cable Tray / 3.1</td><td>Repeated missing/insufficient supports</td><td>High</td><td>Construction</td><td>18-Sep-2026</td><td>Open</td><td><button onclick="showHistory('QC-2026-001')">History</button></td></tr>
+  <tr><td>QC-2026-002</td><td>Material / PMI</td><td>Offshore</td><td>Banding Strap</td><td>Material verification / corrosion concern</td><td>High</td><td>Material</td><td>20-Sep-2026</td><td>Action</td><td><button onclick="showHistory('QC-2026-002')">History</button></td></tr>
+ </tbody></table></div>
+</section>
+
+<section class="grid">
+ <div class="panel span-6"><div class="kicker">Corrective Action</div><h2>Action & Effectiveness Tracker</h2>
+ <table><thead><tr><th>Ref.</th><th>Action</th><th>Owner</th><th>Due</th><th>Effectiveness</th><th>Status</th></tr></thead>
+ <tbody><tr><td>NCR-0532</td><td>Compile and submit missing documents</td><td>Document / QC</td><td>Open</td><td>Pending verification</td><td>In Progress</td></tr>
+ <tr><td>PQN-014</td><td>Verify cable tray supports before cable pulling</td><td>Construction</td><td>Open</td><td>Focused assessment required</td><td>Monitoring</td></tr></tbody></table></div>
+ <div class="panel span-6"><div class="kicker">Escalation Logic</div><h2>From Trend to Assurance Action</h2>
+ <p><strong>Repeated QC Return</strong> → Proactive Quality Notification</p>
+ <p><strong>Recurring / High-Risk Concern</strong> → Focused Assessment</p>
+ <p><strong>Confirmed Nonconformance</strong> → NCR</p>
+ <p><strong>Corrective Action</strong> → Effectiveness Verification → Closure → Lessons Learned</p>
+ </div>
+</section>
 </main>
-
 <script>
-const TODAY=new Date("2026-09-11");
-const ncrs=[
-{no:"NCR-E-0041",discipline:"Electrical",tag:"408-3J-PC-00803",rfi:"RFI-E-0208",issue:"Cable installation failed inspection acceptance criteria.",risk:"High",cause:"Readiness / Workmanship",target:"2026-09-15",status:"Open",reinspection:"RFI-E-0238"},
-{no:"NCR-E-0035",discipline:"Electrical",tag:"408-3M-JB-0256",rfi:"-",issue:"Equipment grounding conductor below required minimum size.",risk:"High",cause:"Material / Requirement Verification",target:"2026-09-05",status:"Pending Verification",reinspection:"-"},
-{no:"NCR-E-0029",discipline:"Electrical",tag:"Cable Tray / PDM 216",rfi:"-",issue:"Insufficient cable tray support arrangement.",risk:"Medium",cause:"Installation Planning",target:"2026-08-30",status:"Closed",reinspection:"-"},
-{no:"NCR-I-0018",discipline:"Instrumentation",tag:"JB-0139",rfi:"RFI-I-0271",issue:"Installation detail required rectification prior to acceptance.",risk:"Medium",cause:"Installation / Interface",target:"2026-09-18",status:"Corrective Action In Progress",reinspection:"-"}];
-const proactive=[
-{no:"PQN-E-2026-018",discipline:"Electrical",area:"PDM 216/221",obs:"Cable tray support and alignment concern before replication.",risk:"Medium",owner:"Construction / FE",target:"2026-09-13",status:"Open"},
-{no:"PQN-E-2026-015",discipline:"Electrical",area:"Offshore / Store",obs:"Verify uninstalled banding straps by PMI prior to offshore installation.",risk:"High",owner:"Material / QC",target:"2026-09-05",status:"Verified"},
-{no:"PQN-I-2026-007",discipline:"Instrumentation",area:"Zulf-228/233",obs:"Verify prerequisite readiness before final inspection requests.",risk:"Medium",owner:"Construction / QC",target:"2026-09-16",status:"Actioned"}];
-const audits=[
-{no:"AUD-Q-2026-04",type:"Internal Quality Audit",scope:"RFI / ITR workflow and document traceability",area:"E&I",date:"2026-08-20",lead:"Lead Auditor",findings:5,open:2,status:"Action in Progress"},
-{no:"AUD-E-2026-02",type:"Process Audit",scope:"Cable installation and inspection readiness",area:"PDM 216/221",date:"2026-09-01",lead:"Electrical QA/QC",findings:3,open:3,status:"Open"},
-{no:"AUD-Q-2026-01",type:"Internal Quality Audit",scope:"Calibration control",area:"QA/QC",date:"2026-06-12",lead:"Lead Auditor",findings:2,open:0,status:"Closed"}];
-const instruments=[
-{id:"TI-E-001",desc:"Insulation Resistance Tester",serial:"MIT-88421",range:"0-1000 MΩ",cal:"2025-10-10",expiry:"2026-10-10",assigned:"Electrical QC"},
-{id:"TI-E-002",desc:"Digital Multimeter",serial:"DMM-14055",range:"0-1000 V",cal:"2025-09-01",expiry:"2026-09-01",assigned:"Electrical QC"},
-{id:"TI-I-003",desc:"Loop Calibrator",serial:"LC-30211",range:"4-20 mA",cal:"2026-01-15",expiry:"2027-01-15",assigned:"Instrument QC"},
-{id:"TI-E-004",desc:"Torque Wrench",serial:"TW-72218",range:"20-200 Nm",cal:"2025-09-25",expiry:"2026-09-25",assigned:"Electrical Construction"}];
-const bestPractices=[
-{id:"BP-001",discipline:"Electrical",practice:"Benchmark one cable tray installation before mass replication.",benefit:"Reduces support/alignment rework.",source:"Focused assessment / field experience",status:"Recommended"},
-{id:"BP-002",discipline:"Electrical",practice:"Verify prerequisites before RFI submission.",benefit:"Reduces rejected RFIs.",source:"IMM / NCR trend",status:"Implemented"},
-{id:"BP-003",discipline:"E&I",practice:"Use current controlled documents linked to RFI.",benefit:"Prevents obsolete-document use.",source:"Document control review",status:"Implemented"}];
-const lessons=[
-{id:"LL-001",source:"Repeated tray support concerns",issue:"Support-only verification may not establish final tray position.",lesson:"Verify representative tray placement with supports where alignment/location is critical.",change:"Benchmark + focused assessment",owner:"FE / Construction / QC",status:"Open"},
-{id:"LL-002",source:"Material verification",issue:"MTC stated 316 SS but rust prompted further verification.",lesson:"Use risk-based PMI when field evidence creates doubt.",change:"PMI verification for affected materials",owner:"Material / QC",status:"Implemented"},
-{id:"LL-003",source:"RFI readiness",issue:"Inspection requested before prerequisites completed.",lesson:"Gate RFI by prerequisite and document status.",change:"IMM + RFI hard gate",owner:"QC / System Admin",status:"In Progress"}];
+function history(){try{return JSON.parse(localStorage.getItem("noelIMMInspectionHistory")||"[]")}catch(e){return[]}}
+function analyzeIMM(){
+ const h=history(), screenings=h.filter(x=>x.event==="QC_SCREENING");
+ const returned=screenings.filter(x=>["Return to Requester","Hold","Reinspection Required"].includes(x.qcDecision));
+ document.getElementById("mReturn").textContent=screenings.length?Math.round(returned.length/screenings.length*100)+"%":"—";
+ const grouped={}; returned.forEach(x=>{let k=(x.activityNo||"Unknown");grouped[k]=(grouped[k]||0)+1});
+ const top=Object.entries(grouped).sort((a,b)=>b[1]-a[1])[0];
+ if(top && top[1]>=2) document.getElementById("trendAlerts").innerHTML+=`<div class="alert"><strong>Recurring QC Return:</strong> Activity ${top[0]} has ${top[1]} return/hold events. Consider a Proactive Quality Notification or Focused Assessment.</div>`;
+}
+function showModule(x){alert("Prototype module: "+x+"\\nThis will open its controlled register/workflow in the next development stage.")}
+function addConcern(){alert("Quality concern captured in prototype. Production version will save to shared project database and audit trail.")}
+function showHistory(x){alert(x+"\\nPrototype history view: creation → assignment → corrective action → verification → closure.")}
+window.addEventListener("load",analyzeIMM);
+window.addEventListener("storage",analyzeIMM);
 
-function rc(r){return r==="Critical"?"critical":r==="High"?"bad":r==="Medium"?"warn":"ok"}
-function sc(s){return ["Closed","Verified","Implemented"].includes(s)?"ok":"warn"}
-ncrBody.innerHTML=ncrs.map(x=>`<tr><td>${x.no}</td><td>${x.discipline}</td><td>${x.tag}</td><td>${x.rfi}</td><td>${x.issue}</td><td><span class="status ${rc(x.risk)}">${x.risk}</span></td><td>${x.cause}</td><td>${x.target}</td><td><span class="status ${sc(x.status)}">${x.status}</span></td><td>${x.reinspection}</td></tr>`).join("");
-proactiveBody.innerHTML=proactive.map(x=>`<tr><td>${x.no}</td><td>${x.discipline}</td><td>${x.area}</td><td>${x.obs}</td><td><span class="status ${rc(x.risk)}">${x.risk}</span></td><td>${x.owner}</td><td>${x.target}</td><td><span class="status ${sc(x.status)}">${x.status}</span></td></tr>`).join("");
-auditBody.innerHTML=audits.map(x=>`<tr><td>${x.no}</td><td>${x.type}</td><td>${x.scope}</td><td>${x.area}</td><td>${x.date}</td><td>${x.lead}</td><td>${x.findings}</td><td>${x.open}</td><td><span class="status ${sc(x.status)}">${x.status}</span></td></tr>`).join("");
-instrumentBody.innerHTML=instruments.map(x=>{const d=Math.ceil((new Date(x.expiry)-TODAY)/86400000),s=d<0?"Expired":d<=30?"Due Soon":"Valid",c=s==="Expired"?"bad":s==="Due Soon"?"warn":"ok";return `<tr><td>${x.id}</td><td>${x.desc}</td><td>${x.serial}</td><td>${x.range}</td><td>${x.cal}</td><td>${x.expiry}</td><td>${d}</td><td><span class="status ${c}">${s}</span></td><td>${x.assigned}</td></tr>`}).join("");
-bestBody.innerHTML=bestPractices.map(x=>`<tr><td>${x.id}</td><td>${x.discipline}</td><td>${x.practice}</td><td>${x.benefit}</td><td>${x.source}</td><td><span class="status ${sc(x.status)}">${x.status}</span></td></tr>`).join("");
-lessonBody.innerHTML=lessons.map(x=>`<tr><td>${x.id}</td><td>${x.source}</td><td>${x.issue}</td><td>${x.lesson}</td><td>${x.change}</td><td>${x.owner}</td><td><span class="status ${sc(x.status)}">${x.status}</span></td></tr>`).join("");
+function ncrVal(id){const e=document.getElementById(id);return e?e.value:""}
+function getNCRs(){try{return JSON.parse(localStorage.getItem("noelNCRRegister")||"[]")}catch(e){return[]}}
+function ncrRecord(){
+ return {no:ncrVal("ncrNo"),date:ncrVal("ncrDate"),initiator:ncrVal("ncrInitiator"),initiatorPosition:ncrVal("ncrInitiatorPosition"),initiatorDept:ncrVal("ncrInitiatorDept"),initiatorCompany:ncrVal("ncrInitiatorCompany"),initiatorEmail:ncrVal("ncrInitiatorEmail"),discipline:ncrVal("ncrDiscipline"),priority:ncrVal("ncrPriority"),
+ area:ncrVal("ncrArea"),system:ncrVal("ncrSystem"),tags:ncrVal("ncrTags"),activity:ncrVal("ncrActivity"),source:ncrVal("ncrSource"),
+ owner:ncrVal("ncrOwner"),due:ncrVal("ncrDue"),status:ncrVal("ncrStatus"),description:ncrVal("ncrDescription"),
+ requirement:ncrVal("ncrRequirement"),rootCause:ncrVal("ncrRootCause"),correction:ncrVal("ncrCorrection"),
+ corrective:ncrVal("ncrCorrective"),effectiveness:ncrVal("ncrEffectiveness"),pqn:ncrVal("ncrPQN"),pqnEffect:ncrVal("ncrPQNEffect"),pqnDate:ncrVal("ncrPQNDate"),afterPQN:ncrVal("ncrAfterPQN"),beforeCount:ncrVal("ncrBeforeCount"),afterCount:ncrVal("ncrAfterCount"),pqnReviewDate:ncrVal("ncrPQNReviewDate"),pqnVerifiedBy:ncrVal("ncrPQNVerifiedBy"),pqnEvidence:ncrVal("ncrPQNEvidence"),updated:new Date().toISOString()}
+}
+function saveNCR(){
+ const r=ncrRecord(); if(!r.no){alert("NCR No. is required.");return}
+ let a=getNCRs(),i=a.findIndex(x=>x.no===r.no); if(i>=0)a[i]=r;else a.push(r);
+ localStorage.setItem("noelNCRRegister",JSON.stringify(a));renderNCRRegister();viewNCR();alert("NCR saved.");
+}
+function previewNCR(r){
+ document.getElementById("ncrPreview").style.display="block";
+ pvNo.textContent=r.no||"Draft NCR";pvStatus.textContent=r.status||"Draft";
+ const rows=[["Date Raised",r.date],["Initiator Name",r.initiator],["Initiator Position",r.initiatorPosition],["Initiator Department / Team",r.initiatorDept],["Initiator Company",r.initiatorCompany],["Initiator Email",r.initiatorEmail],["Discipline",r.discipline],["Priority / Severity",r.priority],["Area / PDM",r.area],
+ ["System / Subsystem",r.system],["Equipment Tag(s)",r.tags],["Activity No.",r.activity],["Source",r.source],
+ ["Responsible Department",r.owner],["Due Date",r.due],["Non-Conformance Description",r.description],
+ ["Requirement / Reference",r.requirement],["Root Cause",r.rootCause],["Correction / Immediate Action",r.correction],
+ ["Corrective Action",r.corrective],["Effectiveness Verification / Closure Evidence",r.effectiveness],["Related PQN",r.pqn],["PQN Effectiveness",r.pqnEffect],["PQN Issue Date",r.pqnDate],["Occurrence After PQN",r.afterPQN],["Occurrences Before PQN",r.beforeCount],["Occurrences After PQN",r.afterCount],["PQN Effectiveness Review Date",r.pqnReviewDate],["PQN Verified By",r.pqnVerifiedBy],["PQN Effectiveness Evidence",r.pqnEvidence]];
+ ncrPreviewBody.innerHTML=rows.map(x=>`<tr><th style="width:28%">${x[0]}</th><td>${(x[1]||"—").replace(/</g,"&lt;")}</td></tr>`).join("");
+}
+function viewNCR(no){
+ const a=getNCRs(); const r=no?a.find(x=>x.no===no):ncrRecord(); if(!r){alert("NCR not found.");return} previewNCR(r);
+ document.getElementById("ncrPreview").scrollIntoView({behavior:"smooth"});
+}
+function printNCR(no){
+ if(no)viewNCR(no);else viewNCR();
+ setTimeout(()=>window.print(),150);
+}
+function loadNCR(no){
+ const r=getNCRs().find(x=>x.no===no);if(!r)return;
+ const map={ncrNo:"no",ncrDate:"date",ncrInitiator:"initiator",ncrInitiatorPosition:"initiatorPosition",ncrInitiatorDept:"initiatorDept",ncrInitiatorCompany:"initiatorCompany",ncrInitiatorEmail:"initiatorEmail",ncrDiscipline:"discipline",ncrPriority:"priority",ncrArea:"area",ncrSystem:"system",
+ ncrTags:"tags",ncrActivity:"activity",ncrSource:"source",ncrOwner:"owner",ncrDue:"due",ncrStatus:"status",
+ ncrDescription:"description",ncrRequirement:"requirement",ncrRootCause:"rootCause",ncrCorrection:"correction",
+ ncrCorrective:"corrective",ncrEffectiveness:"effectiveness",ncrPQN:"pqn",ncrPQNEffect:"pqnEffect",ncrPQNDate:"pqnDate",ncrAfterPQN:"afterPQN",ncrBeforeCount:"beforeCount",ncrAfterCount:"afterCount",ncrPQNReviewDate:"pqnReviewDate",ncrPQNVerifiedBy:"pqnVerifiedBy",ncrPQNEvidence:"pqnEvidence"};
+ Object.entries(map).forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=r[k]||""});
+ document.getElementById("ncrGenerator").scrollIntoView({behavior:"smooth"});
+}
+function renderNCRRegister(){
+ const b=document.getElementById("ncrRegisterBody");if(!b)return;const a=getNCRs();
+ b.innerHTML=a.length?a.map(r=>`<tr><td>${r.no}</td><td>${r.date||"—"}</td><td>${r.area||"—"}</td><td>${r.tags||"—"}</td>
+ <td>${r.description||"—"}</td><td>${r.priority||"—"}</td><td>${r.owner||"—"}</td><td>${r.due||"—"}</td><td>${r.status||"—"}</td>
+ <td><button onclick="viewNCR('${r.no}')">View NCR</button> <button onclick="printNCR('${r.no}')">Print</button> <button onclick="loadNCR('${r.no}')">Edit</button></td></tr>`).join("")
+ :'<tr><td colspan="10">No saved NCR records yet.</td></tr>';
+}
 
-function updateKpis(){const open=ncrs.filter(x=>x.status!=="Closed").length,over=ncrs.filter(x=>x.status!=="Closed"&&new Date(x.target)<TODAY).length,closed=ncrs.filter(x=>x.status==="Closed").length,aud=audits.reduce((s,x)=>s+x.open,0),cal=instruments.filter(x=>Math.ceil((new Date(x.expiry)-TODAY)/86400000)<=30).length,high=ncrs.filter(x=>["High","Critical"].includes(x.risk)).length+proactive.filter(x=>["High","Critical"].includes(x.risk)).length;kNcrOpen.textContent=open;kNcrOverdue.textContent=over;kProactive.textContent=proactive.length;kAudit.textContent=aud;kCalibration.textContent=cal;kHighRisk.textContent=high;kClosed.textContent=Math.round(closed/ncrs.length*100)+"%"}updateKpis();
-function evaluateNcr(){const r=ncrRisk.value;ncrAdvice.className=(r==="Critical"||r==="High")?"notice bad":"notice";ncrAdvice.innerHTML=`<strong>${r.toUpperCase()} RISK NCR</strong><br>`+(r==="Critical"?"Immediate containment, management attention, corrective action and effectiveness verification recommended.":r==="High"?"Priority corrective action, reinspection control, root-cause review and trend monitoring recommended.":r==="Medium"?"Manage through normal NCR workflow with timely verification.":"Routine NCR controls with recurrence monitoring.")}
+window.addEventListener('load',renderNCRRegister);
 
-document.querySelectorAll(".tab-btn").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active")});
+function addRepeatedIssue(){
+ const row=document.createElement("tr");
+ const vals=[
+  riNo.value,riType.value,riArea.value,(riTags.value||"—")+" / "+(riActivity.value||"—"),
+  riDescription.value||"—",riCount.value,riRisk.value,riOwner.value,riAction.value,"Open"
+ ];
+ row.innerHTML=vals.map(v=>`<td>${String(v).replace(/</g,"&lt;")}</td>`).join("");
+ repeatedIssueBody.appendChild(row);
+ alert("Repeated issue / violation added to the register.");
+}
+function scanRepeatedIMM(){
+ const h=history().filter(x=>x.event==="QC_SCREENING"&&["Return to Requester","Hold","Reinspection Required"].includes(x.qcDecision));
+ const g={}; h.forEach(x=>{const k=(x.activityNo||"Unknown")+"|"+(x.qcDecision||"Return");g[k]=(g[k]||0)+1});
+ const repeated=Object.entries(g).filter(x=>x[1]>=2).sort((a,b)=>b[1]-a[1]);
+ if(!repeated.length){alert("No repeated QC return pattern found in the current IMM browser history.");return}
+ alert("Repeated patterns detected:\\n\\n"+repeated.map(x=>`${x[0]} — ${x[1]} occurrences`).join("\\n")+"\\n\\nReview for Proactive Notification, Focused Assessment or NCR as applicable.");
+}
+
+
+function getPQNs(){
+ try{
+   let a=JSON.parse(localStorage.getItem("noelPQNRegister")||"[]");
+   if(!a.length){
+     a=[
+       {no:"PQN-2026-001",title:"Cable tray support installation compliance",date:"2026-09-01",status:"Monitoring"},
+       {no:"PQN-2026-002",title:"Material verification / 316SS banding straps",date:"2026-08-31",status:"Monitoring"}
+     ];
+   }
+   return a;
+ }catch(e){return[]}
+}
+function loadPQNLinks(){
+ const s=document.getElementById("ncrPQN"); if(!s)return;
+ const keep=s.value;
+ s.innerHTML='<option value="">None / Not Applicable</option>'+getPQNs().map(x=>`<option value="${x.no}">${x.no} — ${x.title}</option>`).join("");
+ if([...s.options].some(o=>o.value===keep))s.value=keep;
+}
+function evaluatePQNEffectiveness(){
+ const before=Number(ncrVal("ncrBeforeCount")||0),after=Number(ncrVal("ncrAfterCount")||0);
+ const linked=!!ncrVal("ncrPQN"); let result="Not Evaluated";
+ if(linked){
+   if(after===0 && before>0)result="Effective";
+   else if(after>0 && before>0 && after<before)result="Partially Effective";
+   else if(after>=before && after>0)result="Ineffective";
+ }
+ const sel=document.getElementById("ncrPQNEffect");
+ if(sel && result!=="Not Evaluated")sel.value=result;
+ const box=document.getElementById("pqnEffectivenessSummary");
+ if(box)box.innerHTML=`<strong>PQN Effectiveness Measurement:</strong> ${linked?ncrVal("ncrPQN"):"No PQN linked"} | Before: ${before} | After: ${after} | Assessment: <strong>${result}</strong>. Final effectiveness remains subject to QA/QC verification and objective evidence.`;
+}
+["ncrPQN","ncrBeforeCount","ncrAfterCount"].forEach(id=>document.addEventListener("change",e=>{if(e.target&&e.target.id===id)evaluatePQNEffectiveness()}));
+window.addEventListener("load",()=>{loadPQNLinks();evaluatePQNEffectiveness()});
+
+
+function pqnVal(id){const e=document.getElementById(id);return e?e.value:""}
+function getPQNRecords(){try{return JSON.parse(localStorage.getItem("noelPQNRegister")||"[]")}catch(e){return[]}}
+function pqnRecord(){
+ return {no:pqnVal("pqnNo"),rev:pqnVal("pqnRev"),date:pqnVal("pqnDate"),initiator:pqnVal("pqnInitiator"),initiatorPosition:pqnVal("pqnInitiatorPosition"),initiatorDept:pqnVal("pqnInitiatorDept"),initiatorCompany:pqnVal("pqnInitiatorCompany"),initiatorEmail:pqnVal("pqnInitiatorEmail"),status:pqnVal("pqnStatus"),discipline:pqnVal("pqnDiscipline"),
+ category:pqnVal("pqnCategory"),risk:pqnVal("pqnRisk"),source:pqnVal("pqnSource"),area:pqnVal("pqnArea"),system:pqnVal("pqnSystem"),
+ tags:pqnVal("pqnTags"),activity:pqnVal("pqnActivity"),concern:pqnVal("pqnConcern"),reference:pqnVal("pqnReference"),impact:pqnVal("pqnImpact"),
+ action:pqnVal("pqnAction"),owner:pqnVal("pqnOwner"),person:pqnVal("pqnPerson"),due:pqnVal("pqnDue"),review:pqnVal("pqnReview"),
+ before:pqnVal("pqnBefore"),after:pqnVal("pqnAfter"),effect:pqnVal("pqnEffect"),ncr:pqnVal("pqnNCR"),response:pqnVal("pqnResponse"),
+ evidence:pqnVal("pqnEvidence"),updated:new Date().toISOString()}
+}
+function savePQN(){
+ const r=pqnRecord();if(!r.no){alert("PQN No. is required.");return}
+ let a=getPQNRecords(),i=a.findIndex(x=>x.no===r.no);if(i>=0)a[i]=r;else a.push(r);
+ localStorage.setItem("noelPQNRegister",JSON.stringify(a));renderPQNRegister();loadPQNLinks();viewPQN();alert("Proactive Quality Notification saved.");
+}
+function evaluatePQN(){
+ const b=Number(pqnVal("pqnBefore")||0),a=Number(pqnVal("pqnAfter")||0);let e="Not Evaluated";
+ if(b>0&&a===0)e="Effective";else if(b>0&&a>0&&a<b)e="Partially Effective";else if(a>0&&a>=b)e="Ineffective";
+ document.getElementById("pqnEffect").value=e;
+ document.getElementById("pqnEvalSummary").innerHTML=`<strong>Effectiveness:</strong> Before PQN: ${b} occurrence(s) | After PQN: ${a} occurrence(s) | Assessment: <strong>${e}</strong>. Final conclusion requires QA/QC verification and objective evidence.`;
+ return e;
+}
+function previewPQN(r){
+ pqnPreview.style.display="block";pqnPvNo.textContent=(r.no||"Draft")+" Rev. "+(r.rev||"0");pqnPvStatus.textContent=r.status||"Draft";
+ const rows=[["Date Issued",r.date],["Initiator Name",r.initiator],["Initiator Position",r.initiatorPosition],["Initiator Department / Team",r.initiatorDept],["Initiator Company",r.initiatorCompany],["Initiator Email",r.initiatorEmail],["Discipline",r.discipline],["Category",r.category],["Risk / Priority",r.risk],["Source",r.source],
+ ["Area / PDM",r.area],["System / Subsystem",r.system],["Equipment / Tag(s)",r.tags],["Activity No.",r.activity],
+ ["Quality Concern / Potential Nonconformance",r.concern],["Applicable Requirement / Reference",r.reference],["Potential Impact / Risk",r.impact],
+ ["Required Preventive / Proactive Action",r.action],["Responsible Department",r.owner],["Responsible Person",r.person],
+ ["Target Completion Date",r.due],["Monitoring / Review Date",r.review],["Occurrences Before PQN",r.before],["Occurrences After PQN",r.after],
+ ["Effectiveness",r.effect],["Action Taken / Response",r.response],["Effectiveness Verification / Evidence",r.evidence],["Related NCR",r.ncr]];
+ pqnPreviewBody.innerHTML=rows.map(x=>`<tr><th style="width:29%">${x[0]}</th><td>${String(x[1]||"—").replace(/</g,"&lt;")}</td></tr>`).join("");
+}
+function viewPQN(no){const r=no?getPQNRecords().find(x=>x.no===no):pqnRecord();if(!r){alert("PQN not found.");return}previewPQN(r);pqnPreview.scrollIntoView({behavior:"smooth"})}
+function printPQN(no){viewPQN(no);setTimeout(()=>window.print(),150)}
+function loadPQN(no){
+ const r=getPQNRecords().find(x=>x.no===no);if(!r)return;
+ const m={pqnNo:"no",pqnRev:"rev",pqnDate:"date",pqnInitiator:"initiator",pqnInitiatorPosition:"initiatorPosition",pqnInitiatorDept:"initiatorDept",pqnInitiatorCompany:"initiatorCompany",pqnInitiatorEmail:"initiatorEmail",pqnStatus:"status",pqnDiscipline:"discipline",pqnCategory:"category",pqnRisk:"risk",
+ pqnSource:"source",pqnArea:"area",pqnSystem:"system",pqnTags:"tags",pqnActivity:"activity",pqnConcern:"concern",pqnReference:"reference",
+ pqnImpact:"impact",pqnAction:"action",pqnOwner:"owner",pqnPerson:"person",pqnDue:"due",pqnReview:"review",pqnBefore:"before",pqnAfter:"after",
+ pqnEffect:"effect",pqnNCR:"ncr",pqnResponse:"response",pqnEvidence:"evidence"};
+ Object.entries(m).forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=r[k]||""});pqnGenerator.scrollIntoView({behavior:"smooth"});evaluatePQN();
+}
+function renderPQNRegister(){
+ const b=document.getElementById("pqnRegisterBody");if(!b)return;const a=getPQNRecords();
+ b.innerHTML=a.length?a.map(r=>`<tr><td>${r.no}</td><td>${r.date||"—"}</td><td>${r.area||"—"}</td><td>${r.concern||"—"}</td>
+ <td>${r.risk||"—"}</td><td>${r.owner||"—"}</td><td>${r.due||"—"}</td><td>${r.before||0} / ${r.after||0}</td><td>${r.effect||"Not Evaluated"}</td><td>${r.status||"—"}</td>
+ <td><button onclick="viewPQN('${r.no}')">View</button> <button onclick="printPQN('${r.no}')">Print</button> <button onclick="loadPQN('${r.no}')">Edit</button></td></tr>`).join("")
+ :'<tr><td colspan="11">No saved proactive quality notifications yet.</td></tr>';
+}
+function createNCRFromPQN(){
+ const p=pqnRecord();if(!p.no){alert("Create or load a PQN first.");return}
+ const map={ncrPQN:p.no,ncrPQNDate:p.date,ncrInitiator:p.initiator,ncrInitiatorPosition:p.initiatorPosition,ncrInitiatorDept:p.initiatorDept,ncrInitiatorCompany:p.initiatorCompany,ncrInitiatorEmail:p.initiatorEmail,ncrBeforeCount:p.before,ncrAfterCount:p.after,ncrPQNEffect:p.effect,ncrPQNEvidence:p.evidence,
+ ncrDiscipline:p.discipline,ncrPriority:p.risk,ncrArea:p.area,ncrSystem:p.system,ncrTags:p.tags,ncrActivity:p.activity,ncrDescription:p.concern,
+ ncrRequirement:p.reference,ncrOwner:p.owner};
+ Object.entries(map).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.value=v||""});
+ document.getElementById("ncrGenerator").scrollIntoView({behavior:"smooth"});
+ alert("PQN information transferred to the NCR Generator. Complete the NCR investigation, root cause and corrective action before issuance.");
+}
+window.addEventListener("load",()=>{renderPQNRegister(); if(!pqnDate.value)pqnDate.value=new Date().toISOString().slice(0,10)});
+
+
+function rncVal(id){const e=document.getElementById(id);return e?e.value:""}
+function getRNCs(){try{return JSON.parse(localStorage.getItem("noelRepeatedNCRegister")||"[]")}catch(e){return[]}}
+function rncRecord(){return {
+ no:rncVal("rncNo"),currentNCR:rncVal("rncCurrentNCR"),previousNCR:rncVal("rncPreviousNCR"),count:rncVal("rncCount"),
+ discipline:rncVal("rncDiscipline"),area:rncVal("rncArea"),system:rncVal("rncSystem"),tags:rncVal("rncTags"),
+ firstDate:rncVal("rncFirstDate"),latestDate:rncVal("rncLatestDate"),owner:rncVal("rncOwner"),status:rncVal("rncStatus"),
+ description:rncVal("rncDescription"),requirement:rncVal("rncRequirement"),prevRoot:rncVal("rncPrevRoot"),prevCA:rncVal("rncPrevCA"),
+ prevEffect:rncVal("rncPrevEffect"),classification:rncVal("rncClass"),management:rncVal("rncMgmt"),focusedAssessment:rncVal("rncFA"),
+ recurrenceReason:rncVal("rncReason"),revisedCA:rncVal("rncRevisedCA"),verifyPlan:rncVal("rncVerifyPlan"),closure:rncVal("rncClosure"),
+ updated:new Date().toISOString()
+}}
+function populateNCRLinks(){
+ const s=document.getElementById("rncCurrentNCR");if(!s)return;let keep=s.value,a=getNCRs();
+ s.innerHTML='<option value="">Select current NCR</option>'+a.map(x=>`<option value="${x.no}">${x.no} — ${x.description||"NCR"}</option>`).join("");
+ if([...s.options].some(o=>o.value===keep))s.value=keep;
+}
+function loadCurrentNCRToRNC(){
+ const n=getNCRs().find(x=>x.no===rncVal("rncCurrentNCR"));if(!n){alert("Select a current NCR first.");return}
+ const m={rncDiscipline:n.discipline,rncArea:n.area,rncSystem:n.system,rncTags:n.tags,rncLatestDate:n.date,rncOwner:n.owner,rncDescription:n.description,rncRequirement:n.requirement};
+ Object.entries(m).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.value=v||""});
+}
+function saveRNC(){
+ const r=rncRecord();if(!r.no||!r.currentNCR){alert("Repeated NC No. and Current NCR No. are required.");return}
+ let a=getRNCs(),i=a.findIndex(x=>x.no===r.no);if(i>=0)a[i]=r;else a.push(r);
+ localStorage.setItem("noelRepeatedNCRegister",JSON.stringify(a));renderRNC();viewRNC();alert("Repeated non-conformance analysis saved.");
+}
+function previewRNC(r){
+ rncPreview.style.display="block";rncPvNo.textContent=r.no||"Draft";rncPvStatus.textContent=r.status||"Under Review";
+ const rows=[["Current NCR",r.currentNCR],["Previous NCR(s)",r.previousNCR],["Recurrence Count",r.count],["Discipline",r.discipline],["Area / PDM",r.area],["System / Subsystem",r.system],["Equipment / Tags",r.tags],["First Occurrence Date",r.firstDate],["Latest Recurrence Date",r.latestDate],["Repeated Non-Conformance",r.description],["Requirement / Clause Violated",r.requirement],["Previous Root Cause",r.prevRoot],["Previous Corrective Action",r.prevCA],["Previous Effectiveness",r.prevEffect],["Recurrence Classification",r.classification],["Reason for Recurrence / Root Cause Reassessment",r.recurrenceReason],["Revised / Additional Corrective Action",r.revisedCA],["Effectiveness Verification Plan",r.verifyPlan],["Management Review Required",r.management],["Focused Assessment Required",r.focusedAssessment],["Final Effectiveness / Closure Evidence",r.closure]];
+ rncPreviewBody.innerHTML=rows.map(x=>`<tr><th style="width:30%">${x[0]}</th><td>${String(x[1]||"—").replace(/</g,"&lt;")}</td></tr>`).join("");
+}
+function viewRNC(no){const r=no?getRNCs().find(x=>x.no===no):rncRecord();if(!r){alert("Repeated NC record not found.");return}previewRNC(r);rncPreview.scrollIntoView({behavior:"smooth"})}
+function printRNC(no){viewRNC(no);setTimeout(()=>window.print(),150)}
+function renderRNC(){
+ const b=document.getElementById("rncRegisterBody");if(!b)return;const a=getRNCs();
+ b.innerHTML=a.length?a.map(r=>`<tr><td>${r.no}</td><td>${r.currentNCR||"—"}</td><td>${r.previousNCR||"—"}</td><td>${r.area||"—"}</td><td>${r.description||"—"}</td><td>${r.count||"—"}</td><td>${r.prevEffect||"—"}</td><td>${r.owner||"—"}</td><td>${r.status||"—"}</td><td><button onclick="viewRNC('${r.no}')">View</button> <button onclick="printRNC('${r.no}')">Print</button></td></tr>`).join(""):'<tr><td colspan="10">No repeated non-conformance records yet.</td></tr>';
+}
+window.addEventListener("load",()=>{populateNCRLinks();renderRNC()});
+
+
+function qSafe(v){return (v===undefined||v===null||v==="")?"—":String(v)}
+function qEmails(v){return String(v||"").split(/[;,]+/).map(x=>x.trim()).filter(Boolean).join(",")}
+function refreshQualityEmailRecords(){
+ const ns=document.getElementById("ncrEmailRecord"),ps=document.getElementById("pqnEmailRecord");
+ if(ns){let keep=ns.value,a=getNCRs();ns.innerHTML='<option value="">Select NCR</option>'+a.map(x=>`<option value="${qSafe(x.no)}">${qSafe(x.no)} — ${qSafe(x.area)}</option>`).join("");if([...ns.options].some(o=>o.value===keep))ns.value=keep}
+ if(ps){let keep=ps.value,a=getPQNs();ps.innerHTML='<option value="">Select PQN</option>'+a.map(x=>`<option value="${qSafe(x.no)}">${qSafe(x.no)} — ${qSafe(x.area)}</option>`).join("");if([...ps.options].some(o=>o.value===keep))ps.value=keep}
+}
+function buildNCREmail(){
+ const no=document.getElementById("ncrEmailRecord")?.value,n=getNCRs().find(x=>x.no===no);if(!n)return;
+ document.getElementById("ncrEmailSubject").value=`NCR Notification – ${qSafe(n.no)} – ${qSafe(n.discipline)} – ${qSafe(n.area)}`;
+ document.getElementById("ncrEmailBody").value=
+`Dear All,
+
+Please be informed that Non-Conformance Report ${qSafe(n.no)} has been raised for review and necessary action.
+
+NCR No.: ${qSafe(n.no)}
+Date Raised: ${qSafe(n.date)}
+Discipline: ${qSafe(n.discipline)}
+Area / PDM: ${qSafe(n.area)}
+System / Subsystem: ${qSafe(n.system)}
+Equipment / Tag(s): ${qSafe(n.tags)}
+Priority / Severity: ${qSafe(n.priority)}
+Responsible Department: ${qSafe(n.owner)}
+Status: ${qSafe(n.status)}
+
+Non-Conformance:
+${qSafe(n.description)}
+
+Applicable Requirement / Reference:
+${qSafe(n.requirement)}
+
+Immediate Correction / Action:
+${qSafe(n.correction)}
+
+Corrective Action:
+${qSafe(n.corrective)}
+
+Target Completion Date: ${qSafe(n.due)}
+Related PQN: ${qSafe(n.pqn)}
+
+Kindly review the NCR and take the required correction and corrective action within the specified target date. Please provide the necessary objective evidence for verification and closure.
+
+Regards,
+${qSafe(n.initiatorName||n.initiator)}
+${qSafe(n.initiatorPosition)}
+${qSafe(n.initiatorDepartment)}
+${qSafe(n.initiatorCompany)}`;
+}
+function buildPQNEmail(){
+ const no=document.getElementById("pqnEmailRecord")?.value,p=getPQNs().find(x=>x.no===no);if(!p)return;
+ document.getElementById("pqnEmailSubject").value=`Proactive Quality Notification – ${qSafe(p.no)} – ${qSafe(p.discipline)} – ${qSafe(p.area)}`;
+ document.getElementById("pqnEmailBody").value=
+`Dear All,
+
+Please be informed that Proactive Quality Notification ${qSafe(p.no)} has been issued regarding a potential quality concern / potential violation requiring preventive action before it develops into an actual non-conformance or violation.
+
+PQN No.: ${qSafe(p.no)}
+Date Issued: ${qSafe(p.date)}
+Discipline: ${qSafe(p.discipline)}
+Area / PDM: ${qSafe(p.area)}
+System / Subsystem: ${qSafe(p.system)}
+Equipment / Tag(s): ${qSafe(p.tags)}
+Risk / Priority: ${qSafe(p.risk||p.priority)}
+Responsible Department: ${qSafe(p.owner)}
+Status: ${qSafe(p.status)}
+
+Potential Violation / Quality Concern:
+${qSafe(p.concern)}
+
+Applicable Requirement / Reference at Risk:
+${qSafe(p.requirement)}
+
+Potential Impact / Risk if Not Addressed:
+${qSafe(p.impact)}
+
+Preventive Action Required / Action to Avoid Violation:
+${qSafe(p.action)}
+
+Target Completion Date: ${qSafe(p.due)}
+
+Kindly review and implement the required preventive action within the target date to avoid development of the identified condition into an actual non-conformance / violation. Please provide the action taken and objective evidence for effectiveness monitoring and closure.
+
+Regards,
+${qSafe(p.initiatorName||p.initiator)}
+${qSafe(p.initiatorPosition)}
+${qSafe(p.initiatorDepartment)}
+${qSafe(p.initiatorCompany)}`;
+}
+function openQualityEmail(type){
+ const pre=type==="ncr"?"ncr":"pqn",to=qEmails(document.getElementById(pre+"EmailTo").value),cc=qEmails(document.getElementById(pre+"EmailCC").value),sub=document.getElementById(pre+"EmailSubject").value,body=document.getElementById(pre+"EmailBody").value;
+ if(!to){alert("Enter at least one recipient email address.");return}
+ location.href=`mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`;
+}
+async function copyQualityEmail(type){
+ const pre=type==="ncr"?"ncr":"pqn",sub=document.getElementById(pre+"EmailSubject").value,body=document.getElementById(pre+"EmailBody").value;
+ try{await navigator.clipboard.writeText("Subject: "+sub+"\n\n"+body);alert("Email statement copied.")}catch(e){alert("Copy is not available in this browser. Please select and copy the email statement manually.")}
+}
+window.addEventListener("load",refreshQualityEmailRecords);
+window.addEventListener("storage",refreshQualityEmailRecords);
+
+
+function ncrResponseVal(id){const e=document.getElementById(id);return e?e.value:""}
+function getNCRResponses(){try{return JSON.parse(localStorage.getItem("noelNCRRecipientResponses")||"{}")}catch(e){return{}}}
+function saveNCRRecipientQCResponse(){
+ const no=document.getElementById("ncrNo")?.value||document.getElementById("ncrEmailRecord")?.value;
+ if(!no){alert("Enter or select an NCR No. first.");return}
+ let all=getNCRResponses();
+ all[no]={
+  ncrNo:no,recipientName:ncrResponseVal("ncrRecipientName"),recipientPosition:ncrResponseVal("ncrRecipientPosition"),
+  recipientDept:ncrResponseVal("ncrRecipientDept"),recipientEmail:ncrResponseVal("ncrRecipientEmail"),
+  correction:ncrResponseVal("ncrRecipientCorrection"),initialRootCause:ncrResponseVal("ncrInitialRootCause"),
+  proposedCA:ncrResponseVal("ncrRecipientCA"),proposedDue:ncrResponseVal("ncrRecipientDue"),
+  recipientStatus:ncrResponseVal("ncrRecipientStatus"),recipientEvidence:ncrResponseVal("ncrRecipientEvidence"),
+  qcReviewer:ncrResponseVal("ncrQCReviewer"),qcReviewDate:ncrResponseVal("ncrQCReviewDate"),
+  initialRCReview:ncrResponseVal("ncrInitialRCReview"),caReview:ncrResponseVal("ncrCAReview"),
+  qcComments:ncrResponseVal("ncrQCComments"),finalRootCause:ncrResponseVal("ncrFinalRootCause"),
+  finalCA:ncrResponseVal("ncrFinalCA"),qcFinalStatus:ncrResponseVal("ncrQCFinalStatus"),
+  effectivenessReviewDate:ncrResponseVal("ncrEffectivenessReviewDate"),updated:new Date().toISOString()
+ };
+ localStorage.setItem("noelNCRRecipientResponses",JSON.stringify(all));alert("NCR recipient response and QC review saved.");
+}
+function loadNCRRecipientQCResponse(no){
+ no=no||document.getElementById("ncrNo")?.value;if(!no)return;const r=getNCRResponses()[no];if(!r)return;
+ const map={ncrRecipientName:"recipientName",ncrRecipientPosition:"recipientPosition",ncrRecipientDept:"recipientDept",ncrRecipientEmail:"recipientEmail",
+ ncrRecipientCorrection:"correction",ncrInitialRootCause:"initialRootCause",ncrRecipientCA:"proposedCA",ncrRecipientDue:"proposedDue",
+ ncrRecipientStatus:"recipientStatus",ncrRecipientEvidence:"recipientEvidence",ncrQCReviewer:"qcReviewer",ncrQCReviewDate:"qcReviewDate",
+ ncrInitialRCReview:"initialRCReview",ncrCAReview:"caReview",ncrQCComments:"qcComments",ncrFinalRootCause:"finalRootCause",
+ ncrFinalCA:"finalCA",ncrQCFinalStatus:"qcFinalStatus",ncrEffectivenessReviewDate:"effectivenessReviewDate"};
+ Object.entries(map).forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=r[k]||""});
+}
+window.addEventListener("load",()=>{
+ const qc=document.getElementById("ncrQCFinalReview");
+ if(qc){const a=document.createElement("div");a.className="actions no-print";a.innerHTML='<button class="primary" onclick="saveNCRRecipientQCResponse()">Save Recipient / QC Response</button><button class="secondary" onclick="loadNCRRecipientQCResponse()">Load Saved Response</button>';qc.appendChild(a)}
+});
+
+
+function ncrMailValue(id){const e=document.getElementById(id);return e?e.value:""}
+function currentNCRForMail(){
+ const no=document.getElementById("ncrNo")?.value||"";
+ const list=(typeof getNCRs==="function")?getNCRs():[];
+ return list.find(x=>x.no===no)||{
+  no:no,date:document.getElementById("ncrDate")?.value||"",discipline:document.getElementById("ncrDiscipline")?.value||"",
+  area:document.getElementById("ncrArea")?.value||"",system:document.getElementById("ncrSystem")?.value||"",
+  tags:document.getElementById("ncrTags")?.value||"",priority:document.getElementById("ncrPriority")?.value||"",
+  description:document.getElementById("ncrDescription")?.value||"",requirement:document.getElementById("ncrRequirement")?.value||"",
+  due:document.getElementById("ncrDue")?.value||""
+ };
+}
+function prepareNCREmailStatement(){
+ const n=currentNCRForMail(), no=n.no||document.getElementById("ncrNo")?.value||"NCR";
+ document.getElementById("ncrMailNo").value=no;
+ if(!document.getElementById("ncrMailRecipient").value)
+   document.getElementById("ncrMailRecipient").value=n.owner||document.getElementById("ncrRecipientDept")?.value||"";
+ document.getElementById("ncrMailSubject").value=`NCR Notification – ${no} – Response and Corrective Action Required`;
+ document.getElementById("ncrMailBody").value=
+`Dear ${ncrMailValue("ncrMailRecipient")||"Concerned Team"},
+
+Please be informed that Non-Conformance Report ${no} has been raised for your review and necessary action.
+
+NCR No.: ${no}
+Date Raised: ${n.date||"—"}
+Discipline: ${n.discipline||"—"}
+Area / PDM: ${n.area||"—"}
+System / Subsystem: ${n.system||"—"}
+Equipment / Tag(s): ${n.tags||"—"}
+Priority / Severity: ${n.priority||"—"}
+
+Non-Conformance Description:
+${n.description||"—"}
+
+Applicable Requirement / Reference:
+${n.requirement||"—"}
+
+You are kindly requested to review the above non-conformance and provide the following:
+
+1. Correction / immediate action taken to address the identified condition;
+2. Initial root cause analysis;
+3. Proposed corrective action to eliminate the cause and prevent recurrence;
+4. Proposed completion date; and
+5. Supporting documents / objective evidence, as applicable.
+
+Please note that the root cause submitted by the recipient / responsible department will be treated as the initial root cause. The final root cause and adequacy of the corrective action will be reviewed, verified and confirmed by QC prior to effectiveness verification and NCR closure.
+
+Target Response / Completion Date: ${n.due||"—"}
+
+Kindly provide your response within the required timeframe for QC review and further disposition.
+
+Regards,
+Quality Control`;
+}
+function ncrEmailList(v){return String(v||"").split(/[;,]+/).map(x=>x.trim()).filter(Boolean).join(",")}
+function openNCREmail(){
+ prepareNCREmailStatement();
+ const to=ncrEmailList(ncrMailValue("ncrMailTo"));if(!to){alert("Enter the NCR recipient email address.");return}
+ const cc=ncrEmailList(ncrMailValue("ncrMailCC"));
+ location.href=`mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(ncrMailValue("ncrMailSubject"))}&body=${encodeURIComponent(ncrMailValue("ncrMailBody"))}`;
+}
+async function copyNCREmail(){
+ prepareNCREmailStatement();
+ const text=`To: ${ncrMailValue("ncrMailTo")}\nCC: ${ncrMailValue("ncrMailCC")}\nSubject: ${ncrMailValue("ncrMailSubject")}\n\n${ncrMailValue("ncrMailBody")}`;
+ try{await navigator.clipboard.writeText(text);alert("NCR email statement copied.");}catch(e){alert("Please select and copy the NCR email statement manually.");}
+}
+
+
+let ncrWF={stage:1,approved1:false,approved2:false,template:"standard",returned:false};
+function wfEl(id){return document.getElementById(id)}
+function wfV(id){return wfEl(id)?.value||""}
+function setNCRWorkflowTemplate(){
+ ncrWF.template=wfV("ncrWorkflowTemplate"); ncrWF.stage=1;ncrWF.approved1=false;ncrWF.approved2=false;ncrWF.returned=false;renderNCRWorkflow();
+}
+function wfNeedsSupervisor(){return ["standard","inspector-supervisor","custom"].includes(ncrWF.template)}
+function wfNeedsManager(){return ["standard","inspector-manager","custom"].includes(ncrWF.template)}
+function renderNCRWorkflow(){
+ const sup=wfNeedsSupervisor(),mgr=wfNeedsManager();
+ wfEl("wfTo1").textContent=sup?"QC Supervisor":mgr?"QC Manager":"Corrective Action Department";
+ wfEl("wfFrom2").textContent=sup?"QC Supervisor":"QC Inspector";
+ wfEl("wfTo2").textContent=(sup&&mgr)?"QC Manager":"Corrective Action Department";
+ wfEl("wfFrom3").textContent=mgr?"QC Manager":sup?"QC Supervisor":"QC Inspector";
+ wfEl("wfStatus1").textContent=ncrWF.approved1?"Approved":ncrWF.returned?"Returned for Revision":"Pending Review";
+ wfEl("wfStatus2").textContent=ncrWF.approved1?(ncrWF.approved2?"Approved":"Pending Next Approval"):"Locked — Awaiting Stage 1 Approval";
+ const finalApproved = ncrWF.approved1 && (!sup||!mgr ? ncrWF.approved2 : ncrWF.approved2);
+ wfEl("wfStatus3").textContent=finalApproved?"Released for Corrective Action":"Locked — Awaiting Final QC Approval";
+ wfEl("wfBtn2").disabled=!ncrWF.approved1;
+ wfEl("wfBtn3").disabled=!finalApproved;
+ wfEl("ncrWFCurrentStage").value=ncrWF.stage===1?"Stage 1 — QC Review":ncrWF.stage===2?"Stage 2 — Final QC Approval":"Stage 3 — Corrective Action";
+ wfEl("ncrWFApprovalStatus").value=ncrWF.returned?"Returned for Revision":ncrWF.stage===1?"Pending First QC Approval":ncrWF.stage===2?"Pending Final QC Approval":"Approved for Corrective Action";
+}
+function currentNCRData(){
+ const no=wfEl("ncrNo")?.value||wfEl("ncrMailNo")?.value||"";
+ const a=typeof getNCRs==="function"?getNCRs():[]; return a.find(x=>x.no===no)||{no:no};
+}
+function prepareNCRWorkflowEmail(stage){
+ const n=currentNCRData(); wfEl("ncrMailNo").value=n.no||"";
+ let to="",recipient="",subject="",body="";
+ const sup=wfNeedsSupervisor(),mgr=wfNeedsManager();
+ if(stage===1){
+   if(sup){to=wfV("ncrWFSupervisorEmail");recipient=wfV("ncrWFSupervisor")||"QC Supervisor"}
+   else if(mgr){to=wfV("ncrWFManagerEmail");recipient=wfV("ncrWFManager")||"QC Manager"}
+   else {to=wfV("ncrWFDeptEmail");recipient=wfV("ncrWFDept")||"Corrective Action Department"}
+   subject=`NCR ${n.no||"Draft"} — For Review and Approval`;
+   body=`Dear ${recipient},
+
+Please find NCR ${n.no||"—"} submitted by ${wfV("ncrWFInspector")||"QC Inspector"} for your review and approval.
+
+Non-Conformance:
+${n.description||"—"}
+
+Applicable Requirement / Reference:
+${n.requirement||"—"}
+
+Kindly review the NCR details and provide your approval or comments. The NCR will proceed to the next configured approval stage only after your approval.
+
+Regards,
+${wfV("ncrWFInspector")||"QC Inspector"}`;
+ } else if(stage===2){
+   if(!ncrWF.approved1){alert("Stage 1 approval is required first.");return}
+   if(sup&&mgr){to=wfV("ncrWFManagerEmail");recipient=wfV("ncrWFManager")||"QC Manager"}
+   else {to=wfV("ncrWFDeptEmail");recipient=wfV("ncrWFDept")||"Corrective Action Department"}
+   subject=`NCR ${n.no||"Draft"} — For Final QC Approval`;
+   body=`Dear ${recipient},
+
+NCR ${n.no||"—"} has completed the preceding QC review and is forwarded for the next required approval.
+
+QC Review Comments:
+${wfV("ncrWFComments")||"No additional comments."}
+
+Kindly review and approve the NCR for controlled release to the responsible corrective-action department.
+
+Regards,
+${sup?wfV("ncrWFSupervisor")||"QC Supervisor":wfV("ncrWFInspector")||"QC Inspector"}`;
+ } else {
+   if(!(ncrWF.approved1&&ncrWF.approved2)){alert("Final QC approval is required before release to the corrective-action department.");return}
+   to=wfV("ncrWFDeptEmail");recipient=wfV("ncrWFDept")||"Corrective Action Department";
+   subject=`Approved NCR ${n.no||"Draft"} — Corrective Action Response Required`;
+   body=`Dear ${recipient},
+
+Please be informed that NCR ${n.no||"—"} has completed the required QC review and approval workflow and is hereby issued for your necessary action.
+
+Non-Conformance:
+${n.description||"—"}
+
+Applicable Requirement / Reference:
+${n.requirement||"—"}
+
+You are requested to provide:
+1. Correction / immediate action taken;
+2. Initial root cause analysis;
+3. Proposed corrective action to eliminate the cause and prevent recurrence;
+4. Proposed completion date; and
+5. Supporting documents / objective evidence.
+
+The root cause submitted by the responsible department will be treated as the initial root cause. The final root cause and adequacy of corrective action will be reviewed, verified and confirmed by QC before effectiveness verification and NCR closure.
+
+Kindly submit your response within the required timeframe.
+
+Regards,
+Quality Control`;
+ }
+ wfEl("ncrMailTo").value=to;wfEl("ncrMailSubject").value=subject;wfEl("ncrMailBody").value=body;ncrWF.stage=stage;renderNCRWorkflow();
+}
+function approveNCRStage(){
+ const sup=wfNeedsSupervisor(),mgr=wfNeedsManager();
+ if(ncrWF.stage===1){
+   ncrWF.approved1=true;ncrWF.returned=false;
+   if(sup&&mgr){ncrWF.stage=2;prepareNCRWorkflowEmail(2)}
+   else {ncrWF.approved2=true;ncrWF.stage=3;prepareNCRWorkflowEmail(3)}
+ } else if(ncrWF.stage===2){
+   ncrWF.approved2=true;ncrWF.returned=false;ncrWF.stage=3;prepareNCRWorkflowEmail(3)
+ } else alert("The NCR is already approved for release to the corrective-action department.");
+ saveNCRWorkflow();renderNCRWorkflow();
+}
+function returnNCRStage(){ncrWF.returned=true;ncrWF.approved1=false;ncrWF.approved2=false;ncrWF.stage=1;saveNCRWorkflow();renderNCRWorkflow();alert("NCR returned for revision. Downstream approval/release has been locked.");}
+function saveNCRWorkflow(){
+ const no=wfEl("ncrNo")?.value||wfV("ncrMailNo");if(!no)return;
+ let all={};try{all=JSON.parse(localStorage.getItem("noelNCRApprovalWorkflows")||"{}")}catch(e){}
+ all[no]={...ncrWF,inspector:wfV("ncrWFInspector"),inspectorEmail:wfV("ncrWFInspectorEmail"),supervisor:wfV("ncrWFSupervisor"),supervisorEmail:wfV("ncrWFSupervisorEmail"),manager:wfV("ncrWFManager"),managerEmail:wfV("ncrWFManagerEmail"),department:wfV("ncrWFDept"),departmentEmail:wfV("ncrWFDeptEmail"),comments:wfV("ncrWFComments"),updated:new Date().toISOString()};
+ localStorage.setItem("noelNCRApprovalWorkflows",JSON.stringify(all));
+}
+function openNCREmail(){const to=wfV("ncrMailTo");if(!to){alert("Prepare the applicable workflow email first.");return}location.href=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(wfV("ncrMailSubject"))}&body=${encodeURIComponent(wfV("ncrMailBody"))}`;}
+async function copyNCREmail(){const t=`To: ${wfV("ncrMailTo")}\nSubject: ${wfV("ncrMailSubject")}\n\n${wfV("ncrMailBody")}`;try{await navigator.clipboard.writeText(t);alert("Current NCR workflow email copied.")}catch(e){alert("Please copy the email statement manually.")}}
+window.addEventListener("load",()=>{setNCRWorkflowTemplate();});
+
+
+function pV(id){return document.getElementById(id)?.value||""}
+function preparePQNEmailStatement(){
+ const no=document.getElementById("pqnNo")?.value||"PQN";
+ document.getElementById("pqnMailNo").value=no;
+ const recipient=pV("pqnMailRecipient")||"Concerned Team";
+ document.getElementById("pqnMailSubject").value=`Proactive Quality Notification ${no} — Preventive Action Required`;
+ document.getElementById("pqnMailBody").value=`Dear ${recipient},
+
+Please be informed that Proactive Quality Notification ${no} has been issued regarding a potential quality concern / potential violation requiring timely preventive action to avoid development into an actual non-conformance or violation.
+
+You are kindly requested to:
+1. Review the identified potential condition;
+2. Implement the necessary preventive action;
+3. Identify the responsible person;
+4. Provide the target / actual completion date; and
+5. Submit supporting objective evidence for QC monitoring and effectiveness verification.
+
+This PQN is a proactive and preventive quality measure and does not, by itself, constitute an NCR. If the potential condition is not adequately addressed and subsequently develops into an actual non-conformance / violation, it may be escalated to NCR in accordance with the applicable project quality process.
+
+Kindly provide your response within the required timeframe for monitoring and closure.
+
+Regards,
+Quality Control`;
+}
+function openPQNEmail(){preparePQNEmailStatement();const to=pV("pqnMailTo");if(!to){alert("Enter the PQN recipient email address.");return}location.href=`mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(pV("pqnMailCC"))}&subject=${encodeURIComponent(pV("pqnMailSubject"))}&body=${encodeURIComponent(pV("pqnMailBody"))}`;}
+async function copyPQNEmail(){preparePQNEmailStatement();const t=`To: ${pV("pqnMailTo")}\nCC: ${pV("pqnMailCC")}\nSubject: ${pV("pqnMailSubject")}\n\n${pV("pqnMailBody")}`;try{await navigator.clipboard.writeText(t);alert("PQN email statement copied.")}catch(e){alert("Please copy the PQN email statement manually.")}}
+
 </script>
 </body></html>
