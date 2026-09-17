@@ -286,6 +286,107 @@ The risk-based recommendation is advisory. It can increase attention or trigger 
 </div>
 </section>
 
+
+<section class="panel" id="itpGenerator">
+  <div class="kicker">Inspection & Test Management</div>
+  <h2>ITP Generator</h2>
+  <p class="small">Create a controlled Inspection & Test Plan by discipline, equipment/work category and activity. Each activity can define inspection level, risk category, acceptance/reference criteria, ITR, prerequisites and applicable engineering references.</p>
+
+  <div class="form">
+    <div class="field"><label>ITP No.</label><input id="itgNo" placeholder="ITP-E-CBL-001"></div>
+    <div class="field"><label>Revision No.</label><input id="itgRev" placeholder="0"></div>
+    <div class="field"><label>ITP Title</label><input id="itgTitle" placeholder="Inspection & Test Plan for Electrical Cable Installation"></div>
+    <div class="field"><label>Status</label><select id="itgStatus"><option>Draft</option><option>Internal Review</option><option>Client / Company Review</option><option>Approved / Issued</option><option>Superseded</option></select></div>
+    <div class="field"><label>Discipline</label><select id="itgDisc"><option>Electrical</option><option>Instrumentation</option><option>Telecommunication</option><option>Quality</option></select></div>
+    <div class="field"><label>Main Equipment / Work Category</label><input id="itgEquip" placeholder="Cable / Cable Tray / Transformer / Switchgear"></div>
+    <div class="field"><label>Project / Package</label><input id="itgProject"></div>
+    <div class="field"><label>System / Area</label><input id="itgArea"></div>
+    <div class="field full"><label>Scope</label><textarea id="itgScope" rows="2"></textarea></div>
+  </div>
+
+  <h3 style="margin-top:22px">ITP Activity Table</h3>
+  <div class="tablewrap"><table>
+    <thead><tr>
+      <th>Activity No.</th><th>Inspection / Test Activity</th><th>Reference Standard / Code</th><th>Project Specification / Procedure</th><th>Acceptance / Verification Criteria</th><th>Risk</th><th>Inspection Level</th><th>ITR / Record</th><th>Prerequisite Activity</th><th>Responsible Party</th><th>Action</th>
+    </tr></thead>
+    <tbody id="itgRows"></tbody>
+  </table></div>
+  <div class="actions no-print">
+    <button class="secondary" onclick="addITPActivity()">+ Add Activity</button>
+    <button class="primary" onclick="saveGeneratedITP()">Save ITP</button>
+    <button class="secondary" onclick="previewGeneratedITP()">Preview / Print</button>
+    <button class="secondary" onclick="clearITPGenerator()">New ITP</button>
+  </div>
+  <div class="alert" style="margin-top:14px"><strong>Control rule:</strong> Only an Approved / Issued ITP revision should be offered to new RFI/inspection requests. Existing records retain the ITP revision used when they were created.</div>
+</section>
+
+<section class="panel" id="generatedITPRegister">
+ <div class="kicker">ITP Library</div><h2>Generated ITP Register</h2>
+ <div class="tablewrap"><table><thead><tr><th>ITP No.</th><th>Rev.</th><th>Title</th><th>Discipline</th><th>Equipment / Work Category</th><th>Status</th><th>Activities</th><th>Action</th></tr></thead><tbody id="itgRegister"></tbody></table></div>
+</section>
+
+
+<section class="panel" id="itrGenerator">
+  <div class="kicker">Inspection & Test Management</div>
+  <h2>ITR Generator</h2>
+  <p class="small">Create an Inspection & Test Report linked to the applicable ITP activity, equipment/tag, requirements, inspection results and formal inspection records.</p>
+
+  <div class="form">
+    <div class="field"><label>ITR No.</label><input id="itrNo" placeholder="ITR-E-CBL-001"></div>
+    <div class="field"><label>Revision No.</label><input id="itrRev" placeholder="0"></div>
+    <div class="field"><label>ITR Title</label><input id="itrTitle" placeholder="Cable Installation Inspection Report"></div>
+    <div class="field"><label>Status</label><select id="itrStatus"><option>Draft</option><option>Internal Review</option><option>Ready for Inspection</option><option>Accepted</option><option>Accepted with Comments</option><option>Rejected</option><option>Superseded</option></select></div>
+    <div class="field"><label>Discipline</label><select id="itrDisc"><option>Electrical</option><option>Instrumentation</option><option>Telecommunication</option><option>Quality</option></select></div>
+    <div class="field"><label>Equipment / Work Category</label><input id="itrEquip"></div>
+    <div class="field"><label>Applicable ITP No.</label><select id="itrITP" onchange="loadITPActivitiesForITR()"><option value="">Select Approved ITP</option></select></div>
+    <div class="field"><label>ITP Activity No.</label><select id="itrActivity"><option value="">Select Activity</option></select></div>
+    <div class="field"><label>Project / Package</label><input id="itrProject"></div>
+    <div class="field"><label>System / Subsystem</label><input id="itrSystem"></div>
+    <div class="field"><label>Area / Location</label><input id="itrArea"></div>
+    <div class="field"><label>Tag / Equipment No.</label><input id="itrTag"></div>
+    <div class="field"><label>Inspection Date</label><input id="itrDate" type="date"></div>
+    <div class="field"><label>RFI No.</label><input id="itrRFI"></div>
+    <div class="field full"><label>Applicable Standard / Code</label><input id="itrStd" placeholder="Linked from ITP / Engineering References"></div>
+    <div class="field full"><label>Project Specification / Procedure</label><input id="itrSpec"></div>
+  </div>
+
+  <h3 style="margin-top:22px">Inspection / Test Checklist</h3>
+  <p class="small">Organize ITR requirements under the four standard inspection stages below. Each checklist item retains its applicable acceptance criteria and reference/clauses.</p>
+  <div class="actions no-print" style="margin-bottom:12px">
+    <button class="secondary" onclick="addITRItem({section:'A. General Requirements and Documentation'})">+ A. General Requirements & Documentation</button>
+    <button class="secondary" onclick="addITRItem({section:'B. Material Receiving Inspection and Storage'})">+ B. Material Receiving Inspection & Storage</button>
+    <button class="secondary" onclick="addITRItem({section:'C. Installation'})">+ C. Installation</button>
+    <button class="secondary" onclick="addITRItem({section:'D. Pre-commissioning and Commissioning'})">+ D. Pre-commissioning & Commissioning</button>
+  </div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Section</th><th>Inspection / Test Item</th><th>Requirement / Acceptance Criteria</th><th>Reference / Clause</th><th>Result</th><th>Measured Value / Observation</th><th>Evidence / Record</th><th>Action</th></tr></thead>
+    <tbody id="itrRows"></tbody>
+  </table></div>
+
+  <h3 style="margin-top:22px">Inspection Result & Signatories</h3>
+  <div class="form">
+    <div class="field"><label>Overall Result</label><select id="itrOverall"><option>Pending</option><option>Accepted</option><option>Accepted with Comments</option><option>Rejected</option></select></div>
+    <div class="field"><label>Punch / NCR Reference</label><input id="itrNCR"></div>
+    <div class="field full"><label>Comments / Remarks</label><textarea id="itrComments" rows="3"></textarea></div>
+    <div class="field"><label>Contractor Construction</label><input id="itrConstruction"></div>
+    <div class="field"><label>Contractor QC Inspector</label><input id="itrQCI"></div>
+    <div class="field"><label>Contractor QC Supervisor / Lead</label><input id="itrQCS"></div>
+    <div class="field"><label>PMT / PMC Inspector</label><input id="itrPMT"></div>
+    <div class="field"><label>PID / Client / Company Inspector</label><input id="itrClient"></div>
+  </div>
+  <div class="actions no-print">
+    <button class="primary" onclick="saveGeneratedITR()">Save ITR</button>
+    <button class="secondary" onclick="previewGeneratedITR()">Preview / Print</button>
+    <button class="secondary" onclick="clearITRGenerator()">New ITR</button>
+  </div>
+  <div class="alert" style="margin-top:14px"><strong>Traceability rule:</strong> Each ITR should retain the exact ITP number/revision, activity, standard/specification reference and inspection result used at the time of inspection.</div>
+</section>
+
+<section class="panel" id="generatedITRRegister">
+ <div class="kicker">ITR Library</div><h2>Generated ITR Register</h2>
+ <div class="tablewrap"><table><thead><tr><th>ITR No.</th><th>Rev.</th><th>Title</th><th>Tag / Equipment</th><th>ITP / Activity</th><th>Inspection Date</th><th>Result</th><th>Status</th><th>Action</th></tr></thead><tbody id="itrRegister"></tbody></table></div>
+</section>
+
 </main>
 
 <script>
@@ -438,6 +539,124 @@ document.querySelectorAll(".tab-btn").forEach(b=>b.onclick=()=>{
 });
 
 initITP();renderITPRegister();initITR();initRevision();fillRiskNumbers();syncRiskSelectors();
+
+const ITP_GEN_KEY="noelGeneratedITPs";
+function itgEsc(v){return String(v??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function addITPActivity(a={}){
+ const tb=document.getElementById("itgRows"),tr=document.createElement("tr");
+ tr.innerHTML=`<td><input class="aNo" value="${itgEsc(a.no||"")}"></td>
+ <td><textarea class="aDesc" rows="2">${itgEsc(a.desc||"")}</textarea></td>
+ <td><input class="aStd" value="${itgEsc(a.standard||"")}" placeholder="Select/link Engineering References later"></td>
+ <td><input class="aSpec" value="${itgEsc(a.spec||"")}"></td>
+ <td><textarea class="aCriteria" rows="2">${itgEsc(a.criteria||"")}</textarea></td>
+ <td><select class="aRisk">${["Low","Medium","High","Critical"].map(x=>`<option ${a.risk===x?"selected":""}>${x}</option>`).join("")}</select></td>
+ <td><select class="aLevel">${["Review","Witness","Hold","Surveillance","Record"].map(x=>`<option ${a.level===x?"selected":""}>${x}</option>`).join("")}</select></td>
+ <td><input class="aItr" value="${itgEsc(a.itr||"")}"></td>
+ <td><input class="aPre" value="${itgEsc(a.prereq||"")}" placeholder="e.g. 4.1 or 4.2, 4.3"></td>
+ <td><input class="aResp" value="${itgEsc(a.responsible||"Contractor / QC / Client")}"></td>
+ <td><button class="secondary" onclick="this.closest('tr').remove()">Remove</button></td>`;
+ tb.appendChild(tr);
+}
+function collectActivities(){return [...document.querySelectorAll("#itgRows tr")].map(r=>({
+ no:r.querySelector(".aNo").value.trim(),desc:r.querySelector(".aDesc").value.trim(),standard:r.querySelector(".aStd").value.trim(),
+ spec:r.querySelector(".aSpec").value.trim(),criteria:r.querySelector(".aCriteria").value.trim(),risk:r.querySelector(".aRisk").value,
+ level:r.querySelector(".aLevel").value,itr:r.querySelector(".aItr").value.trim(),prereq:r.querySelector(".aPre").value.trim(),responsible:r.querySelector(".aResp").value.trim()
+}))}
+function getGeneratedITPs(){try{return JSON.parse(localStorage.getItem(ITP_GEN_KEY)||"[]")}catch(e){return[]}}
+function saveGeneratedITP(){
+ const no=document.getElementById("itgNo").value.trim(),title=document.getElementById("itgTitle").value.trim();
+ if(!no||!title){alert("ITP No. and ITP Title are required.");return}
+ const obj={no,rev:itgRev.value.trim(),title,status:itgStatus.value,discipline:itgDisc.value,equipment:itgEquip.value.trim(),project:itgProject.value.trim(),area:itgArea.value.trim(),scope:itgScope.value.trim(),activities:collectActivities(),updated:new Date().toISOString()};
+ let list=getGeneratedITPs();const i=list.findIndex(x=>x.no===obj.no&&x.rev===obj.rev);if(i>=0)list[i]=obj;else list.unshift(obj);
+ localStorage.setItem(ITP_GEN_KEY,JSON.stringify(list));renderGeneratedITPs();alert("ITP saved to the ITP Library.");
+}
+function renderGeneratedITPs(){
+ const tb=document.getElementById("itgRegister");if(!tb)return;const list=getGeneratedITPs();
+ tb.innerHTML=list.map((x,i)=>`<tr><td><strong>${itgEsc(x.no)}</strong></td><td>${itgEsc(x.rev)}</td><td>${itgEsc(x.title)}</td><td>${itgEsc(x.discipline)}</td><td>${itgEsc(x.equipment)}</td><td>${itgEsc(x.status)}</td><td>${x.activities?.length||0}</td><td><button class="secondary" onclick="loadGeneratedITP(${i})">Open</button> <button class="secondary" onclick="deleteGeneratedITP(${i})">Delete</button></td></tr>`).join("");
+}
+
+function deleteGeneratedITP(i){
+ const list=getGeneratedITPs(),x=list[i]; if(!x)return;
+ const label=(x.no||"ITP")+" Rev. "+(x.rev||"");
+ if(!confirm("Delete "+label+"?\n\nThis will remove this saved ITP revision from the local ITP Library. This action cannot be undone."))return;
+ list.splice(i,1);
+ localStorage.setItem(ITP_GEN_KEY,JSON.stringify(list));
+ renderGeneratedITPs();
+ if(document.getElementById("itgNo").value===(x.no||"") && document.getElementById("itgRev").value===(x.rev||"")) clearITPGenerator();
+ alert(label+" deleted.");
+}
+
+function loadGeneratedITP(i){
+ const x=getGeneratedITPs()[i];if(!x)return;
+ itgNo.value=x.no||"";itgRev.value=x.rev||"";itgTitle.value=x.title||"";itgStatus.value=x.status||"Draft";itgDisc.value=x.discipline||"Electrical";itgEquip.value=x.equipment||"";itgProject.value=x.project||"";itgArea.value=x.area||"";itgScope.value=x.scope||"";
+ itgRows.innerHTML="";(x.activities||[]).forEach(addITPActivity);document.getElementById("itpGenerator").scrollIntoView({behavior:"smooth"});
+}
+function clearITPGenerator(){["itgNo","itgRev","itgTitle","itgEquip","itgProject","itgArea","itgScope"].forEach(id=>document.getElementById(id).value="");itgStatus.value="Draft";itgRows.innerHTML="";addITPActivity()}
+function previewGeneratedITP(){
+ const acts=collectActivities();const w=window.open("","_blank");if(!w)return;
+ w.document.write(`<html><head><title>${itgEsc(itgNo.value)} ITP</title><style>body{font-family:Arial;padding:24px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #777;padding:6px;vertical-align:top}h1{font-size:20px}</style></head><body><h1>${itgEsc(itgNo.value)} — ${itgEsc(itgTitle.value)}</h1><p><b>Rev:</b> ${itgEsc(itgRev.value)} &nbsp; <b>Status:</b> ${itgEsc(itgStatus.value)} &nbsp; <b>Discipline:</b> ${itgEsc(itgDisc.value)} &nbsp; <b>Category:</b> ${itgEsc(itgEquip.value)}</p><p><b>Scope:</b> ${itgEsc(itgScope.value)}</p><table><thead><tr><th>Activity</th><th>Description</th><th>Standard</th><th>Specification</th><th>Criteria</th><th>Risk</th><th>Level</th><th>ITR</th><th>Prerequisite</th><th>Responsible</th></tr></thead><tbody>${acts.map(a=>`<tr><td>${itgEsc(a.no)}</td><td>${itgEsc(a.desc)}</td><td>${itgEsc(a.standard)}</td><td>${itgEsc(a.spec)}</td><td>${itgEsc(a.criteria)}</td><td>${itgEsc(a.risk)}</td><td>${itgEsc(a.level)}</td><td>${itgEsc(a.itr)}</td><td>${itgEsc(a.prereq)}</td><td>${itgEsc(a.responsible)}</td></tr>`).join("")}</tbody></table></body></html>`);w.document.close();w.print();
+}
+window.addEventListener("load",()=>{if(document.getElementById("itgRows")&&!document.querySelector("#itgRows tr"))addITPActivity({no:"1.1"});renderGeneratedITPs()});
+
+
+const ITR_GEN_KEY="noelGeneratedITRs";
+function itrEsc(v){return String(v??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function addITRItem(a={}){
+ const tr=document.createElement("tr");
+ tr.innerHTML=`<td><select class="iSection">${["A. General Requirements and Documentation","B. Material Receiving Inspection and Storage","C. Installation","D. Pre-commissioning and Commissioning"].map(x=>`<option ${a.section===x?"selected":""}>${x}</option>`).join("")}</select></td>
+ <td><textarea class="iItem" rows="2">${itrEsc(a.item||"")}</textarea></td>
+ <td><textarea class="iCriteria" rows="2">${itrEsc(a.criteria||"")}</textarea></td>
+ <td><input class="iRef" value="${itrEsc(a.reference||"")}"></td>
+ <td><select class="iResult">${["Pending","Acceptable","Not Acceptable","N/A"].map(x=>`<option ${a.result===x?"selected":""}>${x}</option>`).join("")}</select></td>
+ <td><textarea class="iObs" rows="2">${itrEsc(a.observation||"")}</textarea></td>
+ <td><input class="iEvidence" value="${itrEsc(a.evidence||"")}"></td>
+ <td><button class="secondary" onclick="this.closest('tr').remove()">Remove</button></td>`;
+ document.getElementById("itrRows").appendChild(tr);
+}
+function collectITRItems(){return [...document.querySelectorAll("#itrRows tr")].map(r=>({section:r.querySelector(".iSection").value,item:r.querySelector(".iItem").value.trim(),criteria:r.querySelector(".iCriteria").value.trim(),reference:r.querySelector(".iRef").value.trim(),result:r.querySelector(".iResult").value,observation:r.querySelector(".iObs").value.trim(),evidence:r.querySelector(".iEvidence").value.trim()}))}
+function getGeneratedITRs(){try{return JSON.parse(localStorage.getItem(ITR_GEN_KEY)||"[]")}catch(e){return[]}}
+function refreshITPSelectForITR(){
+ const sel=document.getElementById("itrITP");if(!sel)return;const current=sel.value;
+ const list=getGeneratedITPs().filter(x=>x.status==="Approved / Issued");
+ sel.innerHTML='<option value="">Select Approved ITP</option>'+list.map((x,i)=>`<option value="${itrEsc(x.no+"||"+x.rev)}">${itrEsc(x.no)} Rev. ${itrEsc(x.rev)} — ${itrEsc(x.title)}</option>`).join("");
+ sel.value=current;
+}
+function loadITPActivitiesForITR(){
+ const val=itrITP.value,act=itrActivity;act.innerHTML='<option value="">Select Activity</option>';if(!val)return;
+ const [no,rev]=val.split("||"),x=getGeneratedITPs().find(z=>z.no===no&&z.rev===rev);if(!x)return;
+ itrDisc.value=x.discipline||"Electrical";itrEquip.value=x.equipment||"";itrProject.value=x.project||"";
+ act.innerHTML+=[...(x.activities||[])].map(a=>`<option value="${itrEsc(a.no)}">${itrEsc(a.no)} — ${itrEsc(a.desc)}</option>`).join("");
+ act.onchange=()=>{const a=(x.activities||[]).find(z=>z.no===act.value);if(a){itrStd.value=a.standard||"";itrSpec.value=a.spec||"";if(!itrRows.children.length)addITRItem({section:"C. Installation",item:a.desc,criteria:a.criteria,reference:[a.standard,a.spec].filter(Boolean).join(" / ")})}};
+}
+function saveGeneratedITR(){
+ if(!itrNo.value.trim()||!itrTitle.value.trim()){alert("ITR No. and ITR Title are required.");return}
+ const obj={no:itrNo.value.trim(),rev:itrRev.value.trim(),title:itrTitle.value.trim(),status:itrStatus.value,discipline:itrDisc.value,equipment:itrEquip.value.trim(),itp:itrITP.value,activity:itrActivity.value,project:itrProject.value.trim(),system:itrSystem.value.trim(),area:itrArea.value.trim(),tag:itrTag.value.trim(),date:itrDate.value,rfi:itrRFI.value.trim(),standard:itrStd.value.trim(),spec:itrSpec.value.trim(),items:collectITRItems(),overall:itrOverall.value,ncr:itrNCR.value.trim(),comments:itrComments.value.trim(),construction:itrConstruction.value.trim(),qci:itrQCI.value.trim(),qcs:itrQCS.value.trim(),pmt:itrPMT.value.trim(),client:itrClient.value.trim(),updated:new Date().toISOString()};
+ let list=getGeneratedITRs(),i=list.findIndex(x=>x.no===obj.no&&x.rev===obj.rev);if(i>=0)list[i]=obj;else list.unshift(obj);
+ localStorage.setItem(ITR_GEN_KEY,JSON.stringify(list));renderGeneratedITRs();alert("ITR saved to the ITR Library.");
+}
+function renderGeneratedITRs(){
+ const tb=document.getElementById("itrRegister");if(!tb)return;const list=getGeneratedITRs();
+ tb.innerHTML=list.map((x,i)=>`<tr><td><strong>${itrEsc(x.no)}</strong></td><td>${itrEsc(x.rev)}</td><td>${itrEsc(x.title)}</td><td>${itrEsc(x.tag)}</td><td>${itrEsc((x.itp||"").replace("||"," Rev. "))} / ${itrEsc(x.activity)}</td><td>${itrEsc(x.date)}</td><td>${itrEsc(x.overall)}</td><td>${itrEsc(x.status)}</td><td><button class="secondary" onclick="loadGeneratedITR(${i})">Open</button> <button class="secondary" onclick="deleteGeneratedITR(${i})">Delete</button></td></tr>`).join("");
+}
+function deleteGeneratedITR(i){
+ let list=getGeneratedITRs(),x=list[i];if(!x)return;
+ if(!confirm(`Delete ${x.no} Rev. ${x.rev}?\n\nThis action cannot be undone.`))return;
+ list.splice(i,1);localStorage.setItem(ITR_GEN_KEY,JSON.stringify(list));renderGeneratedITRs();alert("ITR deleted.");
+}
+function loadGeneratedITR(i){
+ const x=getGeneratedITRs()[i];if(!x)return;
+ itrNo.value=x.no||"";itrRev.value=x.rev||"";itrTitle.value=x.title||"";itrStatus.value=x.status||"Draft";itrDisc.value=x.discipline||"Electrical";itrEquip.value=x.equipment||"";refreshITPSelectForITR();itrITP.value=x.itp||"";loadITPActivitiesForITR();itrActivity.value=x.activity||"";itrProject.value=x.project||"";itrSystem.value=x.system||"";itrArea.value=x.area||"";itrTag.value=x.tag||"";itrDate.value=x.date||"";itrRFI.value=x.rfi||"";itrStd.value=x.standard||"";itrSpec.value=x.spec||"";itrOverall.value=x.overall||"Pending";itrNCR.value=x.ncr||"";itrComments.value=x.comments||"";itrConstruction.value=x.construction||"";itrQCI.value=x.qci||"";itrQCS.value=x.qcs||"";itrPMT.value=x.pmt||"";itrClient.value=x.client||"";itrRows.innerHTML="";(x.items||[]).forEach(addITRItem);document.getElementById("itrGenerator").scrollIntoView({behavior:"smooth"});
+}
+function clearITRGenerator(){
+ ["itrNo","itrRev","itrTitle","itrEquip","itrProject","itrSystem","itrArea","itrTag","itrDate","itrRFI","itrStd","itrSpec","itrNCR","itrComments","itrConstruction","itrQCI","itrQCS","itrPMT","itrClient"].forEach(id=>document.getElementById(id).value="");
+ itrStatus.value="Draft";itrOverall.value="Pending";itrRows.innerHTML="";refreshITPSelectForITR();itrActivity.innerHTML='<option value="">Select Activity</option>';addITRItem({section:"A. General Requirements and Documentation"});
+}
+function previewGeneratedITR(){
+ const w=window.open("","_blank");if(!w)return;const items=collectITRItems();
+ w.document.write(`<html><head><title>${itrEsc(itrNo.value)}</title><style>body{font-family:Arial;padding:24px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #777;padding:6px;vertical-align:top}</style></head><body><h2>${itrEsc(itrNo.value)} — ${itrEsc(itrTitle.value)}</h2><p><b>Rev:</b> ${itrEsc(itrRev.value)} &nbsp; <b>Tag:</b> ${itrEsc(itrTag.value)} &nbsp; <b>Date:</b> ${itrEsc(itrDate.value)}</p><p><b>ITP:</b> ${itrEsc(itrITP.value.replace("||"," Rev. "))} &nbsp; <b>Activity:</b> ${itrEsc(itrActivity.value)}</p><table><thead><tr><th>Section</th><th>Inspection/Test Item</th><th>Criteria</th><th>Reference</th><th>Result</th><th>Observation</th><th>Evidence</th></tr></thead><tbody>${items.map(a=>`<tr><td>${itrEsc(a.section)}</td><td>${itrEsc(a.item)}</td><td>${itrEsc(a.criteria)}</td><td>${itrEsc(a.reference)}</td><td>${itrEsc(a.result)}</td><td>${itrEsc(a.observation)}</td><td>${itrEsc(a.evidence)}</td></tr>`).join("")}</tbody></table><p><b>Overall Result:</b> ${itrEsc(itrOverall.value)}</p><p><b>Comments:</b> ${itrEsc(itrComments.value)}</p></body></html>`);w.document.close();w.print();
+}
+window.addEventListener("load",()=>{refreshITPSelectForITR();if(document.getElementById("itrRows")&&!itrRows.children.length)addITRItem({section:"A. General Requirements and Documentation"});renderGeneratedITRs()});
+
 </script>
 </body>
 </html>
