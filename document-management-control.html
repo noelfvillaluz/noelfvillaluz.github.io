@@ -105,6 +105,7 @@ th{background:#f2f6f9;color:var(--navy);position:sticky;top:0;z-index:1}
 
 <div class="tabs">
   <button class="tab-btn active" data-tab="libraryTab">Library & Search</button>
+  <button class="tab-btn" data-tab="generatorTab">Document Generator</button>
   <button class="tab-btn" data-tab="transmittalTab">Submittal / Transmittal</button>
   <button class="tab-btn" data-tab="reviewTab">Review & Approval</button>
   <button class="tab-btn" data-tab="commentTab">Comment Resolution</button>
@@ -159,10 +160,40 @@ th{background:#f2f6f9;color:var(--navy);position:sticky;top:0;z-index:1}
 </div>
 </section>
 
+
+<section id="generatorTab" class="tab">
+<div class="panel">
+<div class="section-kicker">Controlled Document Creation</div>
+<h2>Document Generator</h2>
+<p class="small">Create a controlled document record and submit it into the existing review and approval process. The document is not released for external submittal until the required authorized reviewers/approvers complete their stages.</p>
+<div class="form-grid">
+ <div class="field"><label>Document No.</label><input id="genNo" placeholder="e.g. ITP-E-CBL-002"></div>
+ <div class="field"><label>Revision</label><input id="genRev" value="00"></div>
+ <div class="field span-2"><label>Document Title</label><input id="genTitle"></div>
+ <div class="field"><label>Document Type</label><select id="genType"><option>ITP</option><option>ITR</option><option>IFC Drawing</option><option>Method Statement</option><option>Specification</option><option>Procedure</option><option>Vendor Document</option><option>Report</option><option>Other</option></select></div>
+ <div class="field"><label>Discipline</label><select id="genDiscipline"><option>Electrical</option><option>Instrumentation</option><option>Telecommunication</option><option>Quality</option><option>Multi-Discipline</option></select></div>
+ <div class="field"><label>Main Equipment</label><input id="genEquipment"></div>
+ <div class="field"><label>System</label><input id="genSystem"></div>
+ <div class="field"><label>Subsystem</label><input id="genSubsystem"></div>
+ <div class="field"><label>Originator</label><input id="genOriginator"></div>
+ <div class="field"><label>Issue / Creation Date</label><input id="genDate" type="date"></div>
+ <div class="field"><label>Mandatory for RFI</label><select id="genMandatory"><option>No</option><option>Yes</option></select></div>
+ <div class="field span-2"><label>Scope / Description</label><textarea id="genScope"></textarea></div>
+ <div class="field span-2"><label>Related / Reference Documents</label><textarea id="genRefs" placeholder="Specification, drawing, ITP, procedure or other related references"></textarea></div>
+</div>
+<div class="actions">
+ <button class="btn-primary" onclick="saveGeneratedDocument()">Save Draft</button>
+ <button class="btn-gold" onclick="submitGeneratedForReview()">Submit for Review & Approval</button>
+ <button class="btn-light" onclick="clearGenerator()">New Document</button>
+</div>
+<div id="generatorResult" class="notice">Create the document record, then route it to the controlled Review & Approval tab.</div>
+</div>
+</section>
+
 <section id="transmittalTab" class="tab">
 <div class="panel">
 <div class="section-kicker">Controlled Issuance</div>
-<h2>Document Submittal / Transmittal</h2>
+<h2>Document Submittal / Transmittal</h2><div class="notice warn"><strong>Release Gate:</strong> Only documents that have completed the required internal review and approval workflow should be released for formal external submittal.</div>
 <div class="form-grid">
   <div class="field"><label>Transmittal No.</label><input value="TR-E-2026-0145"></div>
   <div class="field"><label>Date</label><input type="date" value="2026-09-10"></div>
@@ -185,27 +216,80 @@ th{background:#f2f6f9;color:var(--navy);position:sticky;top:0;z-index:1}
 </div>
 </section>
 
+
 <section id="reviewTab" class="tab">
 <div class="panel">
 <div class="section-kicker">Workflow</div>
 <h2>Document Review & Approval</h2>
 <div class="timeline">
-  <span class="stage">Submitted</span>
+  <span class="stage">Document Generated</span>
   <span class="stage">Document Control Check</span>
-  <span class="stage current">Technical Review</span>
-  <span class="stage">Client / Company Review</span>
-  <span class="stage">Approved / Returned</span>
+  <span class="stage current">Authorized Review</span>
+  <span class="stage">Authorized Approval</span>
+  <span class="stage">Approved for Submittal</span>
 </div>
 <div class="form-grid">
   <div class="field"><label>Document No.</label><select id="reviewDoc"></select></div>
   <div class="field"><label>Revision</label><input id="reviewRev" readonly></div>
   <div class="field"><label>Current Status</label><input id="reviewStatus" readonly></div>
-  <div class="field"><label>Review Due Date</label><input value="2026-09-15" type="date"></div>
-  <div class="field"><label>Reviewer</label><input value="Discipline Engineer / QAQC"></div>
-  <div class="field"><label>Approval Code</label><select><option>A - Approved</option><option>B - Approved with Comments</option><option>C - Revise and Resubmit</option><option>D - Rejected</option></select></div>
-  <div class="field span-2"><label>Review Remarks</label><input value="Review against project specification, approved design and applicable standards."></div>
+  <div class="field"><label>Review Due Date</label><input id="reviewDue" type="date"></div>
+  <div class="field"><label>Workflow Template</label><select id="workflowTemplate" onchange="buildReviewWorkflow()"><option value="auto">Auto by Document Type</option><option value="technical">Technical Document</option><option value="quality">Quality Document</option><option value="itp">ITP / Procedure</option></select></div>
+  <div class="field"><label>Current Authorized Stage</label><input id="currentReviewStage" readonly></div>
+  <div class="field"><label>Workflow Status</label><input id="workflowStatus" readonly></div>
+  <div class="field"><label>Release Status</label><input id="releaseStatus" readonly></div>
 </div>
-<div class="actions"><button class="btn-primary">Record Review</button></div>
+
+<h3 style="margin-top:18px">Authorized Review / Approval Routing</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Stage</th><th>Required Role</th><th>Authorized Reviewer / Approver</th><th>Email</th><th>Authorization</th><th>Decision</th><th>Date</th><th>Comments</th><th>Action</th></tr></thead>
+<tbody id="reviewWorkflowBody"></tbody>
+</table>
+</div>
+<div class="actions">
+ <button class="btn-primary" onclick="saveReviewWorkflow()">Save Workflow</button>
+ <button class="btn-gold" onclick="notifyCurrentReviewer()">Notify Current Authorized Reviewer</button>
+</div>
+<div class="notice">Sequential control: the next reviewer/approver is activated only after the preceding required stage is approved. Final internal approval changes the document to <strong>Approved for Submittal</strong>.</div>
+</div>
+
+<div class="panel">
+<div class="section-kicker">Controlled Authorization</div>
+<h3>Authorized Reviewer / Approver Register</h3>
+<div class="form-grid">
+ <div class="field"><label>Authorization ID</label><input id="authId" placeholder="AR-001"></div>
+ <div class="field"><label>Name</label><input id="authName"></div>
+ <div class="field"><label>Position / Designation</label><input id="authPosition"></div>
+ <div class="field"><label>Company / Organization</label><input id="authCompany"></div>
+ <div class="field"><label>Discipline</label><select id="authDiscipline"><option>Electrical</option><option>Instrumentation</option><option>Telecommunication</option><option>Quality</option><option>Multi-Discipline</option><option>Document Control</option><option>Project Management</option></select></div>
+ <div class="field"><label>Authorized Role</label><select id="authRole"><option>Reviewer</option><option>Approver</option><option>Reviewer & Approver</option><option>Document Controller</option></select></div>
+ <div class="field"><label>Email</label><input id="authEmail" type="email"></div>
+ <div class="field"><label>Status</label><select id="authStatus"><option>Active</option><option>Inactive</option><option>Suspended</option></select></div>
+</div>
+<div class="actions"><button class="btn-primary" onclick="saveAuthorizedReviewer()">Add / Update Authorized Reviewer</button></div>
+<div class="table-wrap" style="margin-top:12px"><table>
+<thead><tr><th>ID</th><th>Name</th><th>Position</th><th>Company</th><th>Discipline</th><th>Authorized Role</th><th>Email</th><th>Status</th><th>Action</th></tr></thead>
+<tbody id="authorizedReviewerBody"></tbody></table></div>
+</div>
+
+<div class="panel" id="reviewEmailPanel">
+<div class="section-kicker">Email Notification</div>
+<h3>Authorized Reviewer / Approver Notification</h3>
+<div class="form-grid">
+ <div class="field"><label>Document No.</label><input id="mailDoc" readonly></div>
+ <div class="field"><label>Revision</label><input id="mailRev" readonly></div>
+ <div class="field"><label>Review / Approval Stage</label><input id="mailStage" readonly></div>
+ <div class="field"><label>Authorization Check</label><input id="mailAuthorization" readonly></div>
+ <div class="field span-2"><label>To</label><input id="mailTo" readonly></div>
+ <div class="field span-2"><label>Subject</label><input id="mailSubject"></div>
+ <div class="field span-4"><label>Email Statement</label><textarea id="mailBody" style="min-height:180px"></textarea></div>
+</div>
+<div class="actions">
+ <button class="btn-primary" onclick="openReviewEmail()">Open in Outlook / Mail</button>
+ <button class="btn-light" onclick="copyReviewEmail()">Copy Email</button>
+ <button class="btn-light" onclick="recordEmailNotification()">Record Notification</button>
+</div>
+<div class="notice warn">Only an <strong>Active</strong> person in the Authorized Reviewer / Approver Register can receive a controlled workflow notification.</div>
 </div>
 </section>
 
@@ -280,7 +364,7 @@ th{background:#f2f6f9;color:var(--navy);position:sticky;top:0;z-index:1}
 <div class="table-wrap">
 <table>
 <thead><tr><th>Date / Time</th><th>User / Role</th><th>Action</th><th>Document</th><th>Revision</th><th>Previous Status</th><th>New Status</th><th>Reference</th></tr></thead>
-<tbody>
+<tbody id="auditBody">
 <tr><td>2026-07-15 09:10</td><td>Document Controller</td><td>Revision issued</td><td>ITP-E-CBL-001</td><td>03</td><td>For Approval</td><td>Approved / Current</td><td>TR-E-2026-0112</td></tr>
 <tr><td>2026-07-15 09:11</td><td>System</td><td>Previous revision superseded</td><td>ITP-E-CBL-001</td><td>02</td><td>Approved / Current</td><td>Superseded</td><td>Auto revision control</td></tr>
 <tr><td>2026-08-18 14:25</td><td>QC Inspector</td><td>Document referenced in RFI</td><td>ITR-E-CBL-002</td><td>02</td><td>Approved / Current</td><td>Approved / Current</td><td>RFI-E-0145</td></tr>
@@ -444,7 +528,120 @@ document.querySelectorAll(".tab-btn").forEach(b=>b.onclick=()=>{
  b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active");
 });
 
+
+const DOC_GEN_KEY="noelGeneratedDocumentRecords";
+const AUTH_KEY="noelAuthorizedDocumentReviewers";
+const WF_KEY="noelDocumentReviewApprovalWorkflows";
+const MAIL_KEY="noelDocumentReviewNotifications";
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k)||"[]")}catch(e){return[]}}
+function lsPut(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function escHtml(v){return String(v??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function addAudit(user,action,d,prev,next,ref){
+ const row=`<tr><td>${new Date().toLocaleString()}</td><td>${escHtml(user||"System")}</td><td>${escHtml(action)}</td><td>${escHtml(d.no)}</td><td>${escHtml(d.rev)}</td><td>${escHtml(prev||"-")}</td><td>${escHtml(next||"-")}</td><td>${escHtml(ref||"-")}</td></tr>`;
+ if(document.getElementById("auditBody"))auditBody.insertAdjacentHTML("afterbegin",row);
+}
+function generatorRecord(){
+ return {no:genNo.value.trim(),rev:genRev.value.trim(),title:genTitle.value.trim(),type:genType.value,discipline:genDiscipline.value,equipment:genEquipment.value.trim(),system:genSystem.value.trim(),subsystem:genSubsystem.value.trim(),revStatus:"Draft",status:"Draft",date:genDate.value,mandatory:genMandatory.value,originator:genOriginator.value.trim(),reviewer:"Pending",approver:"Pending",transmittal:"-",scope:genScope.value,refs:genRefs.value};
+}
+function saveGeneratedDocument(silent=false){
+ const r=generatorRecord();if(!r.no||!r.rev||!r.title){alert("Document No., Revision and Document Title are required.");return false}
+ let a=lsGet(DOC_GEN_KEY),i=a.findIndex(x=>x.no===r.no&&x.rev===r.rev);i>=0?a[i]=r:a.unshift(r);lsPut(DOC_GEN_KEY,a);
+ let di=docs.findIndex(x=>x.no===r.no&&x.rev===r.rev);di>=0?Object.assign(docs[di],r):docs.unshift(r);
+ filtered=[...docs];refreshDocumentControls();renderLibrary();renderRegister();updateKpis();
+ addAudit(r.originator,"Document generated / draft saved",r,"-","Draft","Document Generator");
+ generatorResult.className="notice";generatorResult.innerHTML=`<strong>${escHtml(r.no)} Rev. ${escHtml(r.rev)}</strong> saved as Draft.`;
+ if(!silent)alert("Document draft saved.");return true;
+}
+function submitGeneratedForReview(){
+ if(!saveGeneratedDocument(true))return;
+ const r=generatorRecord(),d=docs.find(x=>x.no===r.no&&x.rev===r.rev);if(d){d.status="Under Review";d.reviewer="Authorized workflow pending";d.approver="Pending"}
+ let a=lsGet(DOC_GEN_KEY),i=a.findIndex(x=>x.no===r.no&&x.rev===r.rev);if(i>=0){a[i].status="Under Review";lsPut(DOC_GEN_KEY,a)}
+ refreshDocumentControls();renderLibrary();renderRegister();updateKpis();
+ reviewDoc.value=r.no;updateReviewFields();buildReviewWorkflow();
+ addAudit(r.originator,"Submitted for review & approval",r,"Draft","Under Review","Review & Approval");
+ generatorResult.className="notice";generatorResult.innerHTML=`<strong>${escHtml(r.no)} Rev. ${escHtml(r.rev)}</strong> routed to Review & Approval.`;
+ document.querySelector('[data-tab="reviewTab"]').click();
+}
+function clearGenerator(){["genNo","genTitle","genEquipment","genSystem","genSubsystem","genOriginator","genScope","genRefs"].forEach(id=>document.getElementById(id).value="");genRev.value="00";genMandatory.value="No";genDate.value=new Date().toISOString().slice(0,10);generatorResult.innerHTML="Create the document record, then route it to the controlled Review & Approval tab."}
+function refreshDocumentControls(){
+ const nos=uniq(docs.map(d=>d.no));fillSelect("reviewDoc",nos,false);fillSelect("revDoc",nos,false);
+ fillSelect("fDiscipline",uniq(docs.map(d=>d.discipline)));fillSelect("fType",uniq(docs.map(d=>d.type)));fillSelect("fSystem",uniq(docs.map(d=>d.system)));fillSelect("fSubsystem",uniq(docs.map(d=>d.subsystem)));fillSelect("fEquipment",uniq(docs.map(d=>d.equipment)));fillSelect("fStatus",uniq(docs.map(d=>d.status)));fillSelect("fRevision",uniq(docs.map(d=>d.rev)));
+}
+function activeAuthorized(){return lsGet(AUTH_KEY).filter(x=>x.status==="Active")}
+function authOptions(selected=""){return '<option value="">Select authorized reviewer / approver</option>'+activeAuthorized().map(x=>`<option value="${escHtml(x.id)}" ${x.id===selected?"selected":""}>${escHtml(x.name)} — ${escHtml(x.position)} (${escHtml(x.role)})</option>`).join("")}
+function saveAuthorizedReviewer(){
+ const r={id:authId.value.trim(),name:authName.value.trim(),position:authPosition.value.trim(),company:authCompany.value.trim(),discipline:authDiscipline.value,role:authRole.value,email:authEmail.value.trim(),status:authStatus.value};
+ if(!r.id||!r.name||!r.email){alert("Authorization ID, Name and Email are required.");return}
+ let a=lsGet(AUTH_KEY),i=a.findIndex(x=>x.id===r.id);i>=0?a[i]=r:a.push(r);lsPut(AUTH_KEY,a);renderAuthorizedReviewers();buildReviewWorkflow();alert("Authorized Reviewer / Approver Register updated.");
+}
+function renderAuthorizedReviewers(){
+ const a=lsGet(AUTH_KEY);authorizedReviewerBody.innerHTML=a.length?a.map(x=>`<tr><td>${escHtml(x.id)}</td><td>${escHtml(x.name)}</td><td>${escHtml(x.position)}</td><td>${escHtml(x.company)}</td><td>${escHtml(x.discipline)}</td><td>${escHtml(x.role)}</td><td>${escHtml(x.email)}</td><td><span class="status ${x.status==="Active"?"ok":"neutral"}">${escHtml(x.status)}</span></td><td><button class="btn-light" onclick="editAuthorizedReviewer('${escHtml(x.id)}')">Edit</button></td></tr>`).join(""):'<tr><td colspan="9">No authorized reviewers / approvers registered.</td></tr>';
+}
+function editAuthorizedReviewer(id){const x=lsGet(AUTH_KEY).find(z=>z.id===id);if(!x)return;authId.value=x.id;authName.value=x.name;authPosition.value=x.position;authCompany.value=x.company;authDiscipline.value=x.discipline;authRole.value=x.role;authEmail.value=x.email;authStatus.value=x.status}
+const wfTemplates={technical:["Document Control Check","Discipline Technical Review","Lead / Senior Review","Project / Engineering Approval","Document Control Release"],quality:["Document Control Check","QA/QC Review","QA/QC Lead / Supervisor Approval","QA/QC Manager Approval","Document Control Release"],itp:["Document Control Check","Discipline Review","QA/QC Review","Project / QAQC Approval","Document Control Release"]};
+function selectedTemplate(){
+ if(workflowTemplate.value!=="auto")return workflowTemplate.value;
+ const d=currentDoc(reviewDoc.value);if(!d)return "technical";
+ if(d.type==="ITP"||d.type==="Procedure"||d.type==="Method Statement")return "itp";
+ if(d.discipline==="Quality")return "quality";return "technical";
+}
+function buildReviewWorkflow(savedRows=null){
+ if(!document.getElementById("reviewWorkflowBody"))return;
+ let rows=savedRows;
+ if(!rows){const saved=lsGet(WF_KEY).find(x=>x.key===reviewDoc.value+"|"+reviewRev.value);if(saved)rows=saved.rows}
+ if(!rows)rows=wfTemplates[selectedTemplate()].map((role,i)=>({role,reviewerId:"",decision:i===0?"Pending":"Pending",date:"",comments:""}));
+ reviewWorkflowBody.innerHTML="";
+ rows.forEach((x,i)=>{
+  const tr=document.createElement("tr");tr.innerHTML=`<td>${i+1}</td><td class="wfRole">${escHtml(x.role)}</td><td><select class="wfReviewer" onchange="wfReviewerChanged(this)">${authOptions(x.reviewerId||"")}</select></td><td><input class="wfEmail" readonly></td><td><span class="wfAuth status neutral">Not Selected</span></td><td><select class="wfDecision"><option ${x.decision==="Pending"?"selected":""}>Pending</option><option ${x.decision==="Approved"?"selected":""}>Approved</option><option ${x.decision==="Approved with Comments"?"selected":""}>Approved with Comments</option><option ${x.decision==="Return for Revision"?"selected":""}>Return for Revision</option><option ${x.decision==="Rejected"?"selected":""}>Rejected</option></select></td><td><input class="wfDate" type="date" value="${escHtml(x.date||"")}"></td><td><textarea class="wfComments">${escHtml(x.comments||"")}</textarea></td><td><button class="btn-light" onclick="prepareReviewerEmail(this)">Notify</button> <button class="btn-primary" onclick="recordReviewDecision(this)">Record</button></td>`;
+  reviewWorkflowBody.appendChild(tr);if(x.reviewerId)wfReviewerChanged(tr.querySelector(".wfReviewer"));
+ });
+ updateWorkflowState();
+}
+function wfReviewerChanged(sel){const r=sel.closest("tr"),x=activeAuthorized().find(z=>z.id===sel.value);r.querySelector(".wfEmail").value=x?x.email:"";const a=r.querySelector(".wfAuth");a.textContent=x?"Authorized / Active":"Not Authorized";a.className="wfAuth status "+(x?"ok":"neutral")}
+function workflowRows(){return [...reviewWorkflowBody.rows].map(r=>({role:r.querySelector(".wfRole").textContent,reviewerId:r.querySelector(".wfReviewer").value,email:r.querySelector(".wfEmail").value,decision:r.querySelector(".wfDecision").value,date:r.querySelector(".wfDate").value,comments:r.querySelector(".wfComments").value}))}
+function saveReviewWorkflow(silent=false){
+ if(!reviewDoc.value){if(!silent)alert("Select a document.");return false}
+ const rows=workflowRows();if(rows.some(x=>!x.reviewerId)){if(!silent)alert("Assign an Active Authorized Reviewer / Approver to every required stage.");return false}
+ let a=lsGet(WF_KEY),key=reviewDoc.value+"|"+reviewRev.value,o={key,template:workflowTemplate.value,due:reviewDue.value,rows},i=a.findIndex(x=>x.key===key);i>=0?a[i]=o:a.push(o);lsPut(WF_KEY,a);updateWorkflowState();if(!silent)alert("Review / approval workflow saved.");return true;
+}
+function updateWorkflowState(){
+ const rows=workflowRows(),pending=rows.find(x=>x.decision==="Pending"),failed=rows.find(x=>["Return for Revision","Rejected"].includes(x.decision)),complete=rows.length&&rows.every(x=>["Approved","Approved with Comments"].includes(x.decision));
+ currentReviewStage.value=failed?"Returned / Rejected":pending?pending.role:complete?"Completed":"Pending";
+ workflowStatus.value=failed?"Returned for Revision":complete?"Internal Review & Approval Completed":"In Progress";
+ releaseStatus.value=complete?"Approved for Submittal":"Locked — Internal Approval Required";
+}
+function firstPendingRow(){return [...reviewWorkflowBody.rows].find(r=>r.querySelector(".wfDecision").value==="Pending")}
+function notifyCurrentReviewer(){const r=firstPendingRow();if(!r)return alert("No pending review / approval stage.");prepareReviewerEmail(r.querySelector("button"))}
+function prepareReviewerEmail(btn){
+ const r=btn.closest("tr"),id=r.querySelector(".wfReviewer").value,x=activeAuthorized().find(z=>z.id===id);if(!x)return alert("Select an Active Authorized Reviewer / Approver.");
+ const d=currentDoc(reviewDoc.value);mailDoc.value=d.no;mailRev.value=d.rev;mailStage.value=r.querySelector(".wfRole").textContent;mailAuthorization.value="Authorized / Active";mailTo.value=x.email;
+ mailSubject.value=`Document ${d.no} Rev. ${d.rev} — Review / Approval Required`;
+ mailBody.value=`Dear ${x.name},\n\nYou are requested to review the following controlled document as the authorized ${mailStage.value}:\n\nDocument No.: ${d.no}\nRevision: ${d.rev}\nTitle: ${d.title}\nDiscipline: ${d.discipline}\nSystem / Subsystem: ${d.system} / ${d.subsystem}\nReview Due Date: ${reviewDue.value||"To be confirmed"}\n\nPlease record one of the controlled dispositions:\n• Approved\n• Approved with Comments\n• Return for Revision\n• Rejected\n\nThe document will proceed to the next authorized reviewer/approver only after the current decision is recorded.\n\nRegards,\n${d.originator||"Document Originator / Document Control"}`;
+ reviewEmailPanel.scrollIntoView({behavior:"smooth"});
+}
+function recordReviewDecision(btn){
+ const r=btn.closest("tr"),id=r.querySelector(".wfReviewer").value,x=activeAuthorized().find(z=>z.id===id);if(!x)return alert("Decision cannot be recorded because the selected person is not Active/Authorized.");
+ const decision=r.querySelector(".wfDecision").value;if(decision==="Pending")return alert("Select a review / approval decision first.");
+ const previousRows=[...reviewWorkflowBody.rows].slice(0,r.rowIndex-1);if(previousRows.some(z=>!["Approved","Approved with Comments"].includes(z.querySelector(".wfDecision").value)))return alert("Previous required review / approval stage must be completed first.");
+ r.querySelector(".wfDate").value=new Date().toISOString().slice(0,10);saveReviewWorkflow(true);
+ const d=currentDoc(reviewDoc.value),old=d.status;
+ if(["Return for Revision","Rejected"].includes(decision)){d.status="Revision Required";d.reviewer=x.name;releaseStatus.value="Locked — Revision Required"}
+ else if(workflowRows().every(z=>["Approved","Approved with Comments"].includes(z.decision))){d.status="Approved for Submittal";d.reviewer="Completed";d.approver=x.name;releaseStatus.value="Approved for Submittal"}
+ else {d.status="Under Review";d.reviewer=x.name}
+ renderLibrary();renderRegister();updateKpis();reviewStatus.value=d.status;updateWorkflowState();
+ addAudit(x.name,`Review decision: ${decision}`,d,old,d.status,mailStage.value||r.querySelector(".wfRole").textContent);
+ if(d.status==="Approved for Submittal")alert("Final internal approval completed. The document is now Approved for Submittal.");
+ else if(!["Return for Revision","Rejected"].includes(decision)){const next=firstPendingRow();if(next)prepareReviewerEmail(next.querySelector("button"))}
+}
+function openReviewEmail(){if(mailAuthorization.value!=="Authorized / Active"||!mailTo.value)return alert("No authorized email notification is prepared.");location.href=`mailto:${encodeURIComponent(mailTo.value)}?subject=${encodeURIComponent(mailSubject.value)}&body=${encodeURIComponent(mailBody.value)}`}
+async function copyReviewEmail(){try{await navigator.clipboard.writeText(`To: ${mailTo.value}\nSubject: ${mailSubject.value}\n\n${mailBody.value}`);alert("Email notification copied.")}catch(e){alert("Copy is not available in this browser.")}}
+function recordEmailNotification(){if(mailAuthorization.value!=="Authorized / Active")return alert("Authorization check failed.");let a=lsGet(MAIL_KEY);a.unshift({doc:mailDoc.value,rev:mailRev.value,stage:mailStage.value,to:mailTo.value,at:new Date().toISOString()});lsPut(MAIL_KEY,a);const d=currentDoc(mailDoc.value);addAudit("System","Authorized reviewer email notification recorded",d,d.status,d.status,mailTo.value);alert("Email notification recorded in Audit Trail.")}
+const originalUpdateReviewFields=updateReviewFields;
+updateReviewFields=function(){originalUpdateReviewFields();const saved=lsGet(WF_KEY).find(x=>x.key===reviewDoc.value+"|"+reviewRev.value);if(saved){workflowTemplate.value=saved.template||"auto";reviewDue.value=saved.due||"";buildReviewWorkflow(saved.rows)}else buildReviewWorkflow()}
+
 init();
+renderAuthorizedReviewers();
+if(document.getElementById("genDate"))genDate.value=new Date().toISOString().slice(0,10);
 </script>
 </body>
 </html>
