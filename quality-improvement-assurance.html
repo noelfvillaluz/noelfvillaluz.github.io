@@ -21,7 +21,7 @@ input,select,textarea{width:100%;padding:9px;border:1px solid #bdcad4;border-rad
 .modules{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.module{border:1px solid var(--line);border-radius:10px;padding:14px;background:#fff}.module h3{margin:0 0 7px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 @media(max-width:900px){.span-3,.span-4,.span-6{grid-column:span 12}.modules,.form{grid-template-columns:1fr}}
-@media print{header,.no-print{display:none}#ncrPreview,#pqnPreview,#rncPreview{display:block!important;page-break-inside:avoid}body{background:#fff}.panel,.hero,.card{box-shadow:none}}
+@media print{header,.no-print{display:none}#ncrPreview,#pqnPreview,#rncPreview,#faPreview{display:block!important;page-break-inside:avoid}body{background:#fff}.panel,.hero,.card{box-shadow:none}}
 </style>
 </head>
 <body>
@@ -57,7 +57,7 @@ input,select,textarea{width:100%;padding:9px;border:1px solid #bdcad4;border-rad
  <div class="modules">
   <div class="module"><h3>NCR Management</h3><p class="small">Raise, classify, investigate, correct, verify effectiveness and close NCRs.</p><button class="primary" onclick="document.getElementById('ncrGenerator').scrollIntoView({behavior:'smooth'})">Open NCR Generator</button></div>
   <div class="module"><h3>Proactive Quality Notification</h3><p class="small">Notify stakeholders before recurring observations escalate to formal nonconformance.</p><button class="primary" onclick="document.getElementById('pqnGenerator').scrollIntoView({behavior:'smooth'})">Open PQN Generator</button></div>
-  <div class="module"><h3>Focused Assessment</h3><p class="small">Target repeated or high-risk concerns by area, system, discipline, equipment or activity.</p><button class="primary" onclick="showModule('FA')">Start Assessment</button></div>
+  <div class="module"><h3>Focused Assessment</h3><p class="small">Target repeated or high-risk concerns by area, system, discipline, equipment or activity.</p><button class="primary" onclick="document.getElementById('focusedAssessment').scrollIntoView({behavior:'smooth'})">Start Assessment</button></div>
   <div class="module"><h3>Quality Audit Management</h3><p class="small">Plan audits, record findings, assign actions and track closure.</p><button class="primary" onclick="showModule('AUDIT')">Audit Register</button></div>
   <div class="module"><h3>Test Instrument Control</h3><p class="small">Calibration status, expiry alerts, instrument assignment and traceability.</p><button class="primary" onclick="showModule('CAL')">Calibration Register</button></div>
   <div class="module"><h3>Best Practices</h3><p class="small">Capture verified good practices and approved benchmark installations.</p><button class="primary" onclick="showModule('BP')">Best Practices</button></div>
@@ -352,6 +352,85 @@ input,select,textarea{width:100%;padding:9px;border:1px solid #bdcad4;border-rad
 </section>
 
 
+
+
+<section class="panel" id="focusedAssessment">
+ <div class="kicker">Quality Improvement & Assurance</div>
+ <h2>Focused Assessment</h2>
+ <p class="small">Perform a controlled assessment of selected samples from a process, activity, system, equipment group, work area or location. One Focused Assessment contains one dedicated sample/findings table. Every Negative finding requires a corresponding NCR.</p>
+ <div class="actions no-print">
+  <button class="primary" onclick="document.getElementById('faGenerator').scrollIntoView({behavior:'smooth'})">Focused Assessment Generator</button>
+  <button class="secondary" onclick="document.getElementById('faRegisterBody').scrollIntoView({behavior:'smooth'})">Focused Assessment Register</button>
+ </div>
+ <div style="overflow:auto;margin-top:16px">
+  <table><thead><tr><th>Focused Assessment Function</th><th>Purpose</th></tr></thead><tbody>
+   <tr><td><strong>Focused Assessment Generator</strong></td><td>Create a specific assessment with scope, objective, sampling basis and sampled findings.</td></tr>
+   <tr><td>Focused Assessment Register</td><td>Maintain one register row per assessment and recall the complete assessment record.</td></tr>
+   <tr><td>Findings & Evidence</td><td>Record each sampled item against relevant standard/code and project specification requirements.</td></tr>
+   <tr><td>NCR Linkage</td><td>Every Negative finding requires a corresponding NCR and transfers the finding to NCR Management.</td></tr>
+   <tr><td>Follow-up / Effectiveness</td><td>Track linked NCR status and corrective-action verification.</td></tr>
+   <tr><td>Closure</td><td>Close the assessment after the required assessment and linked-action controls are satisfied.</td></tr>
+  </tbody></table>
+ </div>
+</section>
+
+<section class="panel" id="faGenerator">
+ <div class="kicker">Focused Assessment</div><h2>Focused Assessment Generator</h2>
+ <div class="form no-print">
+  <div class="field"><label>Focused Assessment No.</label><input id="faNo" placeholder="FA-E-001"></div>
+  <div class="field" style="grid-column:span 2"><label>Focused Assessment Title</label><input id="faTitle" placeholder="Focused Assessment of Cable Tray Support Installation at PDM-240/245"></div>
+  <div class="field"><label>Assessment Date</label><input id="faDate" type="date"></div>
+  <div class="field"><label>Discipline</label><select id="faDiscipline"><option>Electrical</option><option>Instrumentation</option><option>Telecommunication</option><option>Multi-Discipline</option></select></div>
+  <div class="field"><label>Process / Activity</label><input id="faActivity"></div>
+  <div class="field"><label>Area / Location</label><input id="faArea"></div>
+  <div class="field"><label>Status</label><select id="faStatus"><option>Draft</option><option>In Progress</option><option>Action Required</option><option>Under Follow-up</option><option>Closed</option></select></div>
+  <div class="field" style="grid-column:span 2"><label>Assessment Trigger / Reason</label><input id="faTrigger" placeholder="Risk-based review / trend / recurring concern / management request"></div>
+  <div class="field"><label>Population / Scope Size</label><input id="faPopulation" type="number" min="0"></div>
+  <div class="field"><label>Sampling Method</label><select id="faSampling"><option>Risk-based</option><option>Random</option><option>Targeted</option><option>Mixed</option></select></div>
+  <div class="field" style="grid-column:span 2"><label>Scope</label><textarea id="faScope"></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Objective</label><textarea id="faObjective"></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Applicable Requirements / Reference Basis</label><textarea id="faRequirements" placeholder="Reference basis only. Detailed standard/specification and clause are recorded per sample."></textarea></div>
+  <div class="field" style="grid-column:span 2"><label>Assessment Team</label><textarea id="faTeam"></textarea></div>
+ </div>
+
+ <section class="grid" style="margin-top:14px">
+  <div class="card span-3"><div class="small">Samples Assessed</div><div class="metric" id="faMSamples">0</div></div>
+  <div class="card span-3"><div class="small">Positive</div><div class="metric" id="faMPositive">0</div></div>
+  <div class="card span-3"><div class="small">Negative</div><div class="metric" id="faMNegative">0</div></div>
+  <div class="card span-3"><div class="small">NCRs Generated</div><div class="metric" id="faMNCR">0</div></div>
+ </section>
+
+ <div style="overflow:auto;margin-top:16px">
+  <h3>Sample / Findings Table</h3>
+  <table>
+   <thead><tr><th>Sample / Tag / Item</th><th>Location</th><th>Standard / Code & Clause</th><th>Project Specification & Paragraph</th><th>Assessment Criteria</th><th>Finding / Observation</th><th>Result</th><th>Evidence</th><th>NCR No.</th><th>NCR Status</th><th>Action</th></tr></thead>
+   <tbody id="faFindingBody"></tbody>
+  </table>
+ </div>
+ <div class="actions no-print">
+  <button class="secondary" onclick="addFAFinding()">+ Add Sample / Finding</button>
+  <button class="primary" onclick="saveFA()">Save Focused Assessment</button>
+  <button class="secondary" onclick="viewFA()">View Assessment</button>
+  <button class="secondary" onclick="printFA()">Print Assessment</button>
+  <button class="secondary" onclick="newFA()">New Assessment</button>
+ </div>
+ <div class="alert"><strong>Finding control:</strong> Positive = no NCR required. Negative = NCR mandatory. Use <strong>Generate NCR</strong> to transfer the assessment finding, requirement, evidence, discipline and location directly to the NCR Generator.</div>
+
+ <div id="faPreview" style="display:none;margin-top:18px;border:1px solid #d7e0e8;border-radius:10px;padding:18px;background:#fff">
+  <div style="display:flex;justify-content:space-between;gap:15px;border-bottom:2px solid #071b2f;padding-bottom:10px">
+   <div><strong>FOCUSED ASSESSMENT</strong><div class="small">Quality Improvement & Assurance</div></div>
+   <div><strong id="faPvNo"></strong><div id="faPvStatus" class="badge"></div></div>
+  </div>
+  <table style="margin-top:12px"><tbody id="faPreviewHead"></tbody></table>
+  <h3>Sample / Findings</h3>
+  <div style="overflow:auto"><table><thead><tr><th>Sample / Tag / Item</th><th>Location</th><th>Standard / Code & Clause</th><th>Project Specification & Paragraph</th><th>Criteria</th><th>Finding</th><th>Result</th><th>Evidence</th><th>NCR</th><th>NCR Status</th></tr></thead><tbody id="faPreviewFindings"></tbody></table></div>
+ </div>
+
+ <div style="overflow:auto;margin-top:18px">
+  <h3>Focused Assessment Register</h3>
+  <table><thead><tr><th>FA No.</th><th>Focused Assessment Title</th><th>Discipline</th><th>Process / Activity</th><th>Area / Location</th><th>Date</th><th>Samples</th><th>Positive</th><th>Negative</th><th>NCRs</th><th>Status</th><th>Actions</th></tr></thead><tbody id="faRegisterBody"></tbody></table>
+ </div>
+</section>
 
 <section class="panel" id="repeatedNC">
  <div class="kicker">Quality Improvement & Assurance</div>
@@ -1055,6 +1134,60 @@ Quality Control`;
 }
 function openPQNEmail(){preparePQNEmailStatement();const to=pV("pqnMailTo");if(!to){alert("Enter the PQN recipient email address.");return}location.href=`mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(pV("pqnMailCC"))}&subject=${encodeURIComponent(pV("pqnMailSubject"))}&body=${encodeURIComponent(pV("pqnMailBody"))}`;}
 async function copyPQNEmail(){preparePQNEmailStatement();const t=`To: ${pV("pqnMailTo")}\nCC: ${pV("pqnMailCC")}\nSubject: ${pV("pqnMailSubject")}\n\n${pV("pqnMailBody")}`;try{await navigator.clipboard.writeText(t);alert("PQN email statement copied.")}catch(e){alert("Please copy the PQN email statement manually.")}}
+
+
+const FA_KEY="noelFocusedAssessments";
+function faV(id){const e=document.getElementById(id);return e?e.value:""}
+function faEsc(v){return String(v??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function getFAs(){try{return JSON.parse(localStorage.getItem(FA_KEY)||"[]")}catch(e){return[]}}
+function addFAFinding(a={}){
+ const tr=document.createElement("tr");
+ tr.innerHTML=`<td><input class="faItem" value="${faEsc(a.item||"")}"></td><td><input class="faLoc" value="${faEsc(a.location||"")}"></td>
+ <td><textarea class="faStd">${faEsc(a.standard||"")}</textarea></td><td><textarea class="faSpec">${faEsc(a.spec||"")}</textarea></td>
+ <td><textarea class="faCriteria">${faEsc(a.criteria||"")}</textarea></td><td><textarea class="faFinding">${faEsc(a.finding||"")}</textarea></td>
+ <td><select class="faResult" onchange="faFindingChanged(this)"><option ${a.result==="Pending"?"selected":""}>Pending</option><option ${a.result==="Positive"?"selected":""}>Positive</option><option ${a.result==="Negative"?"selected":""}>Negative</option></select></td>
+ <td><input class="faEvidence" value="${faEsc(a.evidence||"")}"></td>
+ <td><input class="faNCR" value="${faEsc(a.ncr||"")}" ${a.result==="Negative"?"":"disabled"}></td>
+ <td><select class="faNCRStatus" ${a.result==="Negative"?"":"disabled"}><option>Not Generated</option><option ${a.ncrStatus==="Open"?"selected":""}>Open</option><option ${a.ncrStatus==="Corrective Action"?"selected":""}>Corrective Action</option><option ${a.ncrStatus==="Effectiveness Verification"?"selected":""}>Effectiveness Verification</option><option ${a.ncrStatus==="Closed"?"selected":""}>Closed</option></select></td>
+ <td><button class="primary faGenNCR" onclick="generateNCRFromFA(this)" ${a.result==="Negative"?"":"disabled"}>Generate NCR</button> <button class="secondary" onclick="this.closest('tr').remove();updateFASummary()">Remove</button></td>`;
+ document.getElementById("faFindingBody").appendChild(tr);updateFASummary();
+}
+function faFindingChanged(e){const r=e.closest("tr"),neg=e.value==="Negative";[".faNCR",".faNCRStatus",".faGenNCR"].forEach(s=>r.querySelector(s).disabled=!neg);if(!neg){r.querySelector(".faNCR").value="";r.querySelector(".faNCRStatus").value="Not Generated"}updateFASummary()}
+function faFindings(){return [...document.querySelectorAll("#faFindingBody tr")].map(r=>({item:r.querySelector(".faItem").value.trim(),location:r.querySelector(".faLoc").value.trim(),standard:r.querySelector(".faStd").value.trim(),spec:r.querySelector(".faSpec").value.trim(),criteria:r.querySelector(".faCriteria").value.trim(),finding:r.querySelector(".faFinding").value.trim(),result:r.querySelector(".faResult").value,evidence:r.querySelector(".faEvidence").value.trim(),ncr:r.querySelector(".faNCR").value.trim(),ncrStatus:r.querySelector(".faNCRStatus").value}))}
+function updateFASummary(){const f=faFindings();faMSamples.textContent=f.length;faMPositive.textContent=f.filter(x=>x.result==="Positive").length;faMNegative.textContent=f.filter(x=>x.result==="Negative").length;faMNCR.textContent=f.filter(x=>x.result==="Negative"&&x.ncr).length}
+function faRecord(){return {no:faV("faNo"),title:faV("faTitle"),date:faV("faDate"),discipline:faV("faDiscipline"),activity:faV("faActivity"),area:faV("faArea"),status:faV("faStatus"),trigger:faV("faTrigger"),population:faV("faPopulation"),sampling:faV("faSampling"),scope:faV("faScope"),objective:faV("faObjective"),requirements:faV("faRequirements"),team:faV("faTeam"),findings:faFindings(),updated:new Date().toISOString()}}
+function validateFA(){
+ const r=faRecord();if(!r.no||!r.title){alert("Focused Assessment No. and Title are required.");return false}
+ const neg=r.findings.filter(x=>x.result==="Negative");if(neg.some(x=>!x.ncr)){alert("Every Negative finding must have a corresponding NCR.");return false}
+ if(r.status==="Closed"&&neg.some(x=>x.ncrStatus!=="Closed")){alert("Focused Assessment cannot be Closed while an associated NCR remains open.");return false}
+ return true;
+}
+function saveFA(){if(!validateFA())return;const r=faRecord();let a=getFAs(),i=a.findIndex(x=>x.no===r.no);if(i>=0)a[i]=r;else a.push(r);localStorage.setItem(FA_KEY,JSON.stringify(a));renderFARegister();viewFA();alert("Focused Assessment saved.")}
+function viewFA(no){
+ const r=no?getFAs().find(x=>x.no===no):faRecord();if(!r)return;
+ faPreview.style.display="block";faPvNo.textContent=r.no||"Draft";faPvStatus.textContent=r.status||"Draft";
+ const rows=[["Title",r.title],["Date",r.date],["Discipline",r.discipline],["Process / Activity",r.activity],["Area / Location",r.area],["Trigger / Reason",r.trigger],["Population / Scope Size",r.population],["Sampling Method",r.sampling],["Scope",r.scope],["Objective",r.objective],["Applicable Requirements / Reference Basis",r.requirements],["Assessment Team",r.team]];
+ faPreviewHead.innerHTML=rows.map(x=>`<tr><th style="width:28%">${x[0]}</th><td>${faEsc(x[1]||"—")}</td></tr>`).join("");
+ faPreviewFindings.innerHTML=(r.findings||[]).map(x=>`<tr><td>${faEsc(x.item)}</td><td>${faEsc(x.location)}</td><td>${faEsc(x.standard)}</td><td>${faEsc(x.spec)}</td><td>${faEsc(x.criteria)}</td><td>${faEsc(x.finding)}</td><td>${faEsc(x.result)}</td><td>${faEsc(x.evidence)}</td><td>${faEsc(x.ncr)}</td><td>${faEsc(x.ncrStatus)}</td></tr>`).join("");
+ faPreview.scrollIntoView({behavior:"smooth"});
+}
+function printFA(){if(!validateFA())return;viewFA();setTimeout(()=>window.print(),150)}
+function renderFARegister(){const b=document.getElementById("faRegisterBody");if(!b)return;const a=getFAs();b.innerHTML=a.length?a.map(r=>{const f=r.findings||[],p=f.filter(x=>x.result==="Positive").length,n=f.filter(x=>x.result==="Negative").length,ncr=f.filter(x=>x.result==="Negative"&&x.ncr).length;return `<tr><td>${faEsc(r.no)}</td><td>${faEsc(r.title)}</td><td>${faEsc(r.discipline)}</td><td>${faEsc(r.activity)}</td><td>${faEsc(r.area)}</td><td>${faEsc(r.date)}</td><td>${f.length}</td><td>${p}</td><td>${n}</td><td>${ncr}</td><td>${faEsc(r.status)}</td><td><button class="secondary" onclick="loadFA('${faEsc(r.no)}')">Open</button> <button class="secondary" onclick="viewFA('${faEsc(r.no)}')">View</button> <button class="secondary" onclick="deleteFA('${faEsc(r.no)}')">Delete</button></td></tr>`}).join(""):`<tr><td colspan="12">No Focused Assessments saved.</td></tr>`}
+function loadFA(no){const r=getFAs().find(x=>x.no===no);if(!r)return;const map={faNo:"no",faTitle:"title",faDate:"date",faDiscipline:"discipline",faActivity:"activity",faArea:"area",faStatus:"status",faTrigger:"trigger",faPopulation:"population",faSampling:"sampling",faScope:"scope",faObjective:"objective",faRequirements:"requirements",faTeam:"team"};Object.entries(map).forEach(([id,k])=>document.getElementById(id).value=r[k]||"");faFindingBody.innerHTML="";(r.findings||[]).forEach(addFAFinding);faGenerator.scrollIntoView({behavior:"smooth"})}
+function deleteFA(no){let a=getFAs(),r=a.find(x=>x.no===no);if(!r)return;if(!confirm(`Delete ${no} — ${r.title}?`))return;a=a.filter(x=>x.no!==no);localStorage.setItem(FA_KEY,JSON.stringify(a));renderFARegister()}
+function newFA(){["faNo","faTitle","faDate","faActivity","faArea","faTrigger","faPopulation","faScope","faObjective","faRequirements","faTeam"].forEach(id=>document.getElementById(id).value="");faDiscipline.value="Electrical";faStatus.value="Draft";faSampling.value="Risk-based";faFindingBody.innerHTML="";addFAFinding();faPreview.style.display="none"}
+function generateNCRFromFA(btn){
+ const row=btn.closest("tr"),result=row.querySelector(".faResult").value;if(result!=="Negative"){alert("NCR generation is enabled only for a Negative finding.");return}
+ let no=row.querySelector(".faNCR").value.trim();if(!no){const n=getNCRs().length+1;no=`NCR-${new Date().getFullYear()}-${String(n).padStart(3,"0")}`;row.querySelector(".faNCR").value=no}
+ row.querySelector(".faNCRStatus").value="Open";
+ ncrNo.value=no;ncrDate.value=faDate.value;ncrDiscipline.value=faDiscipline.value;ncrArea.value=row.querySelector(".faLoc").value||faArea.value;ncrTags.value=row.querySelector(".faItem").value;ncrActivity.value=faActivity.value;ncrSource.value="Focused Assessment";ncrStatus.value="Draft";
+ ncrDescription.value=`Focused Assessment ${faNo.value} — ${faTitle.value}\n\n${row.querySelector(".faFinding").value}`;
+ ncrRequirement.value=[row.querySelector(".faStd").value,row.querySelector(".faSpec").value,row.querySelector(".faCriteria").value].filter(Boolean).join("\n");
+ if(document.getElementById("ncrRecipientEvidence"))document.getElementById("ncrRecipientEvidence").value=row.querySelector(".faEvidence").value;
+ updateFASummary();document.getElementById("ncrGenerator").scrollIntoView({behavior:"smooth"});
+ alert("Negative Focused Assessment finding transferred to the NCR Generator. Review the NCR details, responsible department and due date before saving/issuing.");
+}
+window.addEventListener("load",()=>{if(document.getElementById("faFindingBody")&&!faFindingBody.children.length)addFAFinding();renderFARegister()});
 
 </script>
 </body></html>
