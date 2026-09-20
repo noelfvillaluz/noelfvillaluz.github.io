@@ -506,7 +506,366 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
     }
 
 }
-    
+
+/* =====================================================
+   MAJOR PROJECTS
+===================================================== */
+
+.major-projects {
+    padding: 70px 20px;
+    background: #ffffff;
+}
+
+.projects-container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.projects-heading {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.projects-heading h2 {
+    margin: 0 0 8px;
+    color: #071b2f;
+    font-size: 30px;
+}
+
+.projects-heading p {
+    max-width: 800px;
+    margin: auto;
+    color: #52677a;
+    font-size: 14px;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.project-card {
+    display: flex;
+    flex-direction: column;
+
+    background: #ffffff;
+    border-top: 3px solid #f3b632;
+    border-radius: 9px;
+
+    padding: 25px;
+
+    box-shadow: 0 8px 25px rgba(7, 27, 47, 0.07);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 35px rgba(7, 27, 47, 0.12);
+}
+
+.project-card h3 {
+    margin: 0 0 14px;
+
+    color: #071b2f;
+
+    font-size: 18px;
+    line-height: 1.45;
+}
+
+.project-meta {
+    margin-bottom: 20px;
+}
+
+.project-meta p {
+    margin: 4px 0;
+
+    color: #263746;
+
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.project-meta strong {
+    color: #071b2f;
+}
+
+
+/* BUTTON AREA */
+
+.project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    margin-top: auto;
+    padding-top: 10px;
+}
+
+.project-btn {
+    border: none;
+    border-radius: 6px;
+
+    padding: 11px 15px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+/* Roles button */
+
+.role-btn {
+    background: #0d416d;
+    color: #ffffff;
+}
+
+.role-btn:hover {
+    background: #071b2f;
+}
+
+
+/* Project Information button */
+
+.info-btn {
+    background: #f3b632;
+    color: #071b2f;
+}
+
+.info-btn:hover {
+    background: #dca020;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.project-modal {
+    display: none;
+
+    position: fixed;
+    z-index: 9999;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow-y: auto;
+
+    background: rgba(4, 17, 29, 0.78);
+
+    padding: 40px 20px;
+}
+
+.project-modal.active {
+    display: block;
+}
+
+.project-modal-box {
+    position: relative;
+
+    max-width: 900px;
+
+    margin: 30px auto;
+
+    background: #ffffff;
+
+    border-radius: 12px;
+
+    padding: 38px;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.30);
+}
+
+.project-modal-close {
+    position: absolute;
+
+    right: 20px;
+    top: 12px;
+
+    border: none;
+    background: transparent;
+
+    color: #071b2f;
+
+    font-size: 34px;
+    cursor: pointer;
+}
+
+.project-modal-close:hover {
+    color: #f3b632;
+}
+
+
+/* Modal typography */
+
+.modal-kicker {
+    color: #0d416d;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+}
+
+.project-modal h2 {
+    color: #071b2f;
+
+    margin: 6px 45px 20px 0;
+
+    line-height: 1.3;
+}
+
+.project-modal h3 {
+    color: #0d416d;
+
+    margin-top: 28px;
+    margin-bottom: 10px;
+
+    border-bottom: 1px solid #e3e9ee;
+
+    padding-bottom: 7px;
+}
+
+.project-modal p,
+.project-modal li {
+    color: #354b5e;
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* Project information table */
+
+.project-info-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin: 18px 0 25px;
+}
+
+.project-info-table td {
+    border-bottom: 1px solid #e5e9ed;
+
+    padding: 10px 8px;
+
+    vertical-align: top;
+
+    font-size: 14px;
+}
+
+.project-info-table td:first-child {
+    width: 210px;
+
+    color: #071b2f;
+
+    font-weight: 700;
+}
+
+
+/* Status notice */
+
+.project-data-note {
+    margin-top: 25px;
+
+    background: #f4f7fa;
+
+    border-left: 4px solid #f3b632;
+
+    padding: 15px;
+
+    border-radius: 5px;
+
+    font-size: 13px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 800px) {
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .project-actions {
+        flex-direction: column;
+    }
+
+    .project-btn {
+        width: 100%;
+    }
+
+    .project-modal-box {
+        padding: 28px 20px;
+    }
+
+    .project-info-table td {
+        display: block;
+        width: 100% !important;
+    }
+
+    .project-info-table td:first-child {
+        border-bottom: none;
+        padding-bottom: 2px;
+    }
+}
+      
+/* =====================================================
+   PROJECT INFORMATION HIGHLIGHTS
+===================================================== */
+
+.project-highlight-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 20px 0 28px;
+}
+
+.project-highlight {
+    background: #f4f7fa;
+    border-top: 3px solid #f3b632;
+    border-radius: 8px;
+    padding: 18px;
+}
+
+.project-highlight span {
+    display: block;
+    color: #607386;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.project-highlight strong {
+    display: block;
+    color: #071b2f;
+    font-size: 17px;
+    line-height: 1.35;
+}
+
+@media (max-width: 700px) {
+
+    .project-highlight-row {
+        grid-template-columns: 1fr;
+    }
+
+}
+      
 </style>
 </head>
 <body>
@@ -1534,121 +1893,302 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
     </div>
 </section>
 
-<!-- MAJOR PROJECTS -->
-<section id="projects">
-    <div class="wrap">
+<!-- =====================================================
+     MAJOR PROJECTS
+===================================================== -->
+<section class="major-projects" id="major-projects">
+    <div class="projects-container">
 
-        <div class="title">
+        <div class="projects-heading">
             <h2>Major Projects</h2>
             <p>
-                Selected Oil & Gas, Energy, Power and Industrial projects
-                delivered across the Middle East and Asia.
+                Selected major Oil & Gas, Energy, Power, Mining and Industrial
+                projects across the Middle East and Asia. Explore each project
+                for project information and my roles and responsibilities.
             </p>
         </div>
 
-        <div class="cards">
+        <div class="projects-grid">
 
-            <!-- ZULUF -->
-            <div class="card">
+            <!-- 01 ZULUF -->
+            <div class="project-card">
                 <h3>ARAMCO Zuluf AM Crude Platform Project – Package 3</h3>
-                <p><strong>Client:</strong> Saudi Aramco</p>
-                <p><strong>Company:</strong> NMDC Energy</p>
-                <p><strong>Position:</strong> Electrical & Instrumentation QA/QC Supervisor</p>
-                <p><strong>Location:</strong> UAE Onshore / Saudi Arabia Offshore</p>
-                <p><strong>Period:</strong> Dec 2025 – Present</p>
+
+                <div class="project-meta">
+                    <p><strong>Client:</strong> Saudi Aramco</p>
+                    <p><strong>Company:</strong> NMDC Energy</p>
+                    <p><strong>Position:</strong> Electrical & Instrumentation QA/QC Supervisor</p>
+                    <p><strong>Location:</strong> UAE Onshore / Saudi Arabia Offshore</p>
+                    <p><strong>Period:</strong> Dec 2025 – Present</p>
+                </div>
+
+                <div class="project-actions">
+                    <button class="project-btn role-btn"
+                        onclick="openProjectModal('zuluf','role')">
+                        👷 Roles & Responsibilities
+                    </button>
+
+                    <button class="project-btn info-btn"
+                        onclick="openProjectModal('zuluf','info')">
+                        ⓘ Project Information
+                    </button>
+                </div>
             </div>
 
-            <!-- JAFURAH -->
-            <div class="card">
+
+            <!-- 02 JAFURAH -->
+            <div class="project-card">
                 <h3>ARAMCO Jafurah Utilities, Sulfur & Interconnecting System Project</h3>
-                <p><strong>Client:</strong> Saudi Aramco</p>
-                <p><strong>Company:</strong> Hyundai Engineering</p>
-                <p><strong>Position:</strong> Instrumentation QA/QC Supervisor</p>
-                <p><strong>Location:</strong> Jafurah, Saudi Arabia</p>
-                <p><strong>Period:</strong> Oct 2023 – Oct 2025</p>
+
+                <div class="project-meta">
+                    <p><strong>Client:</strong> Saudi Aramco</p>
+                    <p><strong>Company:</strong> Hyundai Engineering</p>
+                    <p><strong>Position:</strong> Instrumentation QA/QC Supervisor</p>
+                    <p><strong>Location:</strong> Jafurah, Saudi Arabia</p>
+                    <p><strong>Period:</strong> Oct 2023 – Oct 2025</p>
+                </div>
+
+                <div class="project-actions">
+                    <button class="project-btn role-btn"
+                        onclick="openProjectModal('jafurah','role')">
+                        👷 Roles & Responsibilities
+                    </button>
+
+                    <button class="project-btn info-btn"
+                        onclick="openProjectModal('jafurah','info')">
+                        ⓘ Project Information
+                    </button>
+                </div>
             </div>
 
-            <!-- HAWIYAH / HARADH -->
-            <div class="card">
+
+            <!-- 03 HAWIYAH / HARADH -->
+            <div class="project-card">
                 <h3>ARAMCO Hawiyah & Haradh Gas Compression Plant Project</h3>
-                <p><strong>Client:</strong> Saudi Aramco</p>
-                <p><strong>Company:</strong> ApplusVelosi</p>
-                <p><strong>Position:</strong> Electrical & Instrumentation Third-Party Inspector</p>
-                <p><strong>Location:</strong> Haradh, Saudi Arabia</p>
-                <p><strong>Period:</strong> Apr 2019 – Mar 2023</p>
+
+                <div class="project-meta">
+                    <p><strong>Client:</strong> Saudi Aramco</p>
+                    <p><strong>Company:</strong> Applus Velosi</p>
+                    <p><strong>Position:</strong> Electrical & Instrumentation Third-Party Inspector</p>
+                    <p><strong>Location:</strong> Haradh, Saudi Arabia</p>
+                    <p><strong>Period:</strong> Apr 2019 – Mar 2023</p>
+                </div>
+
+                <div class="project-actions">
+                    <button class="project-btn role-btn"
+                        onclick="openProjectModal('hawiyah','role')">
+                        👷 Roles & Responsibilities
+                    </button>
+
+                    <button class="project-btn info-btn"
+                        onclick="openProjectModal('hawiyah','info')">
+                        ⓘ Project Information
+                    </button>
+                </div>
             </div>
 
-            <!-- JAZAN -->
-            <div class="card">
+
+            <!-- 04 JAZAN -->
+            <div class="project-card">
                 <h3>ARAMCO Jazan Refinery Project</h3>
-                <p><strong>Client:</strong> Saudi Aramco</p>
-                <p><strong>Discipline:</strong> Instrumentation & Communication</p>
-                <p><strong>Role:</strong> QA/QC Inspection</p>
-                <p><strong>Location:</strong> Saudi Arabia</p>
-                <p><strong>Period:</strong> Feb 2016 – May 2018</p>
+
+                <div class="project-meta">
+                    <p><strong>Client:</strong> Saudi Aramco</p>
+                    <p><strong>Discipline:</strong> Instrumentation & Communication</p>
+                    <p><strong>Role:</strong> QA/QC Inspection</p>
+                    <p><strong>Location:</strong> Saudi Arabia</p>
+                    <p><strong>Period:</strong> Feb 2016 – May 2018</p>
+                </div>
+
+                <div class="project-actions">
+                    <button class="project-btn role-btn"
+                        onclick="openProjectModal('jazan','role')">
+                        👷 Roles & Responsibilities
+                    </button>
+
+                    <button class="project-btn info-btn"
+                        onclick="openProjectModal('jazan','info')">
+                        ⓘ Project Information
+                    </button>
+                </div>
             </div>
 
-            <!-- WASIT -->
-            <div class="card">
+
+            <!-- 05 WASIT -->
+            <div class="project-card">
                 <h3>ARAMCO Wasit Gas Project</h3>
-                <p><strong>Client:</strong> Saudi Aramco</p>
-                <p><strong>Discipline:</strong> Instrumentation</p>
-                <p><strong>Role:</strong> QA/QC Inspection</p>
-                <p><strong>Location:</strong> Saudi Arabia</p>
-                <p><strong>Period:</strong> Aug 2013 – Oct 2015</p>
+
+                <div class="project-meta">
+                    <p><strong>Client:</strong> Saudi Aramco</p>
+                    <p><strong>Discipline:</strong> Instrumentation</p>
+                    <p><strong>Role:</strong> QA/QC Inspection</p>
+                    <p><strong>Location:</strong> Saudi Arabia</p>
+                    <p><strong>Period:</strong> Aug 2013 – Oct 2015</p>
+                </div>
+
+                <div class="project-actions">
+                    <button class="project-btn role-btn"
+                        onclick="openProjectModal('wasit','role')">
+                        👷 Roles & Responsibilities
+                    </button>
+
+                    <button class="project-btn info-btn"
+                        onclick="openProjectModal('wasit','info')">
+                        ⓘ Project Information
+                    </button>
+                </div>
             </div>
-              
-              <!-- KONIAMBO -->
-            <div class="card">
+
+
+            <!-- 06 KONIAMBO -->
+            <div class="project-card">
                 <h3>Koniambo Nickel Project</h3>
-                <p><strong>Industry:</strong> Mining & Industrial</p>
-                <p><strong>Discipline:</strong> Electrical & Instrumentation</p>
-                <p><strong>Role:</strong> QA/QC Inspection</p>
-                <p><strong>Period:</strong> Jan 2012 – May 2013</p>
+
+                <div class="project-meta">
+                    <p><strong>Industry:</strong> Mining & Industrial</p>
+                    <p><strong>Discipline:</strong> Electrical & Instrumentation</p>
+                    <p><strong>Role:</strong> QA/QC Inspection</p>
+                    <p><strong>Period:</strong> Jan 2012 – May 2013</p>
+                </div>
+
+                <div class="project-actions">
+                    <button class="project-btn role-btn"
+                        onclick="openProjectModal('koniambo','role')">
+                        👷 Roles & Responsibilities
+                    </button>
+
+                    <button class="project-btn info-btn"
+                        onclick="openProjectModal('koniambo','info')">
+                        ⓘ Project Information
+                    </button>
+                </div>
             </div>
-              
-            <!-- ASAB -->
-            <div class="card">
+
+
+            <!-- 07 ASAB -->
+            <div class="project-card">
                 <h3>ADCO Asab Project</h3>
-                <p><strong>Client:</strong> ADCO</p>
-                <p><strong>Industry:</strong> Oil & Gas</p>
-                <p><strong>Discipline:</strong> Electrical & Instrumentation</p>
-                <p><strong>Location:</strong> United Arab Emirates</p>
-                <p><strong>Period:</strong> Dec 2010 – Dec 2011</p>
+
+                <div class="project-meta">
+                    <p><strong>Client:</strong> ADCO</p>
+                    <p><strong>Industry:</strong> Oil & Gas</p>
+                    <p><strong>Discipline:</strong> Electrical & Instrumentation</p>
+                    <p><strong>Location:</strong> United Arab Emirates</p>
+                    <p><strong>Period:</strong> Dec 2010 – Dec 2011</p>
+                </div>
+
+                <div class="project-actions">
+                    <button class="project-btn role-btn"
+                        onclick="openProjectModal('asab','role')">
+                        👷 Roles & Responsibilities
+                    </button>
+
+                    <button class="project-btn info-btn"
+                        onclick="openProjectModal('asab','info')">
+                        ⓘ Project Information
+                    </button>
+                </div>
             </div>
 
-            <!-- RAS LAFFAN -->
-            <div class="card">
+
+            <!-- 08 RAS LAFFAN -->
+            <div class="project-card">
                 <h3>Ras Laffan C Power & Water Project</h3>
-                <p><strong>Industry:</strong> Power & Water</p>
-                <p><strong>Discipline:</strong> Electrical</p>
-                <p><strong>Role:</strong> QA/QC Engineering / Inspection</p>
-                <p><strong>Location:</strong> Qatar</p>
-                <p><strong>Period:</strong> Dec 2008 – Oct 2010</p>
+
+                <div class="project-meta">
+                    <p><strong>Industry:</strong> Power & Water</p>
+                    <p><strong>Discipline:</strong> Electrical</p>
+                    <p><strong>Role:</strong> QA/QC Engineering / Inspection</p>
+                    <p><strong>Location:</strong> Qatar</p>
+                    <p><strong>Period:</strong> Dec 2008 – Oct 2010</p>
+                </div>
+
+                <div class="project-actions">
+                    <button class="project-btn role-btn"
+                        onclick="openProjectModal('raslaffan','role')">
+                        👷 Roles & Responsibilities
+                    </button>
+
+                    <button class="project-btn info-btn"
+                        onclick="openProjectModal('raslaffan','info')">
+                        ⓘ Project Information
+                    </button>
+                </div>
             </div>
 
-            <!-- PETRORABIGH -->
-            <div class="card">
+
+            <!-- 09 PETRORABIGH -->
+            <div class="project-card">
                 <h3>PetroRabigh Refining & Petrochemical Development Project</h3>
-                <p><strong>Company:</strong> Carlo Gavazzi Arabia Co. Ltd.</p>
-                <p><strong>Position:</strong> Instrument QC Inspector</p>
-                <p><strong>Location:</strong> Rabigh, Saudi Arabia</p>
-                <p><strong>Period:</strong> Aug 2007 – Aug 2008</p>
+
+                <div class="project-meta">
+                    <p><strong>Company:</strong> Carlo Gavazzi Arabia Co. Ltd.</p>
+                    <p><strong>Position:</strong> Instrument QC Inspector</p>
+                    <p><strong>Location:</strong> Rabigh, Saudi Arabia</p>
+                    <p><strong>Period:</strong> Aug 2007 – Aug 2008</p>
+                </div>
+
+                <div class="project-actions">
+                    <button class="project-btn role-btn"
+                        onclick="openProjectModal('petrorabigh','role')">
+                        👷 Roles & Responsibilities
+                    </button>
+
+                    <button class="project-btn info-btn"
+                        onclick="openProjectModal('petrorabigh','info')">
+                        ⓘ Project Information
+                    </button>
+                </div>
             </div>
 
-            <!-- HADEED -->
-            <div class="card">
+
+            <!-- 10 HADEED -->
+            <div class="project-card">
                 <h3>Hadeed Iron & Steel – Direct Reduction Module E Project</h3>
-                <p><strong>Industry:</strong> Iron & Steel</p>
-                <p><strong>Position:</strong> Junior Instrument QC Inspector</p>
-                <p><strong>Location:</strong> Jubail, Saudi Arabia</p>
-                <p><strong>Period:</strong> Mar 2007 – Aug 2007</p>
+
+                <div class="project-meta">
+                    <p><strong>Industry:</strong> Iron & Steel</p>
+                    <p><strong>Position:</strong> Junior Instrument QC Inspector</p>
+                    <p><strong>Location:</strong> Jubail, Saudi Arabia</p>
+                    <p><strong>Period:</strong> Mar 2007 – Aug 2007</p>
+                </div>
+
+                <div class="project-actions">
+                    <button class="project-btn role-btn"
+                        onclick="openProjectModal('hadeed','role')">
+                        👷 Roles & Responsibilities
+                    </button>
+
+                    <button class="project-btn info-btn"
+                        onclick="openProjectModal('hadeed','info')">
+                        ⓘ Project Information
+                    </button>
+                </div>
             </div>
 
         </div>
-
     </div>
 </section>
+
+
+<!-- =====================================================
+     PROJECT DETAILS MODAL
+===================================================== -->
+<div id="projectModal" class="project-modal">
+
+    <div class="project-modal-box">
+
+        <button class="project-modal-close"
+                onclick="closeProjectModal()"
+                aria-label="Close">
+            &times;
+        </button>
+
+        <div id="projectModalContent"></div>
+
+    </div>
+
+</div>
 
 <!-- CORE COMPETENCIES & AREAS OF EXPERTISE -->
 <section id="competencies">
@@ -2161,3 +2701,731 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
 </div>
 </section>
 </main>
+
+<script>
+const majorProjects = {
+
+zuluf: {
+title: "ARAMCO Zuluf AM Crude Platform Project – Package 3",
+info: `
+<div class="modal-kicker">Project Information</div>
+<h2>ARAMCO Zuluf AM Crude Platform Project – Package 3</h2>
+
+<div class="project-highlight-row">
+    <div class="project-highlight">
+        <span>PROJECT TYPE</span>
+        <strong>Offshore Oil & Gas</strong>
+    </div>
+    <div class="project-highlight">
+        <span>ESTIMATED CONTRACT VALUE</span>
+        <strong>≈ US$900 Million</strong>
+    </div>
+    <div class="project-highlight">
+        <span>PROJECT LOCATION</span>
+        <strong>Zuluf Field, Saudi Arabia</strong>
+    </div>
+</div>
+
+<table class="project-info-table">
+<tr><td>Client / Owner</td><td>Saudi Aramco</td></tr>
+<tr><td>EPC Contractor</td><td>NMDC Energy</td></tr>
+<tr><td>Package</td><td>CRPO-136 / Zulf Package 3 / ZTP-3</td></tr>
+<tr><td>Contract Type</td><td>EPC / Offshore Facilities</td></tr>
+<tr><td>Fabrication</td><td>United Arab Emirates</td></tr>
+<tr><td>Offshore Location</td><td>Saudi Arabia</td></tr>
+</table>
+
+<h3>Project Overview</h3>
+<p>
+The project forms part of Saudi Aramco's development and upgrading
+of offshore crude-production facilities in the Zuluf field.
+</p>
+
+<h3>Purpose / Function</h3>
+<p>
+The project upgrades existing offshore production infrastructure
+and provides additional facilities required to support crude-oil
+production, well operations and associated offshore systems.
+</p>
+
+<h3>Major Facilities & Scope</h3>
+<ul>
+<li>Upgrade of two Production Deck Modules (PDMs)</li>
+<li>Seven new Slip-Over Platforms</li>
+<li>Two new 16-well Auxiliary Platforms</li>
+<li>Upgrade of Zuluf TP-3</li>
+<li>Engineering, procurement and fabrication</li>
+<li>Transportation and offshore installation</li>
+<li>Tie-ins, testing and pre-commissioning</li>
+<li>Commissioning assistance</li>
+</ul>
+
+<div class="project-data-note">
+<strong>Cost Basis:</strong>
+Approximately US$900 million reported estimated value for
+CRPO-136. This is the package-level estimate, not the total
+Zuluf field-development cost.
+</div>
+`
+},
+
+jafurah: {
+title: "ARAMCO Jafurah Utilities, Sulfur & Interconnecting System Project",
+info: `
+<div class="modal-kicker">Project Information</div>
+<h2>ARAMCO Jafurah Utilities, Sulfur & Interconnecting System Project</h2>
+
+<div class="project-highlight-row">
+<div class="project-highlight">
+<span>PROJECT TYPE</span>
+<strong>Gas / Utilities</strong>
+</div>
+
+<div class="project-highlight">
+<span>CONTRACT VALUE</span>
+<strong>≈ US$1.7 Billion</strong>
+</div>
+
+<div class="project-highlight">
+<span>LOCATION</span>
+<strong>Jafurah, Saudi Arabia</strong>
+</div>
+</div>
+
+<table class="project-info-table">
+<tr><td>Client</td><td>Saudi Aramco</td></tr>
+<tr><td>EPC Contractor</td><td>Hyundai Engineering / Hyundai E&C Consortium</td></tr>
+<tr><td>Industry</td><td>Gas / Industrial</td></tr>
+<tr><td>Facility Type</td><td>Utilities & Interconnecting Facilities</td></tr>
+</table>
+
+<h3>Project Overview</h3>
+<p>
+The Utilities, Sulfur and Interconnecting Systems package forms
+part of the development of Saudi Aramco's Jafurah unconventional
+gas facilities.
+</p>
+
+<h3>Purpose / Function</h3>
+<p>
+The package provides the utilities, sulfur-handling and
+interconnecting infrastructure necessary to support gas
+processing and associated Jafurah production facilities.
+</p>
+
+<h3>Associated Gas Processing Capacity</h3>
+<p>
+The associated Jafurah gas facilities were planned to process
+approximately 1.1 billion standard cubic feet per day of
+unconventional raw gas.
+</p>
+
+<h3>Major Facilities & Scope</h3>
+<ul>
+<li>Inlet and export facilities</li>
+<li>Interconnecting pipe racks</li>
+<li>Sulfur recovery facilities</li>
+<li>Flare systems</li>
+<li>Pipeline systems</li>
+<li>Utilities and supporting infrastructure</li>
+</ul>
+
+<div class="project-data-note">
+<strong>Cost Basis:</strong>
+Approximately US$1.7 billion reported EPC contract value
+for the utilities and interconnecting facilities package.
+</div>
+`
+},
+
+hawiyah: {
+title: "ARAMCO Hawiyah & Haradh Gas Compression Plant Project",
+info: `
+<div class="modal-kicker">Project Information</div>
+<h2>ARAMCO Hawiyah & Haradh Gas Compression Plant Project</h2>
+
+<div class="project-highlight-row">
+<div class="project-highlight">
+<span>PROJECT TYPE</span>
+<strong>Gas Compression</strong>
+</div>
+
+<div class="project-highlight">
+<span>PACKAGE ESTIMATE</span>
+<strong>≈ US$1.0–1.2 Billion</strong>
+</div>
+
+<div class="project-highlight">
+<span>LOCATION</span>
+<strong>Haradh / Hawiyah, Saudi Arabia</strong>
+</div>
+</div>
+
+<table class="project-info-table">
+<tr><td>Client</td><td>Saudi Aramco</td></tr>
+<tr><td>Industry</td><td>Oil & Gas / Gas Production</td></tr>
+<tr><td>Program</td><td>Southern Area Gas Compression Program</td></tr>
+<tr><td>Personal Assignment</td><td>North Haradh / North Package</td></tr>
+</table>
+
+<h3>Project Overview</h3>
+<p>
+The Southern Area Gas Compression Program was developed to
+improve and sustain gas production from the Haradh and Hawiyah
+fields.
+</p>
+
+<h3>Purpose / Function</h3>
+<p>
+The compression facilities reduce wellhead choke pressure,
+support continued gas production and extend the production
+plateau of the Haradh and Hawiyah fields.
+</p>
+
+<h3>Program Capacity</h3>
+<p>
+The overall program was designed to boost production by
+approximately 1.3 billion standard cubic feet per day and
+support sales-gas and condensate production.
+</p>
+
+<h3>Major Facilities</h3>
+<ul>
+<li>Gas compression plants</li>
+<li>Liquid separation stations</li>
+<li>Gas gathering facilities</li>
+<li>Transmission lines</li>
+<li>Electrical substations and distribution systems</li>
+<li>Instrumentation and control systems</li>
+</ul>
+
+<div class="project-data-note">
+<strong>Cost Basis:</strong>
+Public project-industry estimates placed the North Haradh
+Compression Plants package at approximately US$1.0–1.2 billion.
+This should not be confused with the cost of the entire
+Southern Area Gas Compression Program.
+</div>
+`
+},
+
+jazan: {
+title: "ARAMCO Jazan Refinery Project",
+info: `
+<div class="modal-kicker">Project Information</div>
+<h2>ARAMCO Jazan Refinery Project</h2>
+
+<div class="project-highlight-row">
+<div class="project-highlight">
+<span>PROJECT TYPE</span>
+<strong>Refining & Energy Complex</strong>
+</div>
+
+<div class="project-highlight">
+<span>ESTIMATED INVESTMENT</span>
+<strong>≈ US$21 Billion</strong>
+</div>
+
+<div class="project-highlight">
+<span>CAPACITY</span>
+<strong>Up to 400,000 BPD</strong>
+</div>
+</div>
+
+<table class="project-info-table">
+<tr><td>Client / Owner</td><td>Saudi Aramco</td></tr>
+<tr><td>Location</td><td>Jazan, Saudi Arabia</td></tr>
+<tr><td>Industry</td><td>Oil Refining / Petrochemicals / Energy</td></tr>
+<tr><td>Refinery Capacity</td><td>Up to 400,000 barrels per day</td></tr>
+</table>
+
+<h3>Project Overview</h3>
+<p>
+Jazan is a large integrated refining and energy complex
+developed as a major component of industrial development in
+southwestern Saudi Arabia.
+</p>
+
+<h3>Purpose / Function</h3>
+<p>
+The refinery processes crude oil into transportation fuels and
+other petroleum products while supporting power generation and
+industrial development in the Jazan region.
+</p>
+
+<h3>Major Products / Facilities</h3>
+<ul>
+<li>Crude-oil refining facilities</li>
+<li>Gasoline production</li>
+<li>Ultra-low-sulfur diesel production</li>
+<li>Benzene and paraxylene production</li>
+<li>Associated utilities and power facilities</li>
+<li>Electrical, instrumentation and control infrastructure</li>
+</ul>
+
+<div class="project-data-note">
+<strong>Cost Basis:</strong>
+Saudi Aramco has described the integrated Jazan Refinery and
+Petrochemical Complex as approximately US$21 billion of investment.
+</div>
+`
+},
+
+wasit: {
+title: "ARAMCO Wasit Gas Project",
+info: `
+<div class="modal-kicker">Project Information</div>
+<h2>ARAMCO Wasit Gas Project</h2>
+
+<div class="project-highlight-row">
+<div class="project-highlight">
+<span>PROJECT TYPE</span>
+<strong>Gas Processing</strong>
+</div>
+
+<div class="project-highlight">
+<span>REPORTED DEVELOPMENT VALUE</span>
+<strong>≈ US$5+ Billion</strong>
+</div>
+
+<div class="project-highlight">
+<span>GAS CAPACITY</span>
+<strong>≈ 2.5 BSCFD</strong>
+</div>
+</div>
+
+<table class="project-info-table">
+<tr><td>Client</td><td>Saudi Aramco</td></tr>
+<tr><td>Location</td><td>Eastern Province, Saudi Arabia</td></tr>
+<tr><td>Industry</td><td>Natural Gas Processing</td></tr>
+<tr><td>Feed Source</td><td>Arabiyah and Hasbah offshore gas fields</td></tr>
+</table>
+
+<h3>Project Overview</h3>
+<p>
+Wasit is a major Saudi Aramco non-associated natural-gas
+processing development integrated with the Kingdom's Master
+Gas System.
+</p>
+
+<h3>Purpose / Function</h3>
+<p>
+The development increases domestic natural-gas supply,
+supporting industry and power generation while allowing
+additional crude oil to be retained for higher-value uses.
+</p>
+
+<h3>Major Scope</h3>
+<ul>
+<li>Offshore gas production facilities</li>
+<li>Gas-processing facilities</li>
+<li>Natural gas liquids processing</li>
+<li>Sulfur recovery and utilities</li>
+<li>Offshore/onshore pipelines</li>
+<li>Electrical and control infrastructure</li>
+</ul>
+
+<div class="project-data-note">
+<strong>Cost Basis:</strong>
+Historical industry reporting placed the overall Wasit Gas
+Development above approximately US$5 billion. Published figures
+vary depending on the scope and date of the estimate.
+</div>
+`
+},
+
+koniambo: {
+title: "Koniambo Nickel Project",
+info: `
+<div class="modal-kicker">Project Information</div>
+<h2>Koniambo Nickel Project</h2>
+
+<div class="project-highlight-row">
+<div class="project-highlight">
+<span>PROJECT TYPE</span>
+<strong>Mining & Metallurgy</strong>
+</div>
+
+<div class="project-highlight">
+<span>PROJECT COST</span>
+<strong>≈ US$7 Billion</strong>
+</div>
+
+<div class="project-highlight">
+<span>LOCATION</span>
+<strong>New Caledonia</strong>
+</div>
+</div>
+
+<table class="project-info-table">
+<tr><td>Project</td><td>Koniambo Nickel</td></tr>
+<tr><td>Industry</td><td>Mining / Nickel Processing</td></tr>
+<tr><td>Location</td><td>North Province, New Caledonia</td></tr>
+<tr><td>Product</td><td>Nickel in Ferronickel</td></tr>
+</table>
+
+<h3>Project Overview</h3>
+<p>
+Koniambo was developed as a major integrated nickel mining
+and ferronickel production project in New Caledonia.
+</p>
+
+<h3>Purpose / Function</h3>
+<p>
+The development extracts nickel ore and processes it into
+ferronickel for use primarily in stainless-steel production.
+</p>
+
+<h3>Major Facilities</h3>
+<ul>
+<li>Nickel mine</li>
+<li>Ore preparation and processing facilities</li>
+<li>Ferronickel smelting facilities</li>
+<li>Power generation infrastructure</li>
+<li>Port and materials-handling facilities</li>
+<li>Utilities and supporting infrastructure</li>
+</ul>
+
+<div class="project-data-note">
+<strong>Cost Basis:</strong>
+Public project history reports that the development cost
+eventually increased to approximately US$7 billion.
+</div>
+`
+},
+
+asab: {
+title: "ADCO Asab Full Field Development Project",
+info: `
+<div class="modal-kicker">Project Information</div>
+<h2>ADCO Asab Full Field Development Project</h2>
+
+<div class="project-highlight-row">
+<div class="project-highlight">
+<span>PROJECT TYPE</span>
+<strong>Onshore Oil & Gas</strong>
+</div>
+
+<div class="project-highlight">
+<span>EPC CONTRACT VALUE</span>
+<strong>≈ US$2.3 Billion</strong>
+</div>
+
+<div class="project-highlight">
+<span>LOCATION</span>
+<strong>Abu Dhabi, UAE</strong>
+</div>
+</div>
+
+<table class="project-info-table">
+<tr><td>Client / Owner</td><td>ADCO</td></tr>
+<tr><td>Main EPC Contractor</td><td>Petrofac</td></tr>
+<tr><td>Industry</td><td>Onshore Oil & Gas</td></tr>
+<tr><td>Field</td><td>Asab</td></tr>
+</table>
+
+<h3>Project Overview</h3>
+<p>
+The Asab Full Field Development was a major redevelopment and
+expansion of the onshore Asab oil field in Abu Dhabi.
+</p>
+
+<h3>Purpose / Function</h3>
+<p>
+The project upgraded field-production and processing
+infrastructure to increase production capability and support
+long-term operation of the field.
+</p>
+
+<h3>Major Scope</h3>
+<ul>
+<li>Central and remote degassing facilities</li>
+<li>Oil production facilities</li>
+<li>Well tie-ins and flowlines</li>
+<li>Pipeline systems</li>
+<li>Utilities and infrastructure</li>
+<li>Electrical and instrumentation systems</li>
+</ul>
+
+<div class="project-data-note">
+<strong>Cost Basis:</strong>
+Petrofac reported receiving an approximately US$2.3 billion
+contract for development of the Asab onshore oil field.
+</div>
+`
+},
+
+raslaffan: {
+title: "Ras Laffan C Power & Water Project",
+info: `
+<div class="modal-kicker">Project Information</div>
+<h2>Ras Laffan C Power & Water Project</h2>
+
+<div class="project-highlight-row">
+<div class="project-highlight">
+<span>PROJECT TYPE</span>
+<strong>Power & Desalination</strong>
+</div>
+
+<div class="project-highlight">
+<span>PROJECT COST</span>
+<strong>≈ US$3.7 Billion</strong>
+</div>
+
+<div class="project-highlight">
+<span>POWER CAPACITY</span>
+<strong>2,730 MW</strong>
+</div>
+</div>
+
+<table class="project-info-table">
+<tr><td>Location</td><td>Ras Laffan, Qatar</td></tr>
+<tr><td>Industry</td><td>Power & Water</td></tr>
+<tr><td>Power Technology</td><td>Combined-Cycle Power Generation</td></tr>
+<tr><td>Power Capacity</td><td>2,730 MW</td></tr>
+<tr><td>Water Capacity</td><td>More than 286,000 m³/day</td></tr>
+</table>
+
+<h3>Project Overview</h3>
+<p>
+Ras Laffan C is a major integrated power-generation and
+water-desalination project developed to supply electricity
+and potable water in Qatar.
+</p>
+
+<h3>Purpose / Function</h3>
+<p>
+The facility combines high-capacity combined-cycle power
+generation with large-scale seawater desalination to meet
+growing electricity and potable-water demand.
+</p>
+
+<h3>Major Facilities</h3>
+<ul>
+<li>Combined-cycle gas-turbine power plant</li>
+<li>Steam turbine systems</li>
+<li>Power generation and grid connection</li>
+<li>Water desalination facilities</li>
+<li>High-voltage electrical systems</li>
+<li>Plant instrumentation and control systems</li>
+</ul>
+
+<div class="project-data-note">
+<strong>Cost Basis:</strong>
+Approximately US$3.7 billion reported total project value.
+</div>
+`
+},
+
+petrorabigh: {
+title: "PetroRabigh Refining & Petrochemical Development Project",
+info: `
+<div class="modal-kicker">Project Information</div>
+<h2>PetroRabigh Refining & Petrochemical Development Project</h2>
+
+<div class="project-highlight-row">
+<div class="project-highlight">
+<span>PROJECT TYPE</span>
+<strong>Refining & Petrochemicals</strong>
+</div>
+
+<div class="project-highlight">
+<span>PROJECT COST</span>
+<strong>≈ US$10 Billion</strong>
+</div>
+
+<div class="project-highlight">
+<span>REFINERY CAPACITY</span>
+<strong>400,000 BPD</strong>
+</div>
+</div>
+
+<table class="project-info-table">
+<tr><td>Owners</td><td>Saudi Aramco / Sumitomo Chemical</td></tr>
+<tr><td>Location</td><td>Rabigh, Saudi Arabia</td></tr>
+<tr><td>Industry</td><td>Refining & Petrochemicals</td></tr>
+<tr><td>Development</td><td>Integrated Refinery and Petrochemical Complex</td></tr>
+</table>
+
+<h3>Project Overview</h3>
+<p>
+PetroRabigh was developed by Saudi Aramco and Sumitomo
+Chemical as a major integrated refining and petrochemical
+complex on Saudi Arabia's Red Sea coast.
+</p>
+
+<h3>Purpose / Function</h3>
+<p>
+The development integrates crude-oil refining with
+petrochemical production, converting refinery streams and
+other feedstocks into higher-value petroleum and
+petrochemical products.
+</p>
+
+<h3>Major Facilities / Products</h3>
+<ul>
+<li>400,000 barrels-per-day refinery</li>
+<li>Petrochemical production facilities</li>
+<li>Ethylene and propylene-based production</li>
+<li>Refined petroleum products</li>
+<li>Utilities and supporting infrastructure</li>
+<li>Electrical, instrumentation and control systems</li>
+</ul>
+
+<div class="project-data-note">
+<strong>Cost Basis:</strong>
+Contemporary reporting placed the original PetroRabigh
+integrated development at approximately US$10 billion.
+</div>
+`
+},
+
+hadeed: {
+title: "Hadeed Iron & Steel – Direct Reduction Module E Project",
+info: `
+<div class="modal-kicker">Project Information</div>
+<h2>Hadeed Iron & Steel – Direct Reduction Module E Project</h2>
+
+<div class="project-highlight-row">
+<div class="project-highlight">
+<span>PROJECT TYPE</span>
+<strong>Iron & Steel</strong>
+</div>
+
+<div class="project-highlight">
+<span>PROJECT COST</span>
+<strong>Public Estimate Not Verified</strong>
+</div>
+
+<div class="project-highlight">
+<span>CAPACITY</span>
+<strong>≈ 1.76 Million t/y DRI</strong>
+</div>
+</div>
+
+<table class="project-info-table">
+<tr><td>Owner</td><td>Saudi Iron & Steel Company (Hadeed)</td></tr>
+<tr><td>Location</td><td>Jubail, Saudi Arabia</td></tr>
+<tr><td>Industry</td><td>Iron & Steel</td></tr>
+<tr><td>Technology</td><td>MIDREX Direct Reduction</td></tr>
+</table>
+
+<h3>Project Overview</h3>
+<p>
+Direct Reduction Module E was developed as a major
+direct-reduced-iron production facility supporting Hadeed's
+integrated steelmaking operations in Jubail.
+</p>
+
+<h3>Purpose / Function</h3>
+<p>
+The plant converts iron-oxide feed into direct-reduced iron
+(DRI), providing metallic feedstock for downstream electric
+steelmaking.
+</p>
+
+<h3>Production Capacity</h3>
+<p>
+The Module E facility was designed for approximately
+1.76 million tonnes per year of direct-reduced iron.
+</p>
+
+<h3>Major Project Features</h3>
+<ul>
+<li>MIDREX direct-reduction process</li>
+<li>Hot DRI production</li>
+<li>Hot transport to adjacent steelmaking facilities</li>
+<li>Electrical and instrumentation systems</li>
+<li>Process control and supporting utilities</li>
+</ul>
+
+<div class="project-data-note">
+<strong>Cost Basis:</strong>
+A sufficiently reliable public project-specific cost for
+Module E has not yet been verified. The website should not
+publish an estimated number until a defensible source is found.
+</div>
+`
+}
+
+};
+
+
+/* =====================================================
+   OPEN PROJECT INFORMATION
+===================================================== */
+
+function openProjectModal(projectKey, type) {
+
+    const project = majorProjects[projectKey];
+
+    if (!project) return;
+
+    const modal =
+        document.getElementById("projectModal");
+
+    const content =
+        document.getElementById("projectModalContent");
+
+
+    if (type === "info" && project.info) {
+
+        content.innerHTML = project.info;
+
+    } else {
+
+        content.innerHTML = `
+            <div class="modal-kicker">
+                Roles & Responsibilities
+            </div>
+
+            <h2>${project.title}</h2>
+
+            <div class="project-data-note">
+                Roles & Responsibilities will be added
+                in the next development stage.
+            </div>
+        `;
+    }
+
+
+    modal.classList.add("active");
+
+    document.body.style.overflow = "hidden";
+}
+
+
+function closeProjectModal() {
+
+    document
+        .getElementById("projectModal")
+        .classList.remove("active");
+
+    document.body.style.overflow = "";
+}
+
+
+/* Close modal by clicking background */
+
+document
+.getElementById("projectModal")
+.addEventListener("click", function(event) {
+
+    if (event.target === this) {
+        closeProjectModal();
+    }
+
+});
+
+
+/* Close modal using ESC */
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+        closeProjectModal();
+    }
+
+});
+
+</script>
