@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inspection Challenge | Noel Villaluz</title>
+<style>
+:root{--navy:#071b2f;--blue:#0d416d;--gold:#f3b632;--light:#f4f7fa;--text:#263746;--muted:#687887;--ok:#087a45;--bad:#b42318;--warn:#9a6700}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--light);color:var(--text);line-height:1.5}
+header{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:17px 6%}
+.top{max-width:1120px;margin:auto;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}.top a{color:#fff;text-decoration:none}
+main{max-width:1120px;margin:auto;padding:26px 16px 55px}.hero{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:30px;border-radius:14px;margin-bottom:18px}
+.hero small{color:var(--gold);font-weight:800;letter-spacing:1.3px}.hero h1{font-size:clamp(30px,5vw,47px);margin:5px 0}.hero p{margin:0;color:#dce7f0}
+.panel,.case{background:#fff;border-radius:13px;padding:20px;box-shadow:0 6px 20px #071b2f12;margin-bottom:18px}
+.setup{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}label{display:block;color:var(--navy);font-weight:800;font-size:13px;margin-bottom:5px}
+select,input{width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px;font-size:16px;background:#fff}
+.btn{border:0;border-radius:8px;padding:12px 16px;font-weight:800;cursor:pointer}.primary{background:var(--gold);color:var(--navy)}.secondary{background:var(--blue);color:#fff}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.hidden{display:none!important}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:14px}.stat{background:#fff;border:1px solid #dce4eb;border-radius:9px;padding:10px;text-align:center}
+.stat small{display:block;color:var(--muted)}.stat strong{font-size:18px;color:var(--navy)}.progress{height:8px;background:#e5ebf0;border-radius:8px;overflow:hidden;margin-bottom:16px}.bar{height:100%;background:var(--gold);width:0}
+.badges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.badge{background:#edf3f8;color:var(--blue);padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800}
+.case h2{color:var(--navy);margin:4px 0 12px}.scenario{background:#f7f9fb;border-left:5px solid var(--gold);padding:16px;border-radius:8px;margin-bottom:16px;font-size:17px}
+.question{font-weight:800;color:var(--navy);margin-bottom:10px}.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.choice{padding:14px;border:2px solid #dce4eb;background:#fff;border-radius:9px;text-align:left;cursor:pointer;font-size:15px;min-height:64px}.choice:hover{border-color:var(--blue)}
+.choice.correct{border-color:var(--ok);background:#e8f7ee}.choice.wrong{border-color:var(--bad);background:#feeceb}
+.feedback{display:none;padding:14px;border-radius:9px;margin-top:14px}.feedback.show{display:block}.feedback.ok{background:#e8f7ee;color:var(--ok)}.feedback.bad{background:#feeceb;color:var(--bad)}
+.reference{margin-top:8px;font-size:13px;font-weight:700}.result{text-align:center}.big{font-size:46px;font-weight:900;color:var(--navy)}
+.rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}.ri{background:var(--light);border-radius:9px;padding:13px}.ri strong{display:block;color:var(--navy);font-size:20px}
+.note{font-size:12px;color:var(--muted);margin-top:12px}
+@media(max-width:760px){.setup{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}.choices{grid-template-columns:1fr}.rgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.setup{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="top"><strong>NOEL VILLALUZ · GAMES & QUIZZES</strong><a href="index.html">← Back to Portfolio</a></div></header>
+<main>
+<section class="hero"><small>GAMES · QUALITY & INSPECTION</small><h1>Inspection Challenge</h1><p>You are the QCI. Review realistic site conditions, make the inspection decision, and protect quality before the work progresses.</p></section>
+
+<section class="panel" id="setup">
+<div class="setup">
+<div><label>Discipline</label><select id="discipline"><option value="electrical">Electrical</option><option value="instrumentation">Instrumentation</option><option value="telecom">Telecommunication</option><option value="mixed">Mixed E&I&T</option></select></div>
+<div><label>Difficulty</label><select id="difficulty"><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></div>
+<div><label>Mode</label><select id="mode"><option value="practice">Practice – 5 Cases</option><option value="tournament">Tournament – 10 Cases</option></select></div>
+<div><label>Player Name</label><input id="player" placeholder="Inspector"></div>
+</div>
+<div class="toolbar"><button class="btn primary" id="start">Start Inspection</button></div>
+<p class="note">Training scenarios are simplified for gameplay. Actual project disposition must follow approved project specifications, ITPs, procedures, drawings, contractual requirements, and authorized project workflow.</p>
+</section>
+
+<section id="game" class="hidden">
+<div class="stats">
+<div class="stat"><small>Case</small><strong id="sCase">1/5</strong></div>
+<div class="stat"><small>Score</small><strong id="sScore">0</strong></div>
+<div class="stat"><small>Time</small><strong id="sTime">00:00</strong></div>
+<div class="stat"><small>Correct</small><strong id="sCorrect">0</strong></div>
+<div class="stat"><small>Accuracy</small><strong id="sAccuracy">100%</strong></div>
+</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="case">
+<div class="badges"><span class="badge" id="bDisc"></span><span class="badge" id="bArea"></span><span class="badge" id="bLevel"></span></div>
+<h2 id="caseTitle"></h2>
+<div class="scenario" id="scenario"></div>
+<div class="question">What is the best inspection decision?</div>
+<div class="choices" id="choices"></div>
+<div class="feedback" id="feedback"></div>
+<button class="btn secondary hidden" id="next" style="margin-top:14px">Next Case</button>
+</div>
+</section>
+
+<section class="panel result hidden" id="result">
+<h2>Inspection Challenge Complete</h2><div class="big" id="finalScore">0</div><div>points</div>
+<div class="rgrid"><div class="ri">Correct<strong id="rCorrect"></strong></div><div class="ri">Accuracy<strong id="rAccuracy"></strong></div><div class="ri">Time<strong id="rTime"></strong></div><div class="ri">Inspector Rank<strong id="rRank"></strong></div></div>
+<button class="btn primary" id="again" style="margin-top:18px">Play Again</button>
+</section>
+</main>
+
+<script>
+(()=>{
+const cases=[
+{d:"electrical",l:"easy",area:"Cable Tray",title:"Cable Pulled Before Tray Completion",s:"During surveillance, cables have already been pulled and laid on a cable ladder while several supports and portions of the tray installation are still incomplete.",choices:["Accept because the cable is already installed","Request rectification and prevent further cable pulling until the supporting tray installation is completed and accepted","Close the observation without verification","Authorize energization"],c:1,e:"The installation sequence should not bypass completion and inspection of the supporting cable-tray system. The incomplete tray/support condition should be corrected before further dependent work proceeds.",ref:"Quality focus: prerequisite inspection / installation sequence."},
+{d:"electrical",l:"medium",area:"Grounding",title:"Undersized Equipment Grounding Conductor",s:"A junction box is installed with an equipment grounding conductor smaller than the minimum size required by the approved project specification.",choices:["Accept if continuity is satisfactory","Replace or rectify the grounding conductor to meet the approved minimum requirement before acceptance","Paint the conductor green and accept","Accept because the JB is small"],c:1,e:"Continuity alone does not waive a specified minimum conductor size. The installation should conform to the approved grounding requirement before acceptance.",ref:"Quality focus: grounding conductor compliance."},
+{d:"electrical",l:"hard",area:"Testing",title:"SAT Procedure Not Approved",s:"The vendor and construction team are ready for final Site Acceptance Testing, but the applicable SAT procedure has not yet received the required approval.",choices:["Proceed because the vendor is present","Proceed and obtain approval after testing","Do not proceed with final acceptance testing until the required procedure approval is in place","Replace SAT with visual inspection"],c:2,e:"Final acceptance testing should be executed using the applicable approved procedure and project workflow. Testing first and approving the governing procedure afterward undermines inspection control.",ref:"Quality focus: approved test procedure prerequisite."},
+{d:"electrical",l:"medium",area:"Materials",title:"Suspected Stainless-Steel Banding",s:"Installed offshore cable-tray banding straps show unexpected rusting. The material certificate identifies the material as 316 stainless steel, but field condition creates reasonable doubt about the actual grade.",choices:["Ignore the rust because an MTC exists","Verify material grade using an appropriate approved verification method and assess affected material","Repaint all straps without verification","Close the issue based only on supplier statement"],c:1,e:"When field evidence creates a credible material-compliance concern, verification of the actual material and assessment of potentially affected items is appropriate rather than relying solely on documentation.",ref:"Quality focus: material verification / traceability."},
+{d:"electrical",l:"easy",area:"Coating",title:"Equipment on Incomplete Coated Support",s:"An equipment installation inspection is requested, but the supporting steel still has incomplete coating work and the required coating clearance has not been established.",choices:["Accept the equipment installation immediately","Complete the prerequisite coating work/clearance before final equipment-installation acceptance","Ignore the support condition","Issue an energization permit"],c:1,e:"Where coating completion or clearance is an established prerequisite, the dependent installation should not be finally accepted before that prerequisite is satisfied.",ref:"Quality focus: prerequisite clearance."},
+{d:"instrumentation",l:"easy",area:"Calibration",title:"Instrument Without Calibration Evidence",s:"A pressure transmitter is presented for installation inspection, but there is no valid calibration evidence available for verification.",choices:["Accept because it is new","Verify required calibration status/evidence before acceptance for the applicable stage","Install first and permanently waive calibration","Change the tag number"],c:1,e:"New equipment status does not by itself demonstrate required calibration. Applicable calibration evidence should be verified according to the approved inspection and installation workflow.",ref:"Quality focus: calibration status."},
+{d:"instrumentation",l:"medium",area:"Loop Testing",title:"Incomplete Termination Before Loop Check",s:"A loop-check request is raised while one field cable termination associated with the loop is still incomplete.",choices:["Perform final loop acceptance anyway","Complete and verify the required termination before final loop-check acceptance","Short the conductors temporarily and accept","Delete the termination from the drawing"],c:1,e:"A final loop check should verify the intended complete signal path. An incomplete required termination means the loop is not ready for final acceptance.",ref:"Quality focus: loop-check prerequisites."},
+{d:"instrumentation",l:"hard",area:"Hazardous Area",title:"Incorrect Cable Gland for Classified Area",s:"An instrument is installed in a classified hazardous area, but the installed cable gland does not match the protection concept and certification requirements specified for the installation.",choices:["Accept if the cable fits tightly","Replace/rectify with a gland suitable for the specified certified installation before acceptance","Apply sealant around the gland","Accept if insulation resistance passes"],c:1,e:"Mechanical fit or insulation resistance does not establish hazardous-area compliance. The cable entry arrangement must be suitable for the specified certified protection concept and installation.",ref:"Quality focus: hazardous-area equipment/cable-entry compliance."},
+{d:"telecom",l:"easy",area:"Fiber Optics",title:"Fiber Bend Radius Violation",s:"A fiber-optic cable is tightly bent at a cabinet entry below the project's permitted minimum bend radius.",choices:["Accept if communication is currently available","Correct the routing to comply with the permitted bend radius and inspect for damage as required","Increase network speed","Cover the bend with tape"],c:1,e:"Excessive fiber bending can increase optical loss and damage the fiber. Routing should comply with the applicable minimum bend-radius requirement.",ref:"Quality focus: fiber installation."},
+{d:"telecom",l:"medium",area:"Fiber Testing",title:"OTDR Test Record Missing",s:"A fiber link is offered for final acceptance, but the required optical test record for the completed link is unavailable.",choices:["Accept based only on visual inspection","Obtain/perform the required approved testing and verify the test record before final acceptance","Accept because connectors are clean","Replace the patch panel"],c:1,e:"Visual inspection cannot demonstrate the complete optical performance of a link when project acceptance requires test evidence. Required testing and records should be verified.",ref:"Quality focus: test documentation."},
+{d:"telecom",l:"hard",area:"Grounding",title:"Telecom Cabinet Bonding Missing",s:"A metallic telecom cabinet containing active equipment is installed, but its required bonding connection to the project grounding/bonding system is missing.",choices:["Accept because communication works","Provide and verify the required bonding connection before acceptance","Use the data cable shield as the cabinet bond","Increase the UPS rating"],c:1,e:"Functional communication does not replace required protective/equipotential bonding of metallic infrastructure. The specified bonding connection should be completed and verified.",ref:"Quality focus: telecom bonding."},
+{d:"electrical",l:"hard",area:"RFI",title:"Incomplete Work Offered for Final Inspection",s:"A final RFI is raised for a cable-tray section even though several supports in the inspection limits are visibly incomplete.",choices:["Accept the completed portion while signing the entire final RFI","Ensure the requested inspection scope is complete or revise the inspection limits to a genuinely completed portion before final acceptance","Sign first and rectify later","Remove the supports from the checklist"],c:1,e:"The inspection request should accurately represent completed work within its stated limits. Incomplete work should not be presented as fully complete for final acceptance.",ref:"Quality focus: RFI readiness and inspection boundaries."}
+];
+let list=[],i=0,correct=0,score=0,sec=0,timer=null,answered=false;
+const $=x=>document.getElementById(x);
+$("start").onclick=start;$("next").onclick=next;$("again").onclick=()=>{$("result").classList.add("hidden");$("setup").classList.remove("hidden")};
+
+function start(){
+ let d=$("discipline").value,l=$("difficulty").value,n=$("mode").value==="tournament"?10:5;
+ let pool=cases.filter(x=>(d==="mixed"||x.d===d));
+ let preferred=shuffle(pool.filter(x=>x.l===l)), rest=shuffle(pool.filter(x=>x.l!==l));
+ list=preferred.concat(rest);
+ while(list.length<n){list=list.concat(shuffle(pool))}
+ list=list.slice(0,Math.min(n,list.length));i=correct=score=sec=0;
+ $("setup").classList.add("hidden");$("result").classList.add("hidden");$("game").classList.remove("hidden");
+ clearInterval(timer);timer=setInterval(()=>{$("sTime").textContent=fmt(++sec)},1000);show();
+}
+function show(){
+ answered=false;let x=list[i];$("sCase").textContent=`${i+1}/${list.length}`;$("sScore").textContent=score;$("sCorrect").textContent=correct;
+ $("sAccuracy").textContent=(i?Math.round(correct/i*100):100)+"%";$("bar").style.width=(i/list.length*100)+"%";
+ $("bDisc").textContent=cap(x.d);$("bArea").textContent=x.area;$("bLevel").textContent=cap(x.l);$("caseTitle").textContent=x.title;$("scenario").textContent=x.s;
+ $("choices").innerHTML="";$("feedback").className="feedback";$("next").classList.add("hidden");
+ x.choices.forEach((c,n)=>{let b=document.createElement("button");b.className="choice";b.textContent=String.fromCharCode(65+n)+". "+c;b.onclick=()=>answer(n,b);$("choices").appendChild(b)})
+}
+function answer(n,b){
+ if(answered)return;answered=true;let x=list[i],buttons=[...document.querySelectorAll(".choice")];buttons.forEach(z=>z.disabled=true);buttons[x.c].classList.add("correct");
+ let f=$("feedback");if(n===x.c){correct++;score+=x.l==="hard"?1500:x.l==="medium"?1100:800;f.className="feedback show ok";f.innerHTML="<strong>Good inspection decision.</strong><br>"+x.e+"<div class='reference'>"+x.ref+"</div>"}
+ else{b.classList.add("wrong");score=Math.max(0,score-250);f.className="feedback show bad";f.innerHTML="<strong>Review the disposition.</strong><br>"+x.e+"<div class='reference'>"+x.ref+"</div>"}
+ $("sScore").textContent=score;$("sCorrect").textContent=correct;$("sAccuracy").textContent=Math.round(correct/(i+1)*100)+"%";$("bar").style.width=((i+1)/list.length*100)+"%";$("next").classList.remove("hidden")
+}
+function next(){i++;if(i<list.length)show();else finish()}
+function finish(){clearInterval(timer);score=Math.max(0,score-sec*2);let acc=Math.round(correct/list.length*100);$("game").classList.add("hidden");$("result").classList.remove("hidden");$("finalScore").textContent=score.toLocaleString();$("rCorrect").textContent=`${correct}/${list.length}`;$("rAccuracy").textContent=acc+"%";$("rTime").textContent=fmt(sec);$("rRank").textContent=acc>=90?"Lead Inspector":acc>=80?"Senior Inspector":acc>=70?"Inspector":"Trainee"}
+function shuffle(a){a=a.slice();for(let j=a.length-1;j>0;j--){let k=Math.floor(Math.random()*(j+1));[a[j],a[k]]=[a[k],a[j]]}return a}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}function cap(s){return s==="telecom"?"Telecommunication":s[0].toUpperCase()+s.slice(1)}
+})();
+</script>
+</body></html>

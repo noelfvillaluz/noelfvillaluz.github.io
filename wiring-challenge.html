@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Electrical Wiring Challenge | Noel Villaluz</title>
+<style>
+:root{--navy:#071b2f;--blue:#0d416d;--gold:#f3b632;--light:#f4f7fa;--text:#263746;--ok:#087a45;--bad:#b42318}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--light);color:var(--text)}
+header{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:16px 6%}
+header .top{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+header a{color:#fff;text-decoration:none}main{max-width:1180px;margin:auto;padding:24px 16px 50px}
+.hero{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:28px;border-radius:14px;margin-bottom:18px}
+.hero small{color:var(--gold);font-weight:800}.hero h1{margin:6px 0;font-size:clamp(30px,5vw,46px)}
+.panel{background:#fff;border-radius:12px;padding:18px;margin-bottom:18px;box-shadow:0 6px 20px #071b2f12}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.controls label{font-size:12px;font-weight:800;color:var(--navy);display:block;margin-bottom:4px}
+select,input{width:100%;padding:10px;border:1px solid #cbd5df;border-radius:8px;font-size:16px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.btn{border:0;border-radius:8px;padding:11px 14px;font-weight:800;cursor:pointer}
+.primary{background:var(--gold);color:var(--navy)}.secondary{background:var(--blue);color:#fff}.ghost{background:#fff;border:1px solid #cbd5df;color:var(--navy)}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}.stat{background:#fff;border:1px solid #dce4eb;border-radius:9px;padding:10px;text-align:center}
+.stat small{display:block;color:#6d7c88}.stat strong{color:var(--navy);font-size:18px}
+.stage{display:grid;grid-template-columns:1fr 285px;gap:16px}.boardwrap{background:#fff;padding:12px;border-radius:12px;overflow:auto}
+.board{position:relative;min-width:820px;height:510px;border:2px solid #dce4eb;border-radius:10px;background:#fff}
+.component{position:absolute;width:145px;min-height:80px;border:2px solid #b8c6d2;border-radius:10px;background:#fff;text-align:center;padding:8px}
+.component strong{display:block;color:var(--navy)}.component small{font-size:11px;color:#70808d}.symbol{font-size:25px;margin:5px 0}
+.terminal{position:absolute;width:24px;height:24px;border-radius:50%;border:3px solid var(--blue);background:#fff;color:var(--blue);font-size:9px;font-weight:900;cursor:pointer;z-index:5}
+.terminal.selected{background:var(--gold);border-color:var(--gold);color:var(--navy)}.terminal.connected{background:#e8f6ee;border-color:var(--ok);color:var(--ok)}
+#wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}.wire{stroke:#1f6fb2;stroke-width:4}
+.task{background:#fff8df;border:1px solid #f0d274;border-radius:9px;padding:12px}.feedback{padding:12px;border-radius:9px;margin-top:12px;display:none}.feedback.show{display:block}
+.feedback.ok{background:#e8f7ee;color:var(--ok)}.feedback.bad{background:#feeceb;color:var(--bad)}.lamp{width:24px;height:24px;border-radius:50%;margin:5px auto;border:2px solid #555;background:#dfe5ea}.lamp.on{background:#32b767;box-shadow:0 0 14px #32b767}
+@media(max-width:900px){.controls{grid-template-columns:1fr 1fr}.stage{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.controls{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="top"><strong>NOEL VILLALUZ · GAMES & QUIZZES</strong><a href="index.html">← Back to Portfolio</a></div></header>
+<main>
+<section class="hero"><small>GAMES · ELECTRICAL</small><h1>Electrical Wiring Challenge</h1><p>Connect terminals, check the control circuit, and energize the RUN lamp.</p></section>
+
+<section class="panel">
+<div class="controls">
+<div><label>Challenge</label><select id="challenge"><option value="dol">DOL Motor Starter</option><option value="startstop">Start / Stop Control</option><option value="lamp">Contactor + Run Lamp</option></select></div>
+<div><label>Difficulty</label><select id="difficulty"><option>Easy</option><option>Medium</option><option>Hard</option></select></div>
+<div><label>Player</label><input id="player" placeholder="Player"></div>
+<div><label>Mode</label><select id="mode"><option>Practice</option><option>Timed Challenge</option></select></div>
+</div>
+<div class="toolbar"><button class="btn primary" id="new">New Challenge</button><button class="btn secondary" id="check">Check Wiring</button><button class="btn ghost" id="hint">Hint</button><button class="btn ghost" id="reset">Reset</button><button class="btn ghost" id="undo">Undo Wire</button></div>
+</section>
+
+<div class="stats"><div class="stat"><small>Score</small><strong id="score">5000</strong></div><div class="stat"><small>Time</small><strong id="time">00:00</strong></div><div class="stat"><small>Mistakes</small><strong id="mistakes">0</strong></div><div class="stat"><small>Hints</small><strong id="hints">0</strong></div><div class="stat"><small>Status</small><strong id="status">Ready</strong></div></div>
+
+<div class="stage">
+<div class="boardwrap"><div class="board" id="board"><svg id="wires"></svg>
+<div class="component" style="left:30px;top:60px"><strong>CONTROL SUPPLY</strong><div class="symbol">⚡</div><small>L / N</small><button class="terminal" data-id="L" style="right:-13px;top:18px">L</button><button class="terminal" data-id="N" style="right:-13px;bottom:14px">N</button></div>
+<div class="component" style="left:225px;top:45px"><strong>STOP PB</strong><div class="symbol">⏹</div><small>NC</small><button class="terminal" data-id="STOP1" style="left:-13px;top:28px">1</button><button class="terminal" data-id="STOP2" style="right:-13px;top:28px">2</button></div>
+<div class="component" style="left:425px;top:45px"><strong>START PB</strong><div class="symbol">▶</div><small>NO</small><button class="terminal" data-id="START1" style="left:-13px;top:28px">1</button><button class="terminal" data-id="START2" style="right:-13px;top:28px">2</button></div>
+<div class="component" style="left:625px;top:45px"><strong>CONTACTOR COIL</strong><div class="symbol">KM</div><small>A1 / A2</small><button class="terminal" data-id="A1" style="left:-13px;top:28px">A1</button><button class="terminal" data-id="A2" style="right:-13px;top:28px">A2</button></div>
+<div class="component" style="left:225px;top:215px"><strong>AUX CONTACT</strong><div class="symbol">13–14</div><small>NO seal-in</small><button class="terminal" data-id="AUX13" style="left:-13px;top:28px">13</button><button class="terminal" data-id="AUX14" style="right:-13px;top:28px">14</button></div>
+<div class="component" style="left:425px;top:215px"><strong>OVERLOAD</strong><div class="symbol">OL</div><small>95–96 NC</small><button class="terminal" data-id="OL95" style="left:-13px;top:28px">95</button><button class="terminal" data-id="OL96" style="right:-13px;top:28px">96</button></div>
+<div class="component" style="left:625px;top:215px"><strong>RUN LAMP</strong><div id="lamp" class="lamp"></div><small>Green</small><button class="terminal" data-id="LAMP1" style="left:-13px;top:28px">1</button><button class="terminal" data-id="LAMP2" style="right:-13px;top:28px">2</button></div>
+<div class="component" style="left:340px;top:385px"><strong>MOTOR</strong><div class="symbol">M</div><small>Operated by KM</small></div>
+</div></div>
+
+<aside><div class="panel"><h3>Objective</h3><div id="task" class="task"></div><div id="feedback" class="feedback"></div><p id="result"></p></div>
+<div class="panel"><h3>How to Play</h3><p>Click one terminal, then another terminal to create a wire. Complete the circuit and press <b>Check Wiring</b>.</p><p>Correct wiring turns the RUN lamp ON. Incorrect wiring deducts points.</p></div></aside>
+</div>
+</main>
+
+<script>
+(()=>{
+const req={
+dol:[["L","STOP1"],["STOP2","START1"],["START2","OL95"],["OL96","A1"],["A2","N"],["STOP2","AUX13"],["AUX14","OL95"],["A1","LAMP1"],["LAMP2","N"]],
+startstop:[["L","STOP1"],["STOP2","START1"],["START2","A1"],["A2","N"],["STOP2","AUX13"],["AUX14","A1"]],
+lamp:[["L","START1"],["START2","A1"],["A2","N"],["A1","LAMP1"],["LAMP2","N"]]
+};
+const task={
+dol:"Wire the DOL control circuit: STOP and overload in series, START energizes KM, the auxiliary contact provides seal-in, and the RUN lamp operates with the contactor.",
+startstop:"Wire a basic Start/Stop contactor control circuit using the NC STOP, NO START, KM coil and NO auxiliary seal-in contact.",
+lamp:"Wire the START pushbutton to energize the contactor coil and the green RUN indication lamp."
+};
+let wires=[],sel=null,score=5000,mistakes=0,hints=0,sec=0,timer;
+const $=id=>document.getElementById(id), board=$("board"), svg=$("wires");
+document.querySelectorAll(".terminal").forEach(t=>t.addEventListener("click",()=>tap(t)));
+$("new").onclick=newGame;$("reset").onclick=()=>reset(false);$("undo").onclick=()=>{wires.pop();draw()};$("check").onclick=check;$("hint").onclick=hint;$("challenge").onchange=newGame;
+function tap(t){if(!sel){sel=t;t.classList.add("selected");return}if(sel===t){sel.classList.remove("selected");sel=null;return}let p=[sel.dataset.id,t.dataset.id];if(!wires.some(w=>pair(w,p)))wires.push(p);sel.classList.remove("selected");sel=null;draw()}
+function pair(a,b){return(a[0]===b[0]&&a[1]===b[1])||(a[0]===b[1]&&a[1]===b[0])}
+function draw(){svg.innerHTML="";document.querySelectorAll(".terminal").forEach(t=>t.classList.remove("connected"));const rr=board.getBoundingClientRect();wires.forEach(w=>{let a=document.querySelector(`[data-id="${w[0]}"]`),b=document.querySelector(`[data-id="${w[1]}"]`);a.classList.add("connected");b.classList.add("connected");let ar=a.getBoundingClientRect(),br=b.getBoundingClientRect(),l=document.createElementNS("http://www.w3.org/2000/svg","line");l.setAttribute("x1",ar.left+ar.width/2-rr.left);l.setAttribute("y1",ar.top+ar.height/2-rr.top);l.setAttribute("x2",br.left+br.width/2-rr.left);l.setAttribute("y2",br.top+br.height/2-rr.top);l.setAttribute("class","wire");svg.appendChild(l)})}
+function check(){let r=req[$("challenge").value],missing=r.filter(x=>!wires.some(w=>pair(w,x))),extra=wires.filter(w=>!r.some(x=>pair(w,x))),f=$("feedback");if(!missing.length&&!extra.length){clearInterval(timer);score=Math.max(0,5000-sec*2-hints*250-mistakes*300);$("score").textContent=score;$("status").textContent="Correct";$("lamp").className="lamp on";f.className="feedback show ok";f.textContent="Correct wiring. KM can energize and the RUN lamp is ON.";$("result").textContent=`Final Score: ${score} | Time: ${fmt(sec)} | Mistakes: ${mistakes} | Hints: ${hints}`}else{mistakes++;score=Math.max(0,5000-sec*2-hints*250-mistakes*300);$("mistakes").textContent=mistakes;$("score").textContent=score;$("status").textContent="Needs Correction";$("lamp").className="lamp";f.className="feedback show bad";f.textContent=`Not yet correct: ${missing.length} required connection(s) missing and ${extra.length} extra/incorrect connection(s).`}}
+function hint(){hints++;$("hints").textContent=hints;let r=req[$("challenge").value],m=r.find(x=>!wires.some(w=>pair(w,x))),f=$("feedback");score=Math.max(0,score-250);$("score").textContent=score;f.className="feedback show ok";f.textContent=m?`Hint: review the path involving ${m[0]} and ${m[1]}.`:"Hint: required paths are present; check for an extra wire."}
+function reset(keep){wires=[];if(sel)sel.classList.remove("selected");sel=null;draw();$("lamp").className="lamp";$("feedback").className="feedback";$("result").textContent="";$("status").textContent="Ready";if(!keep){mistakes=0;hints=0;$("mistakes").textContent=0;$("hints").textContent=0}}
+function newGame(){clearInterval(timer);reset(false);score=5000;sec=0;$("score").textContent=5000;$("time").textContent="00:00";$("task").textContent=task[$("challenge").value];timer=setInterval(()=>{$("time").textContent=fmt(++sec)},1000)}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+window.addEventListener("resize",draw);newGame();
+})();
+</script>
+</body></html>
