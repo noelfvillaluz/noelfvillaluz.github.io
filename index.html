@@ -15,6 +15,208 @@
 <meta name="keywords"
       content="Noel Villaluz, Noel F Villaluz, Professional Electrical Engineer, PEE Philippines, Electrical Engineer UAE, E&I QA QC Engineer, Electrical QA QC Supervisor, Instrumentation QA QC, Oil and Gas Electrical Engineer, PMP">
 
+/* =========================================================
+   GAMES & QUIZZES - MEGA MENU
+========================================================= */
+
+.games-mega-dropdown {
+    position: relative;
+}
+
+/* Main mega-menu panel */
+.games-mega-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 950px;
+    max-width: 92vw;
+
+    background: linear-gradient(
+        135deg,
+        #071b2f,
+        #0d416d
+    );
+
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 12px;
+
+    box-shadow: 0 18px 45px rgba(0,0,0,.30);
+
+    overflow: hidden;
+    z-index: 3000;
+}
+
+/* Show menu */
+.games-mega-dropdown:hover .games-mega-menu {
+    display: block;
+}
+
+/* 3-column layout */
+.games-mega-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr 1fr;
+}
+
+/* Individual column */
+.games-mega-column {
+    padding: 24px;
+}
+
+.games-mega-column + .games-mega-column {
+    border-left: 1px solid rgba(255,255,255,.15);
+}
+
+/* Column headings */
+.games-mega-title {
+    margin-bottom: 17px;
+}
+
+.games-mega-title h3 {
+    color: #fff;
+    font-size: 17px;
+    margin: 0 0 3px;
+}
+
+.games-mega-title p {
+    color: #9fc2dd;
+    font-size: 12px;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Individual menu links */
+.games-mega-item {
+    display: flex !important;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px !important;
+    margin-bottom: 4px;
+
+    border-radius: 8px;
+
+    color: #fff !important;
+    text-decoration: none;
+
+    transition: .2s ease;
+}
+
+.games-mega-item:hover {
+    background: rgba(255,255,255,.10);
+    color: #fff !important;
+    transform: translateX(3px);
+}
+
+/* Icons */
+.games-menu-icon {
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+    place-items: center;
+
+    flex: 0 0 40px;
+
+    border-radius: 8px;
+    font-size: 20px;
+}
+
+.icon-green  { background: #19a968; }
+.icon-blue   { background: #1685d8; }
+.icon-gold   { background: #f3b632; color:#071b2f; }
+.icon-red    { background: #dc4552; }
+.icon-purple { background: #8248c7; }
+.icon-orange { background: #e9782d; }
+.icon-gray   { background: #63798b; }
+
+/* Text inside each menu item */
+.games-menu-text {
+    min-width: 0;
+    flex: 1;
+}
+
+.games-menu-text strong {
+    display: block;
+    color: #fff;
+    font-size: 13px;
+}
+
+.games-menu-text small {
+    display: block;
+    color: #a9c9e1;
+    font-size: 11px;
+    margin-top: 2px;
+    line-height: 1.35;
+}
+
+/* Arrow */
+.games-menu-arrow {
+    margin-left: auto;
+    color: #8eb6d3;
+    font-size: 18px;
+}
+
+/* Footer */
+.games-mega-footer {
+    padding: 14px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    background: rgba(13,65,109,.75);
+
+    border-top: 1px solid rgba(255,255,255,.15);
+}
+
+.games-mega-footer strong {
+    color: #fff;
+    font-size: 13px;
+}
+
+.games-mega-footer span {
+    color: #b9d3e6;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:800px) {
+
+    .games-mega-menu {
+        position: static;
+        transform: none;
+
+        width: 100%;
+        max-width: 100%;
+
+        margin-top: 8px;
+
+        border-radius: 8px;
+    }
+
+    .games-mega-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .games-mega-column + .games-mega-column {
+        border-left: none;
+        border-top: 1px solid rgba(255,255,255,.15);
+    }
+
+    .games-mega-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+    
 <style>
 :root{--navy:#071b2f;--blue:#0d416d;--gold:#f3b632;--light:#f4f7fa;--text:#263746;}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -697,43 +899,298 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
 </div>
 
 </section>
+<!-- =====================================================
+     GAMES & QUIZZES MEGA MENU
+====================================================== -->
 
-<!-- ==================================
-     GAMES & QUIZZES
-=================================== -->
-<li class="dropdown">
+<li class="games-mega-dropdown">
 
-    <a href="#games-quizzes" class="dropbtn">
-        Games & Quizzes ▾
+    <a href="games-quizzes.html" class="dropbtn">
+        Games &amp; Quizzes ▾
     </a>
 
-    <div class="dropdown-content">
+    <div class="games-mega-menu">
 
-        <!-- =========================
-             GAMES
-        ========================== -->
-        <div class="submenu">
+        <div class="games-mega-grid">
 
-            <a href="#games">
-                🎮 Games ▸
-            </a>
 
-            <div class="submenu-content">
+            <!-- ==========================================
+                 COLUMN 1 - GAMES
+            =========================================== -->
 
-                <a href="games/sudoku.html">
-                    🧩 Sudoku Arena
+            <div class="games-mega-column">
+
+                <div class="games-mega-title">
+                    <h3>🎮 Games</h3>
+                    <p>Play, practice and improve</p>
+                </div>
+
+
+                <a href="games-quizzes.html#sudoku-2x2"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-green">
+                        ▦
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Sudoku 2×2</strong>
+                        <small>Quick and fun</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
                 </a>
 
-                <a href="games/wiring-challenge.html">
-                    🔌 Electrical Wiring Challenge
+
+                <a href="games-quizzes.html#sudoku-3x3"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-blue">
+                        ▦
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Sudoku 3×3</strong>
+                        <small>More challenge</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
                 </a>
 
-                <a href="games/inspection-challenge.html">
-                    🔍 Inspection Challenge
+
+                <a href="games-quizzes.html#wiring-game"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-gold">
+                        ⚡
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Electrical Wiring Game</strong>
+                        <small>Interactive wiring diagrams</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
                 </a>
 
-                <a href="games/circuit-troubleshooting.html">
-                    ⚡ Circuit Troubleshooting
+
+                <a href="games-quizzes.html#inspection-challenge"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-red">
+                        ✓
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Inspection Challenge</strong>
+                        <small>Test your inspection skills</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- ==========================================
+                 COLUMN 2 - TECHNICAL QUIZZES
+            =========================================== -->
+
+            <div class="games-mega-column">
+
+                <div class="games-mega-title">
+                    <h3>📖 Technical Quizzes</h3>
+                    <p>700 technical questions</p>
+                </div>
+
+
+                <a href="games-quizzes.html?quiz=electrical#technical-quizzes"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-red">
+                        ⚡
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Electrical</strong>
+                        <small>300 Questions</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
+                </a>
+
+
+                <a href="games-quizzes.html?quiz=instrumentation#technical-quizzes"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-blue">
+                        ⚙
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Instrumentation</strong>
+                        <small>100 Questions</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
+                </a>
+
+
+                <a href="games-quizzes.html?quiz=telecommunication#technical-quizzes"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-green">
+                        📡
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Telecommunication</strong>
+                        <small>100 Questions</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
+                </a>
+
+
+                <a href="games-quizzes.html?quiz=inspection-quality#technical-quizzes"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-purple">
+                        ◆
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Inspection &amp; Quality</strong>
+                        <small>100 Questions</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
+                </a>
+
+
+                <a href="games-quizzes.html?quiz=engineering-design#technical-quizzes"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-orange">
+                        📐
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Engineering &amp; Design</strong>
+                        <small>100 Questions</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- ==========================================
+                 COLUMN 3 - CHALLENGE & RANKING
+            =========================================== -->
+
+            <div class="games-mega-column">
+
+                <div class="games-mega-title">
+                    <h3>🏆 Challenge &amp; Ranking</h3>
+                    <p>Track your performance</p>
+                </div>
+
+
+                <a href="games-quizzes.html#daily-challenge"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-gold">
+                        ★
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Daily Challenge</strong>
+                        <small>Mixed technical challenge</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
+                </a>
+
+
+                <a href="games-quizzes.html#leaderboard"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-blue">
+                        🏆
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Leaderboard</strong>
+                        <small>See top performers</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
+                </a>
+
+
+                <a href="games-quizzes.html#my-scores"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-green">
+                        ✓
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>My Scores</strong>
+                        <small>Track your progress</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
+                </a>
+
+
+                <a href="games-quizzes.html#tournament"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-purple">
+                        ♛
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Tournament</strong>
+                        <small>Compete and improve</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
+                </a>
+
+
+                <a href="games-quizzes.html#quiz-history"
+                   class="games-mega-item">
+
+                    <span class="games-menu-icon icon-gray">
+                        ↶
+                    </span>
+
+                    <span class="games-menu-text">
+                        <strong>Quiz History</strong>
+                        <small>Review previous attempts</small>
+                    </span>
+
+                    <span class="games-menu-arrow">›</span>
+
                 </a>
 
             </div>
@@ -741,41 +1198,23 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
         </div>
 
 
-        <!-- =========================
-             TECHNICAL QUIZZES
-        ========================== -->
-        <div class="submenu">
+        <!-- MEGA MENU FOOTER -->
 
-            <a href="#technical-quizzes">
-                📝 Technical Quizzes ▸
-            </a>
+        <div class="games-mega-footer">
 
-            <div class="submenu-content">
+            <strong>
+                Learn • Practice • Challenge • Improve
+            </strong>
 
-                <!-- INSPECTION & QUALITY -->
-                <div class="submenu">
+            <span>
+                Knowledge Today, A Better Tomorrow
+            </span>
 
-                    <a href="#">
-                        🔍 Inspection & Quality ▸
-                    </a>
+        </div>
 
-                    <div class="submenu-content">
+    </div>
 
-                        <a href="quizzes/technical-quiz.html?category=inspection&discipline=electrical">
-                            ⚡ Electrical
-                        </a>
-
-                        <a href="quizzes/technical-quiz.html?category=inspection&discipline=instrumentation">
-                            ⚙ Instrumentation
-                        </a>
-
-                        <a href="quizzes/technical-quiz.html?category=inspection&discipline=telecommunication">
-                            📡 Telecommunication
-                        </a>
-
-                    </div>
-
-                </div>
+</li>
 
 
                 <!-- ENGINEERING & DESIGN -->
