@@ -173,207 +173,338 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
     }
 }
 
+/* =========================================
+   GAMES & QUIZZES VERTICAL DROPDOWN
+========================================= */
 
-/* =========================================================
-   GAMES & QUIZZES - MEGA MENU
-========================================================= */
-
-.games-mega-dropdown {
+.gq-dropdown {
     position: relative;
+    list-style: none;
 }
 
-/* Main mega-menu panel */
-.games-mega-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
 
-    width: 950px;
-    max-width: 92vw;
+/* MAIN MENU BUTTON */
 
-    background: linear-gradient(
-        135deg,
-        #071b2f,
-        #0d416d
-    );
-
-    border: 1px solid rgba(255,255,255,.18);
-    border-radius: 12px;
-
-    box-shadow: 0 18px 45px rgba(0,0,0,.30);
-
-    overflow: hidden;
-    z-index: 3000;
-}
-
-/* Show menu */
-.games-mega-dropdown:hover .games-mega-menu {
-    display: block;
-}
-
-/* 3-column layout */
-.games-mega-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.15fr 1fr;
-}
-
-/* Individual column */
-.games-mega-column {
-    padding: 24px;
-}
-
-.games-mega-column + .games-mega-column {
-    border-left: 1px solid rgba(255,255,255,.15);
-}
-
-/* Column headings */
-.games-mega-title {
-    margin-bottom: 17px;
-}
-
-.games-mega-title h3 {
-    color: #fff;
-    font-size: 17px;
-    margin: 0 0 3px;
-}
-
-.games-mega-title p {
-    color: #9fc2dd;
-    font-size: 12px;
-    margin: 0;
-    font-weight: 400;
-}
-
-/* Individual menu links */
-.games-mega-item {
-    display: flex !important;
+.gq-main-link {
+    display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 6px;
 
-    padding: 10px !important;
-    margin-bottom: 4px;
-
-    border-radius: 8px;
-
-    color: #fff !important;
+    color: #ffffff;
     text-decoration: none;
 
-    transition: .2s ease;
+    font-weight: 700;
+
+    padding: 14px 16px;
+
+    white-space: nowrap;
+
+    transition: 0.2s ease;
 }
 
-.games-mega-item:hover {
-    background: rgba(255,255,255,.10);
-    color: #fff !important;
-    transform: translateX(3px);
+
+.gq-main-link:hover {
+    color: #f3b632;
 }
 
-/* Icons */
-.games-menu-icon {
-    width: 40px;
-    height: 40px;
 
-    display: grid;
-    place-items: center;
+.gq-chevron {
+    font-size: 10px;
 
-    flex: 0 0 40px;
+    transition: transform 0.2s ease;
+}
+
+
+/* ROTATE ARROW */
+
+.gq-dropdown:hover .gq-chevron {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================
+   DROPDOWN BOX
+========================================= */
+
+.gq-dropdown-menu {
+
+    position: absolute;
+
+    top: calc(100% + 8px);
+    left: 50%;
+
+    transform: translateX(-50%) translateY(-8px);
+
+    width: 360px;
+
+    background: #ffffff;
+
+    border: 1px solid #d8e1e8;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,0.22);
+
+    overflow: hidden;
+
+    z-index: 9999;
+
+
+    /* HIDDEN */
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        visibility 0.18s ease;
+}
+
+
+/* SMALL TRIANGLE */
+
+.gq-dropdown-menu::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -7px;
+    left: 50%;
+
+    transform: translateX(-50%) rotate(45deg);
+
+    width: 14px;
+    height: 14px;
+
+    background: #ffffff;
+
+    border-left: 1px solid #d8e1e8;
+    border-top: 1px solid #d8e1e8;
+}
+
+
+/* SHOW DROPDOWN */
+
+.gq-dropdown:hover .gq-dropdown-menu,
+.gq-dropdown:focus-within .gq-dropdown-menu {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+
+/* =========================================
+   DROPDOWN ITEMS
+========================================= */
+
+.gq-menu-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    width: 100%;
+
+    padding: 16px 18px;
+
+    color: #263746;
+
+    text-decoration: none;
+
+    background: #ffffff;
+
+    border-bottom:
+        1px solid #e6edf2;
+
+    transition: 0.18s ease;
+}
+
+
+/* REMOVE LAST BORDER */
+
+.gq-menu-item:last-child {
+    border-bottom: none;
+}
+
+
+/* ITEM HOVER */
+
+.gq-menu-item:hover {
+
+    background: #f4f7fa;
+
+    padding-left: 22px;
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.gq-icon {
+
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
 
     border-radius: 8px;
-    font-size: 20px;
+
+    font-size: 21px;
 }
 
-.icon-green  { background: #19a968; }
-.icon-blue   { background: #1685d8; }
-.icon-gold   { background: #f3b632; color:#071b2f; }
-.icon-red    { background: #dc4552; }
-.icon-purple { background: #8248c7; }
-.icon-orange { background: #e9782d; }
-.icon-gray   { background: #63798b; }
 
-/* Text inside each menu item */
-.games-menu-text {
-    min-width: 0;
+.gq-game-icon {
+    background: #f0e9ff;
+}
+
+
+.gq-quiz-icon {
+    background: #e5f2ff;
+}
+
+
+.gq-rank-icon {
+    background: #fff3d6;
+}
+
+
+/* =========================================
+   TEXT
+========================================= */
+
+.gq-menu-text {
+
     flex: 1;
+
+    min-width: 0;
 }
 
-.games-menu-text strong {
+
+.gq-menu-text strong {
+
     display: block;
-    color: #fff;
-    font-size: 13px;
+
+    color: #071b2f;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    margin-bottom: 4px;
 }
 
-.games-menu-text small {
+
+.gq-menu-text small {
+
     display: block;
-    color: #a9c9e1;
+
+    color: #718292;
+
     font-size: 11px;
-    margin-top: 2px;
+
     line-height: 1.35;
 }
 
-/* Arrow */
-.games-menu-arrow {
+
+/* RIGHT ARROW */
+
+.gq-arrow {
+
+    color: #0d416d;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
     margin-left: auto;
-    color: #8eb6d3;
-    font-size: 18px;
+
+    transition: transform 0.18s ease;
 }
 
-/* Footer */
-.games-mega-footer {
-    padding: 14px 24px;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+.gq-menu-item:hover .gq-arrow {
 
-    background: rgba(13,65,109,.75);
-
-    border-top: 1px solid rgba(255,255,255,.15);
+    transform: translateX(4px);
 }
 
-.games-mega-footer strong {
-    color: #fff;
-    font-size: 13px;
-}
 
-.games-mega-footer span {
-    color: #b9d3e6;
-    font-size: 12px;
-    font-style: italic;
-}
-
-/* =========================================================
+/* =========================================
    MOBILE
-========================================================= */
+========================================= */
 
-@media(max-width:800px) {
+@media (max-width: 800px) {
 
-    .games-mega-menu {
+    .gq-dropdown-menu {
+
         position: static;
-        transform: none;
 
         width: 100%;
-        max-width: 100%;
 
-        margin-top: 8px;
+        transform: none;
 
-        border-radius: 8px;
+        margin-top: 5px;
+
+        border-radius: 7px;
+
+        box-shadow: none;
+
+        display: none;
+
+        opacity: 1;
+
+        visibility: visible;
+
+        pointer-events: auto;
     }
 
-    .games-mega-grid {
-        grid-template-columns: 1fr;
+
+    .gq-dropdown:hover .gq-dropdown-menu,
+    .gq-dropdown:focus-within .gq-dropdown-menu {
+
+        display: block;
+
+        transform: none;
     }
 
-    .games-mega-column + .games-mega-column {
-        border-left: none;
-        border-top: 1px solid rgba(255,255,255,.15);
+
+    .gq-dropdown-menu::before {
+        display: none;
     }
 
-    .games-mega-footer {
-        flex-direction: column;
-        align-items: flex-start;
+
+    .gq-menu-item {
+
+        padding: 13px 14px;
     }
+
+
+    .gq-menu-item:hover {
+
+        padding-left: 18px;
+    }
+
 }
     
 </style>
