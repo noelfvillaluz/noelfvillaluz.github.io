@@ -3212,7 +3212,7 @@ publish an estimated number until a defensible source is found.
 
 };
 
-
+   
 /* =====================================================
    OPEN PROJECT INFORMATION
 ===================================================== */
@@ -3230,22 +3230,35 @@ function openProjectModal(projectKey, type) {
         document.getElementById("projectModalContent");
 
 
+    /* PROJECT INFORMATION */
+
     if (type === "info" && project.info) {
 
         content.innerHTML = project.info;
 
-    } else {
+    }
+
+    /* ROLES & RESPONSIBILITIES */
+
+    else if (type === "role" && project.role) {
+
+        content.innerHTML = project.role;
+
+    }
+
+    /* FALLBACK */
+
+    else {
 
         content.innerHTML = `
             <div class="modal-kicker">
-                Roles & Responsibilities
+                Information
             </div>
 
             <h2>${project.title}</h2>
 
             <div class="project-data-note">
-                Roles & Responsibilities will be added
-                in the next development stage.
+                Information is currently being updated.
             </div>
         `;
     }
