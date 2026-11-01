@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Training & Certifications</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+  color: #243247;
+  margin: 0;
+  padding: 30px 16px;
+}
+.container {
+  max-width: 1000px;
+  margin: auto;
+}
+h1 { color: #123c65; }
+.subtitle { color: #64748b; }
+section {
+  background: white;
+  padding: 22px;
+  border-radius: 12px;
+  margin: 22px 0;
+  box-shadow: 0 3px 14px #0000000a;
+}
+h2 {
+  color: #123c65;
+  border-bottom: 2px solid #e4eaf2;
+  padding-bottom: 12px;
+}
+.cert {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf0f5;
+}
+.cert:last-child { border-bottom: 0; }
+.cert-name { line-height: 1.5; }
+.check { color: #16a34a; font-weight: bold; }
+.view-btn {
+  background: #145b9b;
+  color: white;
+  border: 0;
+  padding: 9px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.view-btn:hover { background: #0b3d6c; }
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000b;
+  z-index: 1000;
+  padding: 3vh 3vw;
+  box-sizing: border-box;
+}
+.modal-content {
+  background: white;
+  width: 100%;
+  max-width: 950px;
+  height: 94vh;
+  margin: auto;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+}
+.modal-header h3 { margin: 0; font-size: 17px; }
+.close-btn {
+  border: 0;
+  background: #e8edf4;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+#certificateFrame {
+  width: 100%;
+  flex: 1;
+  border: 0;
+}
+.modal-footer {
+  padding: 12px;
+  text-align: right;
+}
+@media(max-width: 600px) {
+  .cert { align-items: flex-start; }
+  .view-btn { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<main class="container">
+  <h1>Training & Certifications</h1>
+  <p class="subtitle">
+    Professional licenses, international certifications,
+    quality credentials and industry qualifications.
+  </p>
+  <div id="certificateList"></div>
+</main>
+
+<div id="certificateModal" class="modal" role="dialog"
+     aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle">Certificate</h3>
+      <button class="close-btn" onclick="closeCertificate()">
+        ✕ Close
+      </button>
+    </div>
+    <iframe id="certificateFrame" title="Certificate PDF"></iframe>
+    <div class="modal-footer">
+      <a id="openPdf" target="_blank" rel="noopener">
+        Open PDF in New Tab
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+const categories = [
+  {
+    title: "Professional Licenses",
+    items: [
+      ["Professional Electrical Engineer (PEE) – Philippines", "pee.pdf"],
+      ["Registered Electrical Engineer (REE)", "ree.pdf"]
+    ]
+  },
+  {
+    title: "Project Management & Quality",
+    items: [
+      ["Project Management Professional (PMP)", "pmp.pdf"],
+      ["CQI-IRCA ISO 9001:2015 QMS Lead Auditor", "iso9001.pdf"],
+      ["Lean Six Sigma Green Belt", "six-sigma.pdf"]
+    ]
+  },
+  {
+    title: "IECEx Certification",
+    items: [
+      ["Certified IECEx Inspector – Ex 001, 003, 004, 006, 007 & 008",
+       "iecex.pdf"]
+    ]
+  },
+  {
+    title: "Saudi Aramco Qualifications",
+    items: [
+      ["PID Electrical Inspector: Passed", "pid-electrical.pdf"],
+      ["PID Instrumentation Inspector: Passed", "pid-instrumentation.pdf"],
+      ["PID Communication Inspector: Passed", "pid-communication.pdf"],
+      ["VID QM01 – Electrical: Passed", "qm01.pdf"],
+      ["VID QM02 – Instrumentation: Passed", "qm02.pdf"],
+      ["VID QM16 – Transformer: Passed", "qm16.pdf"],
+      ["VID QM17 – Cables: Passed", "qm17.pdf"],
+      ["VID QM19 – Switchgear and MCC: Passed", "qm19.pdf"],
+      ["VID QM21 – Generators and Motors: Passed", "qm21.pdf"]
+    ]
+  },
+  {
+    title: "Offshore Safety Training",
+    items: [
+      ["BOSIET – Basic Offshore Safety Induction and Emergency Training: Completed",
+       "bosiet.pdf"]
+    ]
+  }
+];
+
+const container = document.getElementById("certificateList");
+
+categories.forEach(category => {
+  const section = document.createElement("section");
+  const heading = document.createElement("h2");
+  heading.textContent = category.title;
+  section.appendChild(heading);
+
+  category.items.forEach(([name, file]) => {
+    const row = document.createElement("div");
+    row.className = "cert";
+
+    const label = document.createElement("span");
+    label.className = "cert-name";
+    const check = document.createElement("span");
+    check.className = "check";
+    check.textContent = "✓ ";
+    label.append(check, document.createTextNode(name));
+
+    const button = document.createElement("button");
+    button.className = "view-btn";
+    button.textContent = "📄 View Certificate";
+    button.addEventListener("click", () => openCertificate(name, file));
+
+    row.append(label, button);
+    section.appendChild(row);
+  });
+
+  container.appendChild(section);
+});
+
+function openCertificate(name, file) {
+  const path = "certificates/" + file;
+  document.getElementById("modalTitle").textContent = name;
+  document.getElementById("certificateFrame").src = path;
+  document.getElementById("openPdf").href = path;
+  document.getElementById("certificateModal").style.display = "block";
+  document.body.style.overflow = "hidden";
+}
+
+function closeCertificate() {
+  document.getElementById("certificateModal").style.display = "none";
+  document.getElementById("certificateFrame").src = "about:blank";
+  document.body.style.overflow = "";
+}
+
+document.getElementById("certificateModal").addEventListener("click", e => {
+  if (e.target.id === "certificateModal") closeCertificate();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeCertificate();
+});
+</script>
+</body>
+</html>
