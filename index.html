@@ -65,6 +65,220 @@ nav a:hover{color:var(--gold)}
 .dropbtn{
     cursor:pointer;
 }
+/* ===================================
+   NFV PROFESSIONAL HOMEPAGE HERO
+   =================================== */
+
+.nfv-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 680px;
+  display: flex;
+  align-items: center;
+  padding: 65px 6%;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  /* Background refinery photo */
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(3, 20, 44, 0.96) 0%,
+      rgba(5, 29, 58, 0.90) 42%,
+      rgba(5, 29, 58, 0.52) 75%,
+      rgba(5, 29, 58, 0.22) 100%
+    ),
+    url("images/refinery-background.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #ffffff;
+}
+
+.nfv-hero-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1250px;
+  margin: auto;
+}
+
+/* Topmost Navigation-like Heading */
+
+.nfv-topline {
+  font-size: clamp(12px, 1.3vw, 17px);
+  font-weight: 700;
+  line-height: 1.8;
+  color: #ffffff;
+  border-bottom: 3px solid #facc15;
+  padding-bottom: 15px;
+  margin-bottom: 35px;
+}
+
+.nfv-topline span {
+  color: #facc15;
+  margin: 0 5px;
+}
+
+/* Name and Professional Title */
+
+.nfv-intro {
+  border-left: 7px solid #facc15;
+  padding-left: 25px;
+  margin-bottom: 25px;
+}
+
+.nfv-intro h1 {
+  font-size: clamp(42px, 6vw, 82px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 15px;
+  color: #ffffff;
+}
+
+.nfv-intro h2 {
+  font-size: clamp(16px, 2vw, 25px);
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0;
+  color: #ffffff;
+}
+
+.nfv-intro h2 span {
+  color: #facc15;
+}
+
+/* Experience Description */
+
+.nfv-experience {
+  max-width: 900px;
+  font-size: clamp(16px, 1.6vw, 20px);
+  line-height: 1.7;
+  color: #e2e8f0;
+  margin-bottom: 35px;
+}
+
+/* Main Quality Improvement Highlight */
+
+.nfv-quality-highlight {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  max-width: 1050px;
+  padding: 20px 28px;
+  margin-bottom: 25px;
+
+  background: rgba(2, 24, 54, 0.90);
+  border: 2px solid #facc15;
+  border-left: 7px solid #facc15;
+  border-radius: 6px;
+}
+
+.nfv-quality-icon {
+  font-size: 48px;
+  font-weight: 800;
+  color: #facc15;
+}
+
+.nfv-specializing {
+  display: block;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.nfv-quality-highlight h3 {
+  font-size: clamp(22px, 2.7vw, 36px);
+  font-weight: 800;
+  line-height: 1.25;
+  color: #facc15;
+  margin: 0;
+}
+
+/* Quality Description */
+
+.nfv-quality-description {
+  max-width: 950px;
+  padding-left: 22px;
+  border-left: 5px solid #facc15;
+}
+
+.nfv-quality-description p {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #f1f5f9;
+  margin: 0 0 18px;
+}
+
+/* Gold Motto Bar */
+
+.nfv-motto {
+  display: inline-block;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: 25px;
+  padding: 17px 25px;
+  background: #facc15;
+  color: #09213e;
+  font-size: clamp(14px, 1.5vw, 20px);
+  font-weight: 800;
+  font-style: italic;
+  line-height: 1.6;
+  border-radius: 4px;
+}
+
+.nfv-motto span {
+  margin: 0 6px;
+}
+
+/* Responsive Mobile Layout */
+
+@media (max-width: 768px) {
+
+  .nfv-hero {
+    min-height: auto;
+    padding: 45px 20px;
+    background-position: 65% center;
+  }
+
+  .nfv-topline {
+    font-size: 12px;
+    margin-bottom: 25px;
+  }
+
+  .nfv-intro {
+    padding-left: 15px;
+  }
+
+  .nfv-intro h1 {
+    font-size: 42px;
+  }
+
+  .nfv-quality-highlight {
+    padding: 18px;
+    gap: 12px;
+  }
+
+  .nfv-quality-icon {
+    font-size: 30px;
+  }
+
+  .nfv-quality-highlight h3 {
+    font-size: 22px;
+  }
+
+  .nfv-quality-description p {
+    font-size: 15px;
+  }
+
+  .nfv-motto {
+    display: block;
+    font-size: 14px;
+    text-align: center;
+  }
+}
 .hero{min-height:88vh;background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;display:flex;align-items:center;padding:70px 9%}
 .hero-grid{display:grid;grid-template-columns:1.4fr .6fr;gap:55px;align-items:center;width:100%;max-width:1200px;margin:auto}
 .eyebrow{color:var(--gold);font-weight:800;letter-spacing:2px;text-transform:uppercase}
@@ -1217,35 +1431,59 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
 </header>
 
 <main>
-<section class="hero" id="home">
-<div class="hero-grid">
-<div>
-<div class="eyebrow">Engineering · Quality · Construction · Commissioning · Completion</div>
-<h1>Noel Villaluz</h1>
-<h2>PEE, REE, PMP · Electrical & Instrumentation QA/QC Engineer / Supervisor/ Senior Inspector</h2>
-<p>Electrical engineering and E&I quality professional with more than 19 years of experience across 
-   oil & gas, gas compression, refineries, power plants, substations, industrial facilities and 
-      major infrastructure projects.</p>
-<!-- MAIN EMPHASIS -->
-  <div class="nfv-quality">
-    <small>Specializing in</small>
+<section class="nfv-hero">
 
-    <h3>
-      QUALITY IMPROVEMENT, LEAN MANAGEMENT
-      &amp; OPERATIONAL EXCELLENCE
-    </h3>
-  </div>
+  <div class="nfv-hero-content">
+
+    <!-- Topmost Professional Categories -->
+    <div class="nfv-topline">
+      Engineering <span>•</span>
+      Quality Improvement <span>•</span>
+      Lean Management <span>•</span>
+      Operational Excellence <span>•</span>
+      Construction <span>•</span>
+      Commissioning <span>•</span>
+      Project Completion
+    </div>
+
+    <!-- Professional Name -->
+    <div class="nfv-intro">
+      <h1>Noel Villaluz</h1>
+
+      <h2>
+        PEE, REE, PMP
+        <span>•</span>
+        Electrical &amp; Instrumentation
+        QA/QC Engineer / Supervisor
+      </h2>
+    </div>
+<p class="nfv-experience">Electrical engineering and E&I quality professional with more than 19 years of experience across 
+   oil & gas, gas compression, refineries, power plants, substations, industrial facilities and 
+   major infrastructure projects.</p>
+<!-- MAIN EMPHASIS -->
+  <div class="nfv-quality-highlight">
+      <div class="nfv-quality-icon">↗</div>
+     <div>
+        <span class="nfv-specializing">
+          Specializing in
+        </span>
+
+        <h3>
+          QUALITY IMPROVEMENT, LEAN MANAGEMENT
+          &amp; OPERATIONAL EXCELLENCE
+        </h3>
+      </div>
+    </div>
 
   <!-- QUALITY DESCRIPTION -->
-  <div class="nfv-description">
-    <p>
-      Driving sustainable quality and operational
-      performance through Lean methodologies,
-      continuous improvement, process optimization,
-      waste elimination, defect prevention,
-      risk-based thinking, and effective
-      engineering quality management.
-    </p>
+  <div class="nfv-quality-description">
+      <p>
+        Driving sustainable quality and operational
+        performance through Lean methodologies,
+        continuous improvement, process optimization,
+        waste elimination, defect prevention,
+        risk-based thinking, and effective engineering quality management.
+      </p>
 
     <p>
       Committed to strengthening QA/QC systems,
@@ -1254,15 +1492,18 @@ footer{background:#04111d;color:#b8c7d4;text-align:center;padding:25px}
       excellence through ISO 9001 QMS,
       Lean Six Sigma, Root Cause Analysis (RCA),
       Corrective and Preventive Actions (CAPA),
+      value engineering, best practices, lesson learnt, 
       and performance-driven continuous improvement.
     </p>
   </div>
 
   <!-- MOTTO -->
-  <div class="nfv-motto">
-    Eliminate Waste • Prevent Defects •
-    Improve Processes • Deliver Excellence
-  </div>
+ <div class="nfv-motto">
+      Eliminate Waste <span>•</span>
+      Prevent Defects <span>•</span>
+      Improve Processes <span>•</span>
+      Deliver Excellence
+</div>
 <div class="actions">
 <a class="btn" href="#services">View Services</a>
 <a class="btn alt" href="Noel_Villaluz_Resume.docx" download>Download Resume</a>
