@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Articles & Publications | Noel Villaluz, PEE</title>
+
+<meta name="description"
+      content="Engineering articles, project management,
+      quality improvement, value engineering and
+      operational excellence by Noel Villaluz.">
+
+<style>
+
+/* ==========================================
+   WEBSITE GLOBAL DESIGN
+========================================== */
+
+:root {
+    --navy: #071b2f;
+    --blue: #0d416d;
+    --gold: #f3b632;
+    --light: #f4f7fa;
+    --text: #263746;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--text);
+    background: var(--light);
+    line-height: 1.65;
+}
+
+/* ==========================================
+   HEADER & NAVIGATION
+========================================== */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(7,27,47,0.97);
+    padding: 16px 5%;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.logo {
+    color: white;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+nav a:hover,
+nav a.active {
+    color: var(--gold);
+}
+
+/* DROPDOWN MENU */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 250px;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    padding: 8px 0;
+    z-index: 1100;
+}
+
+.dropdown-content a {
+    display: block;
+    color: var(--navy);
+    padding: 11px 16px;
+    font-size: 13px;
+    white-space: normal;
+}
+
+.dropdown-content a:hover {
+    background: var(--light);
+    color: var(--blue);
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content {
+    display: block;
+}
+
+/* ==========================================
+   ARTICLES HERO BANNER
+========================================== */
+
+.articles-hero {
+    position: relative;
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(3,20,44,0.96),
+            rgba(5,29,58,0.80),
+            rgba(5,29,58,0.55)
+        ),
+        url("nfv-industrial-background.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 85px 8%;
+    color: white;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.hero-label {
+    color: var(--gold);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.articles-hero h1 {
+    font-size: clamp(34px, 5vw, 56px);
+    line-height: 1.2;
+    margin: 15px 0;
+    border-left: 6px solid var(--gold);
+    padding-left: 20px;
+}
+
+.articles-hero p {
+    max-width: 850px;
+    font-size: 17px;
+    color: #e2e8f0;
+}
+
+/* ==========================================
+   MAIN ARTICLE SECTION
+========================================== */
+
+.articles-section {
+    padding: 70px 7%;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.section-heading {
+    margin-bottom: 30px;
+}
+
+.section-heading h2 {
+    color: var(--navy);
+    font-size: 30px;
+    margin: 0 0 10px;
+}
+
+.section-heading p {
+    color: #607386;
+    margin: 0;
+}
+
+/* ==========================================
+   SEARCH & FILTER
+========================================== */
+
+.article-controls {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.article-search,
+.article-filter {
+    padding: 13px 15px;
+    border: 1px solid #d4dee6;
+    border-radius: 7px;
+    background: white;
+    color: var(--text);
+    font-size: 14px;
+}
+
+.article-search {
+    flex: 1;
+    min-width: 230px;
+}
+
+.article-filter {
+    min-width: 200px;
+}
+
+/* ==========================================
+   ARTICLES TABLE
+========================================== */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 8px 25px rgba(7,27,47,0.08);
+}
+
+.articles-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.articles-table th {
+    background: var(--navy);
+    color: white;
+    padding: 17px;
+    text-align: left;
+    font-size: 13px;
+    border-bottom: 3px solid var(--gold);
+}
+
+.articles-table td {
+    padding: 18px 17px;
+    border-bottom: 1px solid #e5e9ed;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.articles-table tbody tr:nth-child(even) {
+    background: #f4f7fa;
+}
+
+.articles-table tbody tr:hover {
+    background: #fff8e8;
+}
+
+.article-number {
+    color: var(--navy);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.article-title {
+    color: var(--blue);
+    font-weight: 700;
+    text-decoration: none;
+    line-height: 1.5;
+}
+
+.article-title:hover {
+    color: #b57c00;
+    text-decoration: underline;
+}
+
+.article-category {
+    display: inline-block;
+    background: #e8f0f7;
+    color: var(--blue);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.pdf-btn {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    padding: 10px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.pdf-btn:hover {
+    background: #dca020;
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   INFORMATION NOTE
+========================================== */
+
+.article-note {
+    margin-top: 30px;
+    background: white;
+    padding: 22px;
+    border-left: 5px solid var(--gold);
+    border-radius: 7px;
+    font-size: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+footer {
+    background: #04111d;
+    color: #b8c7d4;
+    text-align: center;
+    padding: 28px 20px;
+    font-size: 13px;
+}
+
+footer a {
+    color: var(--gold);
+    text-decoration: none;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVENESS
+========================================== */
+
+@media (max-width: 800px) {
+
+    header {
+        position: relative;
+    }
+
+    nav {
+        flex-direction: column;
+    }
+
+    nav ul {
+        justify-content: center;
+        gap: 14px;
+    }
+
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        min-width: 100%;
+    }
+
+    .articles-hero {
+        padding: 55px 20px;
+    }
+
+    .articles-section {
+        padding: 45px 20px;
+    }
+
+    .article-controls {
+        flex-direction: column;
+    }
+
+    .article-search,
+    .article-filter {
+        width: 100%;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ==========================================
+     HEADER & NAVIGATION
+========================================== -->
+
+<header>
+
+<nav aria-label="Main navigation">
+
+<div class="logo">
+    NOEL VILLALUZ · PEE
+</div>
+
+<ul>
+
+<li>
+    <a href="index.html">Home</a>
+</li>
+
+<li>
+    <a href="index.html#services">Services</a>
+</li>
+
+<li>
+    <a href="index.html#service-projects">Projects</a>
+</li>
+
+<li>
+    <a href="articles.html"
+       class="active"
+       aria-current="page">Articles</a>
+</li>
+
+<!-- TECHNICAL RESOURCES -->
+
+<li class="dropdown">
+
+    <a href="index.html#technical-resources">
+        Technical Resources ▾
+    </a>
+
+    <div class="dropdown-content">
+
+        <a href="rfi-generator.html">
+            RFI Generator
+        </a>
+
+        <a href="inspection-monitoring-matrix.html">
+            Inspection Monitoring Matrix
+        </a>
+
+        <a href="inspection-test-management.html">
+            Inspection & Test Management
+        </a>
+
+        <a href="document-management-control.html">
+            Document Management & Control
+        </a>
+
+        <a href="quality-improvement-assurance.html">
+            Quality Improvement & Assurance
+        </a>
+
+        <a href="completion-management-system.html">
+            Completion Management System
+        </a>
+
+        <a href="construction-precommissioning.html">
+            Construction & Pre-Commissioning
+        </a>
+
+        <a href="integrated-project-dashboard.html">
+            Integrated Project Dashboard
+        </a>
+
+    </div>
+
+</li>
+
+<!-- ENGINEERING KNOWLEDGE -->
+
+<li class="dropdown">
+
+    <a href="engineering-knowledge.html">
+        Engineering Knowledge ▾
+    </a>
+
+    <div class="dropdown-content">
+
+        <a href="engineering-knowledge.html#technical-articles">
+            Technical Articles
+        </a>
+
+        <a href="engineering-knowledge.html#engineering-references">
+            Engineering References
+        </a>
+
+        <a href="engineering-knowledge.html#calculators">
+            Engineering Calculators
+        </a>
+
+        <a href="engineering-knowledge.html#testing-guides">
+            Testing Guides
+        </a>
+
+    </div>
+
+</li>
+
+<li>
+    <a href="games-quizzes.html">
+        Games & Quizzes
+    </a>
+</li>
+
+<!-- RESUME DROPDOWN -->
+
+<li class="dropdown">
+
+    <a href="index.html#education">
+        Resume ▾
+    </a>
+
+    <div class="dropdown-content">
+
+        <a href="index.html#education">
+            Education
+        </a>
+
+        <a href="index.html#training">
+            Licenses & Certifications
+        </a>
+
+        <a href="index.html#major-projects">
+            Major Project Experience
+        </a>
+
+        <a href="index.html#experiences">
+            Professional Experiences
+        </a>
+
+        <a href="training-certifications.html">
+            Training & Certifications
+        </a>
+
+    </div>
+
+</li>
+
+<li>
+    <a href="index.html#about">About</a>
+</li>
+
+<li>
+    <a href="index.html#contact">Contact</a>
+</li>
+
+</ul>
+
+</nav>
+
+</header>
+
+
+<!-- ==========================================
+     ARTICLES HERO
+========================================== -->
+
+<section class="articles-hero">
+
+<div class="hero-content">
+
+<div class="hero-label">
+    Engineering · Quality · Project Management
+</div>
+
+<h1>Articles & Publications</h1>
+
+<p>
+    Sharing professional insights, engineering
+    knowledge, practical experience, technical
+    discussions, value engineering, adaptive
+    project management, quality improvement,
+    Lean management, and operational excellence.
+</p>
+
+</div>
+
+</section>
+
+
+<!-- ==========================================
+     ARTICLES PUBLICATION LIBRARY
+========================================== -->
+
+<main>
+
+<section class="articles-section">
+
+<div class="container">
+
+<div class="section-heading">
+
+<h2>Published Articles</h2>
+
+<p>
+    Browse technical articles, professional
+    publications and engineering knowledge resources.
+    Click an article title or View PDF to read.
+</p>
+
+</div>
+
+
+<!-- SEARCH & CATEGORY FILTER -->
+
+<div class="article-controls">
+
+<input
+    type="search"
+    id="articleSearch"
+    class="article-search"
+    placeholder="Search articles by title, number or topic..."
+    aria-label="Search articles"
+>
+
+<select
+    id="categoryFilter"
+    class="article-filter"
+    aria-label="Filter articles by category"
+>
+
+<option value="all">All Categories</option>
+
+<option value="Project Management">
+    Project Management
+</option>
+
+<option value="Electrical Engineering">
+    Electrical Engineering
+</option>
+
+<option value="Instrumentation">
+    Instrumentation
+</option>
+
+<option value="Quality Management">
+    Quality Management
+</option>
+
+<option value="Value Engineering">
+    Value Engineering
+</option>
+
+<option value="Operational Excellence">
+    Operational Excellence
+</option>
+
+</select>
+
+</div>
+
+
+<!-- ==========================================
+     ARTICLE TABLE
+========================================== -->
+
+<div class="table-wrapper">
+
+<table class="articles-table" id="articlesTable">
+
+<thead>
+
+<tr>
+    <th>Article No.</th>
+    <th>Article Title</th>
+    <th>Category</th>
+    <th>Publication Date</th>
+    <th>PDF Article</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<!-- ======================================
+     ARTICLE 001
+     REPLACE WITH YOUR ACTUAL PUBLICATION
+====================================== -->
+
+<tr>
+
+<td class="article-number">
+    NFV-ART-001
+</td>
+
+<td>
+
+<a class="article-title"
+   href="articles/NFV-ART-001.pdf"
+   target="_blank"
+   rel="noopener noreferrer">
+
+Applying a Hybrid, Adaptive and
+Value-Driven Approach to
+Construction Project Management
+
+</a>
+
+</td>
+
+<td>
+<span class="article-category">
+    Project Management
+</span>
+</td>
+
+<td>
+    15 Nov 2026
+</td>
+
+<td>
+
+<a class="pdf-btn"
+   href="articles/NFV-ART-001.pdf"
+   target="_blank"
+   rel="noopener noreferrer">
+
+    View PDF
+
+</a>
+
+</td>
+
+</tr>
+
+
+<!-- ======================================
+     ADD NEW ARTICLES BELOW THIS LINE
+
+     COPY A COMPLETE <tr>...</tr> BLOCK
+     AND CHANGE:
+     1. Article number
+     2. Article title
+     3. Category
+     4. Publication date
+     5. PDF filename
+====================================== -->
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- INFORMATION NOTE -->
+
+<div class="article-note">
+
+<strong>About These Publications</strong>
+
+<p>
+    Articles presented on this website are intended
+    for professional knowledge sharing, technical
+    discussion, engineering best practices,
+    continuous improvement, and practical
+    applications in construction and industrial
+    project management.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<footer>
+
+<p>
+    © 2026 Noel F. Villaluz, PEE.
+    All Rights Reserved.
+</p>
+
+<p>
+    Engineering · Quality Improvement ·
+    Lean Management · Operational Excellence
+</p>
+
+<p>
+    <a href="index.html">Home</a>
+    &nbsp; | &nbsp;
+    <a href="articles.html">Articles</a>
+    &nbsp; | &nbsp;
+    <a href="index.html#contact">Contact</a>
+</p>
+
+</footer>
+
+
+<!-- ==========================================
+     ARTICLE SEARCH & FILTER JAVASCRIPT
+========================================== -->
+
+<script>
+
+const articleSearch =
+    document.getElementById("articleSearch");
+
+const categoryFilter =
+    document.getElementById("categoryFilter");
+
+const articleRows =
+    document.querySelectorAll(
+        "#articlesTable tbody tr"
+    );
+
+function filterArticles() {
+
+    const searchValue =
+        articleSearch.value.toLowerCase().trim();
+
+    const selectedCategory =
+        categoryFilter.value;
+
+    articleRows.forEach(row => {
+
+        const rowText =
+            row.textContent.toLowerCase();
+
+        const categoryElement =
+            row.querySelector(".article-category");
+
+        const category =
+            categoryElement
+                ? categoryElement.textContent.trim()
+                : "";
+
+        const matchesSearch =
+            rowText.includes(searchValue);
+
+        const matchesCategory =
+            selectedCategory === "all" ||
+            category === selectedCategory;
+
+        row.style.display =
+            matchesSearch && matchesCategory
+                ? ""
+                : "none";
+
+    });
+
+}
+
+articleSearch.addEventListener(
+    "input",
+    filterArticles
+);
+
+categoryFilter.addEventListener(
+    "change",
+    filterArticles
+);
+
+</script>
+
+</body>
+</html>
