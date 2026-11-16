@@ -397,6 +397,79 @@ footer a {
     }
 }
 
+/* PUBLICATION CARDS */
+
+.publication-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.publication-card {
+    background: #ffffff;
+    border: 1px solid #e5e9ed;
+    border-top: 4px solid #f3b632;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 8px 25px rgba(7,27,47,0.07);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.publication-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(7,27,47,0.13);
+}
+
+.publication-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    color: #607386;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.publication-card h3 {
+    color: #071b2f;
+    font-size: 21px;
+    line-height: 1.4;
+    margin: 18px 0 12px;
+}
+
+.publication-category {
+    display: inline-block;
+    background: #e8f0f7;
+    color: #0d416d;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.publication-summary {
+    color: #526477;
+    font-size: 14px;
+    line-height: 1.75;
+    margin: 16px 0 24px;
+}
+
+.publication-btn {
+    display: inline-block;
+    background: #f3b632;
+    color: #071b2f;
+    padding: 11px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.publication-btn:hover {
+    background: #dca020;
+}
+
 </style>
 </head>
 
@@ -665,181 +738,56 @@ footer a {
 
 
 <!-- ==========================================
-     ARTICLE TABLE
+     PUBLICATION CARDS
 ========================================== -->
 
-<div class="table-wrapper">
+<div class="publication-grid" id="publicationGrid">
 
-<table class="articles-table" id="articlesTable">
+    <!-- ARTICLE 001 -->
 
-<thead>
+    <article class="publication-card"
+             data-category="Project Management">
 
-<tr>
-    <th>Article No.</th>
-    <th>Article Title</th>
-    <th>Category</th>
-    <th>Publication Date</th>
-    <th>PDF Article</th>
-</tr>
+        <div class="publication-meta">
+            <span>NFV-PM-ART-001</span>
+            <span>15 Nov 2026</span>
+        </div>
 
-</thead>
+        <h3>
+            Beyond Compliance:
+            Value-Driven Hybrid Project Management
+            in Engineering and Construction
+        </h3>
 
-<tbody>
+        <span class="publication-category">
+            Project Management
+        </span>
 
-Beyond Compliance: Value-Driven Hybrid Project Management in Engineering and Construction
+        <p class="publication-summary">
+            This article explores how predictive planning,
+            adaptive management, Agile principles, Lean
+            methodologies, value engineering and continuous
+            improvement can enhance engineering and
+            construction project delivery.
 
-Rethinking Traditional Project Execution Through Adaptive Management, Engineering Judgment, Value Engineering, and Continuous Improvement
+            It emphasizes evidence-based decision-making,
+            engineering judgment and optimization of
+            execution strategies while maintaining
+            safety, quality and mandatory compliance.
+        </p>
 
-I am pleased to share my first technical article, which explores how Hybrid Project Management can transform the way engineering and construction projects are planned, executed, monitored, and continuously improved.
+        <a class="publication-btn"
+           href="articles/NFV-PM-ART-001_Rev02_Value_Driven_Hybrid_Project_Management.pdf"
+           target="_blank"
+           rel="noopener noreferrer">
 
-In major engineering and construction projects, particularly in the oil and gas, offshore, energy, and infrastructure sectors, project execution has traditionally relied on predictive or Waterfall methodologies. These approaches emphasize established procedures, approved engineering drawings, contractual specifications, predetermined schedules, and sequential execution activities.
+            Read Full Article (PDF)
 
-While these frameworks remain essential for maintaining project control, accountability, safety, and quality, they may become less effective when applied too rigidly without considering the actual conditions encountered during project execution.
+        </a>
 
-One of the fundamental challenges in project management is the tendency to measure success primarily through compliance with predetermined requirements rather than continuously evaluating whether those requirements and execution strategies remain the most effective means of achieving project objectives.
+    </article>
 
-In reality, engineering and construction projects operate in dynamic environments. Unforeseen site conditions, engineering interfaces, procurement constraints, construction sequencing conflicts, resource limitations, and evolving operational requirements frequently demand decisions that cannot always be addressed effectively through the original execution plan alone.
-
-This raises an important question:
-
-Should project teams continue following an established execution strategy simply because it was originally approved, even when actual site conditions indicate that a technically sound, safer, more efficient, or higher-value alternative may be available?
-
-My article examines this question through the application of Value-Driven Hybrid Project Management, an integrated approach combining the strengths of several management methodologies:
-
-Predictive Management provides structured planning, engineering control, contractual compliance, defined milestones, and accountability.
-
-Adaptive Management enables project teams to adjust execution strategies in response to actual site conditions, emerging constraints, and changing project priorities.
-
-Agile Principles encourage collaboration, incremental improvements, timely feedback, and responsive decision-making.
-
-Lean Management focuses on eliminating waste, reducing unnecessary activities, improving workflow efficiency, and maximizing value.
-
-Value Engineering and Continuous Improvement promote the systematic evaluation of alternative solutions to optimize technical performance, constructability, maintainability, cost, and lifecycle value.
-
-From Compliance-Driven Execution to Value-Driven Decision-Making
-
-A central argument of the article is that compliance and value creation should not be treated as competing objectives.
-
-Engineering standards, approved drawings, procedures, and contractual requirements establish essential controls. However, project teams should also recognize that an approved execution method may not always represent the most efficient or technically advantageous solution under actual site conditions.
-
-For example, during offshore platform construction, equipment arrangements, cable routing, structural interfaces, and maintenance accessibility may differ from assumptions made during the engineering design stage.
-
-A conventional response may be to proceed strictly according to the approved drawings, even when installation difficulties or potential operational limitations become apparent.
-
-A value-driven hybrid approach, by comparison, encourages early identification of these issues, collaborative technical evaluation, risk assessment, and development of alternative solutions before unnecessary installation work or rework occurs.
-
-Where justified, proposed improvements can be implemented through established engineering change management and approval processes.
-
-The objective is not to disregard compliance, but to prevent rigid interpretation of predetermined plans from becoming a barrier to legitimate engineering optimization and improved project performance.
-
-Why This Matters in Engineering and Construction
-
-The consequences of ineffective project decisions often extend beyond immediate construction activities.
-
-A decision made during engineering or fabrication may influence installation productivity, inspection acceptance, commissioning readiness, equipment maintainability, operational reliability, and total lifecycle cost.
-
-Consequently, effective project management requires evaluating not only whether an activity can be completed according to the approved plan, but also whether its execution will deliver the intended value to the project owner and other stakeholders.
-
-This philosophy is equally applicable to both clients and contractors.
-
-For contractors, it supports improved productivity, reduced rework, better resource utilization, and more reliable project execution.
-
-For clients, it supports engineering integrity, asset reliability, operational readiness, lifecycle optimization, and sustainable project value.
-
-The Role of Engineering Judgment and Continuous Improvement
-
-Hybrid Project Management is not simply the combination of different methodologies. Its effectiveness depends on the ability of project leaders to determine which approach is most appropriate for a particular activity, project phase, risk profile, and site condition.
-
-This requires moving beyond administrative compliance toward evidence-based decision-making supported by engineering judgment, risk assessment, cross-functional collaboration, and continuous improvement.
-
-It also requires recognizing that lessons learned, inspection findings, recurring nonconformities, construction constraints, and operational feedback are not merely records of project performance. They are valuable sources of information for improving future decisions.
-
-My Key Perspective
-
-Project management excellence should not be measured solely by how consistently a project follows its original plan, but also by how effectively its leadership evaluates, adapts, and improves that plan to deliver superior project outcomes.
-
-A successful project is not necessarily one that experiences the fewest changes. It is one in which changes are evaluated intelligently, risks are managed effectively, resources are optimized, and decisions consistently support safety, engineering integrity, quality, and long-term value.
-
-Ultimately, the fundamental question should evolve from:
-
-“Are we executing the project according to the approved plan?”
-
-To:
-
-“Does the approved plan remain the safest, most effective, and highest-value approach under the actual project conditions—and if not, how can we improve it through proper engineering evaluation and controlled change?”
-
-This is the philosophy behind Beyond Compliance: Value-Driven Hybrid Project Management in Engineering and Construction.
-
-I hope this article encourages constructive discussion among professionals involved in engineering, project management, construction, quality assurance, commissioning, and operational excellence.
-
-I welcome your insights, practical experiences, and professional perspectives on how adaptive and value-driven management approaches can contribute to more efficient, reliable, and sustainable project delivery.
-
-Technical Publication: NFV-PM-ART-001
-Revision: 01
-Author: Noel F. Villaluz, PEE, REE, PMP
-
-<tr>
-
-<td class="article-number">
-    NFV-ART-001
-</td>
-
-<td>
-
-<a class="article-title"
-   href="NFV-PM-ART-001_Rev02_Value_Driven_Hybrid_Project_Management.pdf"
-   target="_blank"
-   rel="noopener noreferrer">
-
-Applying a Hybrid, Adaptive and
-Value-Driven Approach to
-Construction Project Management
-
-</a>
-
-</td>
-
-<td>
-<span class="article-category">
-    Project Management
-</span>
-</td>
-
-<td>
-    15 Nov 2026
-</td>
-
-<td>
-
-<a class="pdf-btn"
-   href="articles/NFV-ART-001.pdf"
-   target="_blank"
-   rel="noopener noreferrer">
-
-    View PDF
-
-</a>
-
-</td>
-
-</tr>
-
-
-<!-- ======================================
-     ADD NEW ARTICLES BELOW THIS LINE
-
-     COPY A COMPLETE <tr>...</tr> BLOCK
-     AND CHANGE:
-     1. Article number
-     2. Article title
-     3. Category
-     4. Publication date
-     5. PDF filename
-====================================== -->
-
-</tbody>
-
-</table>
+    <!-- ADD FUTURE PUBLICATION CARDS HERE -->
 
 </div>
 
@@ -907,56 +855,45 @@ const articleSearch =
 const categoryFilter =
     document.getElementById("categoryFilter");
 
-const articleRows =
-    document.querySelectorAll(
-        "#articlesTable tbody tr"
-    );
+const publicationCards =
+    document.querySelectorAll(".publication-card");
 
 function filterArticles() {
 
-    const searchValue =
+    const search =
         articleSearch.value.toLowerCase().trim();
 
-    const selectedCategory =
+    const category =
         categoryFilter.value;
 
-    articleRows.forEach(row => {
+    publicationCards.forEach(card => {
 
-        const rowText =
-            row.textContent.toLowerCase();
+        const text =
+            card.textContent.toLowerCase();
 
-        const categoryElement =
-            row.querySelector(".article-category");
-
-        const category =
-            categoryElement
-                ? categoryElement.textContent.trim()
-                : "";
+        const cardCategory =
+            card.dataset.category;
 
         const matchesSearch =
-            rowText.includes(searchValue);
+            text.includes(search);
 
         const matchesCategory =
-            selectedCategory === "all" ||
-            category === selectedCategory;
+            category === "all" ||
+            category === cardCategory;
 
-        row.style.display =
+        card.style.display =
             matchesSearch && matchesCategory
                 ? ""
                 : "none";
-
     });
-
 }
 
 articleSearch.addEventListener(
-    "input",
-    filterArticles
+    "input", filterArticles
 );
 
 categoryFilter.addEventListener(
-    "change",
-    filterArticles
+    "change", filterArticles
 );
 
 </script>
